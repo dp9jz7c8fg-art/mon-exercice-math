@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Comprendre les Maths - Mobile</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="sidebar">
+        <h2 style="color: #2c3e50; text-align: center;">Menu</h2>
+        <button class="sidebar-button">🏠 Accueil</button>
+        <button class="sidebar-button">📖 Lexique</button>
+        <div style="margin-top: auto; padding: 15px; background: #f1f3f4; border-radius: 8px; font-size: 0.8em;">
+            <strong>Mobile Mode</strong>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <header>
+            <div id="score-board">
+                Score : <span id="current-score">0</span> / <span id="total-questions">0</span>
+            </div>
+        </header>
+
+        <div id="toolbar">
+            <button class="zoom-btn" onclick="ajusterZoom(0.2)">🔍 +</button>
+            <button class="zoom-btn" onclick="ajusterZoom(-0.2)">🔍 -</button>
+            <button class="zoom-btn" onclick="resetZoom()">🔄</button>
+        </div>
+
+        <div id="exercice-container">
+            <img src="IMG_0906.jpg" alt="Fiche" id="fond-exercice">
+            
+            <!-- L'équerre et sa poignée de rotation -->
+            <div id="cursor-wrapper">
+                <div id="rotation-handle"></div>
+                <img src="equerre.png" alt="Équerre" id="custom-cursor">
+            </div>
+        </div>
+
+        <div class="reponses-eleve">
+            <div class="input-group">
+                <input type="number" id="user-answer" placeholder="Degrés">
+                <button id="btn-valider" onclick="verifierReponse()">Valider</button>
+            </div>
+            <p id="feedback"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
