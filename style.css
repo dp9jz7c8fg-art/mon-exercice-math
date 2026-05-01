@@ -83,3 +83,27 @@ header {
 
 .reponses-eleve { margin-top: 15px; text-align: center; }
 .zoom-btn { padding: 10px; margin: 5px; font-size: 18px; }
+#exercice-container:fullscreen {
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#exercice-container:fullscreen #fond-exercice {
+    max-height: 100%;
+    width: auto;
+}
+
+.hint-pc {
+    font-size: 10px;
+    color: #666;
+    margin-left: 10px;
+}
+
+/* Cache l'astuce sur mobile */
+@media (max-width: 600px) {
+    .hint-pc { display: none; }
+}

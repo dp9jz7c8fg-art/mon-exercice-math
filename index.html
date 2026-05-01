@@ -3,26 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Exercice Angles - Mobile</title>
+    <title>Exercice Angles - Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="header-logo">
-        <img src="logo.png" alt="Logo de l'exercice" class="site-logo">
+        <img src="logo.png" alt="Logo" class="site-logo">
     </div>
 
     <div id="main-content">
-
-    
         <header>
             <div id="score-board">
                 Score : <span id="current-score">0</span> / <span id="total-questions">0</span>
             </div>
             
-            <!-- LA ZONE DU VOLANT (À CÔTÉ DU SCORE) -->
             <div id="rotation-control">
                 <div id="rotation-wheel"></div>
-                <span>Pivoter l'équerre</span>
+                <span>Pivoter</span>
             </div>
         </header>
 
@@ -30,6 +27,7 @@
             <button class="zoom-btn" onclick="ajusterZoom(0.2)">🔍 +</button>
             <button class="zoom-btn" onclick="ajusterZoom(-0.2)">🔍 -</button>
             <button class="zoom-btn" onclick="resetZoom()">🔄</button>
+            <span class="hint-pc">Dbl-clic pour Plein Écran</span>
         </div>
 
         <div id="exercice-container">

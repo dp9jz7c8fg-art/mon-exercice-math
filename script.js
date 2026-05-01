@@ -57,3 +57,32 @@ function resetZoom() {
     zoomLevel = 1;
     fond.style.transform = `scale(1)`;
 }
+// --- GESTION DU PLEIN ÉCRAN ---
+
+const containerExercice = document.getElementById('exercice-container');
+
+// 1. Double-clic sur PC
+containerExercice.addEventListener('dblclick', () => {
+    if (!document.fullscreenElement) {
+        containerExercice.requestFullscreen().catch(err => {
+            alert(`Erreur : ${err.message}`);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+});
+
+// 2. Mode Paysage sur Smartphone
+window.addEventListener("orientationchange", () => {
+    // Si l'écran passe à 90 ou -90 degrés (paysage)
+    if (window.orientation === 90 || window.orientation === -90) {
+        if (!document.fullscreenElement) {
+            containerExercice.requestFullscreen();
+        }
+    } else {
+        // Si on revient en portrait, on quitte le plein écran
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        }
+    }
+});
