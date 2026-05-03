@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Parent – La Classe de Stef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'DM Sans', sans-serif; min-height: 100vh;
+            background: linear-gradient(135deg, #040804 0%, #061008 25%, #081a0e 50%, #0a2414 75%, #040804 100%);
+            background-size: 400% 400%; animation: grad 20s ease infinite;
+            color: #e8f5e9; display: flex; flex-direction: column; align-items: center;
+        }
+
+        @keyframes grad { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .content {
+            width: 100%; max-width: 600px; padding: 20px 16px 60px;
+            display: flex; flex-direction: column; align-items: center; gap: 24px;
+        }
+
+        .nav { width: 100%; display: flex; justify-content: space-between; }
+        .nav a { color: rgba(46,204,113,0.5); text-decoration: none; font-size: 13px; font-weight: 600; transition: color 0.15s; }
+        .nav a:hover { color: #2ecc71; }
+
+        .page-header { text-align: center; display: flex; flex-direction: column; gap: 6px; align-items: center; }
+        .page-icon { font-size: 44px; }
+        .page-title {
+            font-family: 'Playfair Display', serif; font-style: italic; font-size: 28px; font-weight: 700;
+            background: linear-gradient(135deg, #2ecc71, #a8f0c0, #2ecc71);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .page-sub { font-size: 12px; color: rgba(46,204,113,0.4); letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
+
+        /* ── Sections ── */
+        .section {
+            width: 100%; background: rgba(10,30,16,0.6);
+            border: 1px solid rgba(40,100,55,0.25);
+            border-radius: 18px; padding: 24px 20px;
+            display: flex; flex-direction: column; gap: 14px;
+        }
+
+        .section-title { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+
+        .section p { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.55); }
+
+        .section ul {
+            list-style: none; display: flex; flex-direction: column; gap: 6px;
+            font-size: 13px; color: rgba(255,255,255,0.5);
+        }
+
+        .section ul li::before { content: '✓ '; color: #2ecc71; font-weight: 700; }
+
+        /* ── Avis existants ── */
+        .avis-list {
+            display: flex; flex-direction: column; gap: 12px;
+        }
+
+        .avis-card {
+            background: rgba(0,0,0,0.2); border-radius: 12px; padding: 14px 16px;
+            display: flex; flex-direction: column; gap: 6px;
+        }
+
+        .avis-top { display: flex; justify-content: space-between; align-items: center; }
+        .avis-author-name { font-size: 13px; font-weight: 600; color: #e8f5e9; }
+        .avis-stars-display { color: #f39c12; font-size: 13px; letter-spacing: 1px; }
+        .avis-text-display { font-size: 12px; color: rgba(255,255,255,0.5); font-style: italic; line-height: 1.5; }
+        .avis-date { font-size: 10px; color: rgba(255,255,255,0.2); }
+
+        .no-avis { font-size: 13px; color: rgba(255,255,255,0.3); text-align: center; padding: 12px; }
+
+        /* ── Formulaire avis ── */
+        .form-avis {
+            display: flex; flex-direction: column; gap: 12px;
+        }
+
+        .form-row { display: flex; flex-direction: column; gap: 4px; }
+
+        .form-row label {
+            font-size: 11px; font-weight: 600; color: rgba(46,204,113,0.5);
+            text-transform: uppercase; letter-spacing: 0.06em;
+        }
+
+        .form-row input, .form-row textarea {
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(40,100,55,0.25);
+            border-radius: 8px; padding: 12px 14px; font-size: 14px;
+            font-family: 'DM Sans', sans-serif; color: #e8f5e9; outline: none;
+            transition: border-color 0.2s; width: 100%;
+        }
+
+        .form-row input::placeholder, .form-row textarea::placeholder { color: rgba(255,255,255,0.2); }
+        .form-row input:focus, .form-row textarea:focus { border-color: rgba(46,204,113,0.4); }
+        .form-row textarea { resize: vertical; min-height: 80px; }
+
+        /* Étoiles cliquables */
+        .stars-input { display: flex; gap: 6px; }
+        .star-btn {
+            font-size: 28px; cursor: pointer; color: rgba(255,255,255,0.15);
+            transition: color 0.15s, transform 0.1s; background: none; border: none; padding: 0;
+        }
+        .star-btn.active { color: #f39c12; }
+        .star-btn:hover { transform: scale(1.2); }
+
+        .btn-submit-avis {
+            background: #2ecc71; color: #040804; border: none; border-radius: 10px;
+            padding: 14px; font-size: 15px; font-family: 'DM Sans', sans-serif;
+            font-weight: 700; cursor: pointer; transition: opacity 0.15s;
+        }
+        .btn-submit-avis:hover { opacity: 0.85; }
+        .btn-submit-avis:disabled { opacity: 0.4; cursor: default; }
+
+        #avis-feedback {
+            font-size: 13px; text-align: center; min-height: 18px;
+        }
+        .af-ok { color: #2ecc71; }
+        .af-err { color: #e74c3c; }
+
+        @media (max-width: 480px) {
+            .page-title { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="content">
+
+    <div class="nav">
+        <a href="index.html">← Accueil</a>
+        <span></span>
+    </div>
+
+    <div class="page-header">
+        <span class="page-icon">👨‍👩‍👧‍👦</span>
+        <h1 class="page-title">Espace Parent</h1>
+        <p class="page-sub">Bienvenue !</p>
+    </div>
+
+    <!-- Présentation -->
+    <div class="section">
+        <div class="section-title">📋 Notre approche</div>
+        <p>La Classe de Stef accompagne les élèves du secondaire avec une approche personnalisée, bienveillante et structurée. Nous travaillons sur :</p>
+        <ul>
+            <li>Le renforcement des bases en mathématiques</li>
+            <li>La méthodologie de travail et d'organisation</li>
+            <li>Le développement personnel et la confiance en soi</li>
+            <li>Des outils concrets pour progresser durablement</li>
+        </ul>
+    </div>
+
+    <!-- Avis -->
+    <div class="section">
+        <div class="section-title">⭐ Avis des parents et élèves</div>
+        <div class="avis-list" id="avis-list">
+            <div class="no-avis">Chargement des avis…</div>
+        </div>
+    </div>
+
+    <!-- Formulaire avis -->
+    <div class="section">
+        <div class="section-title">✍️ Laisser un avis</div>
+        <div class="form-avis">
+            <div class="form-row">
+                <label>Votre nom</label>
+                <input type="text" id="avis-name" placeholder="Parent de…" autocomplete="name">
+            </div>
+            <div class="form-row">
+                <label>Note</label>
+                <div class="stars-input" id="stars-input">
+                    <button class="star-btn active" data-val="1">★</button>
+                    <button class="star-btn active" data-val="2">★</button>
+                    <button class="star-btn active" data-val="3">★</button>
+                    <button class="star-btn active" data-val="4">★</button>
+                    <button class="star-btn active" data-val="5">★</button>
+                </div>
+            </div>
+            <div class="form-row">
+                <label>Votre avis</label>
+                <textarea id="avis-text" placeholder="Partagez votre expérience…"></textarea>
+            </div>
+            <button class="btn-submit-avis" id="btn-avis" onclick="submitAvis()">Envoyer mon avis</button>
+            <div id="avis-feedback"></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+    apiKey: "AIzaSyB0djV_ZDOsYngnUeceNiTUt60IEKP_Qvg",
+    authDomain: "classe-de-stef.firebaseapp.com",
+    projectId: "classe-de-stef",
+    storageBucket: "classe-de-stef.firebasestorage.app",
+    messagingSenderId: "16372668790",
+    appId: "1:16372668790:web:b1bfed825bfb36111b0257"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ── Étoiles cliquables ──
+let selectedStars = 5;
+document.querySelectorAll('.star-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        selectedStars = parseInt(btn.dataset.val);
+        document.querySelectorAll('.star-btn').forEach(b => {
+            b.classList.toggle('active', parseInt(b.dataset.val) <= selectedStars);
+        });
+    });
+});
+
+// ── Charger les avis ──
+async function loadAvis() {
+    const list = document.getElementById('avis-list');
+    try {
+        const snap = await db.collection('avis').orderBy('createdAt', 'desc').limit(30).get();
+        if (snap.empty) {
+            list.innerHTML = '<div class="no-avis">Aucun avis pour le moment. Soyez le premier !</div>';
+            return;
+        }
+
+        let html = '';
+        snap.forEach(doc => {
+            const a = doc.data();
+            const date = a.createdAt ? a.createdAt.toDate().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+            html += `
+                <div class="avis-card">
+                    <div class="avis-top">
+                        <span class="avis-author-name">${a.author || 'Anonyme'}</span>
+                        <span class="avis-stars-display">${'★'.repeat(a.stars || 5)}${'☆'.repeat(5 - (a.stars || 5))}</span>
+                    </div>
+                    <div class="avis-text-display">"${a.text}"</div>
+                    <div class="avis-date">${date}</div>
+                </div>`;
+        });
+        list.innerHTML = html;
+    } catch (e) {
+        list.innerHTML = '<div class="no-avis">Impossible de charger les avis.</div>';
+    }
+}
+
+loadAvis();
+
+// ── Soumettre un avis ──
+async function submitAvis() {
+    const name = document.getElementById('avis-name').value.trim();
+    const text = document.getElementById('avis-text').value.trim();
+    const fb = document.getElementById('avis-feedback');
+    const btn = document.getElementById('btn-avis');
+    fb.textContent = '';
+
+    if (!name || !text) { fb.textContent = 'Veuillez remplir tous les champs.'; fb.className = 'af-err'; return; }
+    if (text.length < 10) { fb.textContent = 'Votre avis doit contenir au moins 10 caractères.'; fb.className = 'af-err'; return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours…';
+
+    try {
+        await db.collection('avis').add({
+            author: name,
+            text: text,
+            stars: selectedStars,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        fb.textContent = '✓ Merci pour votre avis !';
+        fb.className = 'af-ok';
+        document.getElementById('avis-name').value = '';
+        document.getElementById('avis-text').value = '';
+        selectedStars = 5;
+        document.querySelectorAll('.star-btn').forEach(b => b.classList.add('active'));
+
+        // Recharger les avis
+        setTimeout(loadAvis, 1000);
+    } catch (e) {
+        fb.textContent = 'Erreur lors de l\'envoi. Réessayez.';
+        fb.className = 'af-err';
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Envoyer mon avis';
+}
+</script>
+
+</body>
+</html>

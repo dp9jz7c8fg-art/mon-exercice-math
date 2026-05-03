@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Élève – La Classe de Stef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #040804 0%, #061008 25%, #081a0e 50%, #0a2414 75%, #040804 100%);
+            background-size: 400% 400%;
+            animation: grad 20s ease infinite;
+            color: #e8f5e9;
+            display: flex; flex-direction: column; align-items: center;
+            overflow-x: hidden;
+        }
+
+        @keyframes grad {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .content {
+            width: 100%; max-width: 700px;
+            padding: 20px 16px 60px;
+            display: flex; flex-direction: column; align-items: center; gap: 24px;
+        }
+
+        .nav { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+        .nav a { color: rgba(46,204,113,0.5); text-decoration: none; font-size: 13px; font-weight: 600; transition: color 0.15s; }
+        .nav a:hover { color: #2ecc71; }
+
+        .page-header { text-align: center; display: flex; flex-direction: column; gap: 6px; align-items: center; }
+        .page-icon { font-size: 44px; }
+        .page-title {
+            font-family: 'Playfair Display', serif; font-style: italic;
+            font-size: 28px; font-weight: 700;
+            background: linear-gradient(135deg, #2ecc71, #a8f0c0, #2ecc71);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .page-sub { font-size: 12px; color: rgba(46,204,113,0.4); letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
+
+        .grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 16px; width: 100%;
+        }
+
+        .card {
+            background: rgba(10,30,16,0.6);
+            border: 1px solid rgba(40,100,55,0.25);
+            border-radius: 20px; padding: 28px 20px;
+            text-decoration: none; color: #e8f5e9;
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center; gap: 14px;
+            transition: transform 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+            backdrop-filter: blur(8px); position: relative; overflow: hidden;
+        }
+
+        .card::before {
+            content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
+            background: radial-gradient(circle at 50% 30%, rgba(46,204,113,0.03), transparent 60%);
+            pointer-events: none;
+        }
+
+        .card:hover {
+            transform: translateY(-4px); background: rgba(20,50,28,0.7);
+            border-color: rgba(46,204,113,0.4); box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        .card.disabled { opacity: 0.4; pointer-events: none; }
+
+        .card-icon {
+            font-size: 38px; width: 64px; height: 64px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 16px;
+        }
+
+        .ci-math    { background: rgba(46,204,113,0.12); }
+        .ci-methodo { background: rgba(52,152,219,0.12); }
+        .ci-dev     { background: rgba(155,89,182,0.12); }
+        .ci-outils  { background: rgba(243,156,18,0.12); }
+
+        .card-title { font-size: 17px; font-weight: 700; }
+        .card-desc { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.5; }
+
+        .card-tags { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
+        .tag { font-size: 9px; font-weight: 600; padding: 3px 8px; border-radius: 100px; }
+        .tag.green  { background: rgba(46,204,113,0.08); color: rgba(46,204,113,0.55); border: 1px solid rgba(46,204,113,0.1); }
+        .tag.blue   { background: rgba(52,152,219,0.08); color: rgba(52,152,219,0.65); border: 1px solid rgba(52,152,219,0.1); }
+        .tag.purple { background: rgba(155,89,182,0.08); color: rgba(155,89,182,0.65); border: 1px solid rgba(155,89,182,0.1); }
+        .tag.orange { background: rgba(243,156,18,0.08); color: rgba(243,156,18,0.65); border: 1px solid rgba(243,156,18,0.1); }
+
+        .card-badge {
+            display: inline-flex; padding: 4px 10px; border-radius: 100px;
+            font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+        }
+        .badge-ready { background: rgba(46,204,113,0.15); color: #2ecc71; }
+        .badge-soon  { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.3); }
+
+        @media (max-width: 520px) {
+            .grid { grid-template-columns: 1fr; }
+            .page-title { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="content">
+    <div class="nav">
+        <a href="index.html">← Accueil</a>
+        <a href="profil.html">Mon profil</a>
+    </div>
+
+    <div class="page-header">
+        <span class="page-icon">🎓</span>
+        <h1 class="page-title">Espace Élève</h1>
+        <p class="page-sub">Choisis ton domaine</p>
+    </div>
+
+    <div class="grid">
+
+        <a href="maths.html" class="card">
+            <div class="card-icon ci-math">📐</div>
+            <div class="card-title">Mathématiques</div>
+            <div class="card-desc">Exercices en ligne et suivi en présentiel.</div>
+            <div class="card-tags">
+                <span class="tag green">Angles</span>
+                <span class="tag green">Fractions</span>
+                <span class="tag green">Algèbre</span>
+            </div>
+            <span class="card-badge badge-ready">Disponible</span>
+        </a>
+
+        <div class="card disabled">
+            <div class="card-icon ci-methodo">🧠</div>
+            <div class="card-title">Méthodologie</div>
+            <div class="card-desc">Apprendre à apprendre : cerveau, organisation et stratégies.</div>
+            <div class="card-tags">
+                <span class="tag blue">Cerveau</span>
+                <span class="tag blue">Organisation</span>
+                <span class="tag blue">Mémorisation</span>
+            </div>
+            <span class="card-badge badge-soon">Bientôt</span>
+        </div>
+
+        <div class="card disabled">
+            <div class="card-icon ci-dev">🌱</div>
+            <div class="card-title">Développement de soi</div>
+            <div class="card-desc">Mieux te connaître et construire ton avenir.</div>
+            <div class="card-tags">
+                <span class="tag purple">Orientation</span>
+                <span class="tag purple">Émotions</span>
+                <span class="tag purple">Profil</span>
+            </div>
+            <span class="card-badge badge-soon">Bientôt</span>
+        </div>
+
+        <div class="card disabled">
+            <div class="card-icon ci-outils">🧰</div>
+            <div class="card-title">Boîte à outils</div>
+            <div class="card-desc">Fiches et ressources pour les cours.</div>
+            <div class="card-tags">
+                <span class="tag orange">Math</span>
+                <span class="tag orange">Français</span>
+                <span class="tag orange">Sciences</span>
+                <span class="tag orange">EDM</span>
+            </div>
+            <span class="card-badge badge-soon">Bientôt</span>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+<script>requireAuth((user, profile) => { injectUserBar(user, profile); });</script>
+
+</body>
+</html>
