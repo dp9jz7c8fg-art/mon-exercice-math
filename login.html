@@ -296,6 +296,10 @@
     <!-- INSCRIPTION -->
     <div id="register-fields">
         <div class="form-group">
+            <label>Nom de famille</label>
+            <input type="text" id="reg-lastname" placeholder="Ton nom de famille" autocomplete="family-name">
+        </div>
+        <div class="form-group">
             <label>Prénom</label>
             <input type="text" id="reg-name" placeholder="Ton prénom" autocomplete="given-name">
         </div>
@@ -346,7 +350,7 @@ let isRegistering = false; // Bloque la redirection pendant l'inscription
 
 // ── Si déjà connecté → accueil ──
 auth.onAuthStateChanged(user => {
-    if (user && !isRegistering) window.location.href = 'index.html';
+    if (user && !isRegistering) window.location.href = 'eleve.html';
 });
 
 // ── Avatars ──
@@ -411,6 +415,7 @@ async function doLogin() {
 
 // ── Inscription ──
 async function doRegister() {
+    const lastname = document.getElementById('reg-lastname').value.trim();
     const name  = document.getElementById('reg-name').value.trim();
     const email = document.getElementById('reg-email').value.trim();
     const pass  = document.getElementById('reg-password').value;
@@ -419,7 +424,7 @@ async function doRegister() {
     errEl.textContent = '';
     sucEl.textContent = '';
 
-    if (!name || !email || !pass) { errEl.textContent = 'Remplis tous les champs.'; return; }
+    if (!lastname || !name || !email || !pass) { errEl.textContent = 'Remplis tous les champs.'; return; }
     if (pass.length < 6) { errEl.textContent = 'Le mot de passe doit avoir au moins 6 caractères.'; return; }
 
     showLoading(true);
@@ -431,6 +436,7 @@ async function doRegister() {
         // Sauver le profil dans Firestore
         await db.collection('users').doc(user.uid).set({
             name: name,
+            lastname: lastname,
             email: email,
             avatar: selectedAvatar,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -463,11 +469,11 @@ async function doRegister() {
         });
 
         // Mettre le nom dans le profil Auth
-        await user.updateProfile({ displayName: name });
+        await user.updateProfile({ displayName: name + ' ' + lastname });
 
         // Tout est sauvé, on peut rediriger maintenant
         isRegistering = false;
-        window.location.href = 'index.html';
+        window.location.href = 'eleve.html';
     } catch (e) {
         showLoading(false);
         if (e.code === 'auth/email-already-in-use')

@@ -5,289 +5,313 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Espace Parent – La Classe de Stef</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'DM Sans', sans-serif; min-height: 100vh;
-            background: linear-gradient(135deg, #040804 0%, #061008 25%, #081a0e 50%, #0a2414 75%, #040804 100%);
-            background-size: 400% 400%; animation: grad 20s ease infinite;
-            color: #e8f5e9; display: flex; flex-direction: column; align-items: center;
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html,body{height:100%;overflow:hidden}
+        body{
+            font-family:'DM Sans',sans-serif;
+            background:linear-gradient(135deg,#040804 0%,#061008 25%,#081a0e 50%,#0a2414 75%,#040804 100%);
+            background-size:400% 400%;animation:grad 20s ease infinite;
+            color:#e8f5e9;display:flex;flex-direction:column;align-items:center;justify-content:center;
         }
+        @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-        @keyframes grad { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .page{width:100%;max-width:600px;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:20px}
 
-        .content {
-            width: 100%; max-width: 600px; padding: 20px 16px 60px;
-            display: flex; flex-direction: column; align-items: center; gap: 24px;
-        }
+        .nav{width:100%;display:flex;justify-content:flex-start}
+        .nav a{color:rgba(46,204,113,0.5);text-decoration:none;font-size:13px;font-weight:600;transition:color 0.15s}
+        .nav a:hover{color:#2ecc71}
 
-        .nav { width: 100%; display: flex; justify-content: space-between; }
-        .nav a { color: rgba(46,204,113,0.5); text-decoration: none; font-size: 13px; font-weight: 600; transition: color 0.15s; }
-        .nav a:hover { color: #2ecc71; }
+        .page-header{text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center}
+        .page-icon{font-size:44px}
+        .page-title{font-family:'Playfair Display',serif;font-style:italic;font-size:26px;font-weight:700;background:linear-gradient(135deg,#2ecc71,#a8f0c0,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
-        .page-header { text-align: center; display: flex; flex-direction: column; gap: 6px; align-items: center; }
-        .page-icon { font-size: 44px; }
-        .page-title {
-            font-family: 'Playfair Display', serif; font-style: italic; font-size: 28px; font-weight: 700;
-            background: linear-gradient(135deg, #2ecc71, #a8f0c0, #2ecc71);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .page-sub { font-size: 12px; color: rgba(46,204,113,0.4); letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
+        /* Écran d'identification */
+        #identify-screen{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%}
+        .id-box{background:rgba(10,30,16,0.6);border:1px solid rgba(40,100,55,0.25);border-radius:18px;padding:28px 24px;width:100%;display:flex;flex-direction:column;gap:14px;backdrop-filter:blur(8px)}
+        .id-title{font-size:14px;font-weight:600;color:rgba(255,255,255,0.6);text-align:center}
+        .id-input{background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:10px;padding:14px 16px;font-size:15px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none;width:100%;transition:border-color 0.2s}
+        .id-input::placeholder{color:rgba(255,255,255,0.2)}
+        .id-input:focus{border-color:rgba(46,204,113,0.4)}
+        .id-btn{background:#2ecc71;color:#040804;border:none;border-radius:10px;padding:14px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;transition:opacity 0.15s}
+        .id-btn:hover{opacity:0.85}
+        #id-error{font-size:12px;color:#e74c3c;text-align:center;min-height:16px}
 
-        /* ── Sections ── */
-        .section {
-            width: 100%; background: rgba(10,30,16,0.6);
-            border: 1px solid rgba(40,100,55,0.25);
-            border-radius: 18px; padding: 24px 20px;
-            display: flex; flex-direction: column; gap: 14px;
-        }
+        /* Écran principal parent */
+        #parent-main{display:none;flex-direction:column;align-items:center;gap:16px;width:100%}
+        .parent-info{font-size:13px;color:rgba(46,204,113,0.5);text-align:center}
+        .parent-info strong{color:#2ecc71}
 
-        .section-title { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%}
+        .p-card{background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:18px;padding:24px 16px;text-decoration:none;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;transition:transform 0.2s,background 0.2s,border-color 0.2s,box-shadow 0.2s;backdrop-filter:blur(8px);position:relative;overflow:hidden;cursor:pointer}
+        .p-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 50% 30%,rgba(46,204,113,0.03),transparent 60%);pointer-events:none}
+        .p-card:hover{transform:translateY(-4px);background:rgba(20,50,28,0.7);border-color:rgba(46,204,113,0.4);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+        .p-card.disabled{opacity:0.4;pointer-events:none}
+        .p-card-icon{font-size:34px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:rgba(46,204,113,0.1)}
+        .p-card-title{font-size:14px;font-weight:700}
+        .p-card-badge{font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:100px}
+        .badge-ready{background:rgba(46,204,113,0.15);color:#2ecc71}
+        .badge-soon{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.3)}
 
-        .section p { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.55); }
+        /* Modal avis parent */
+        .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+        .modal-overlay.open{display:flex}
+        .modal-box{background:#081a0e;border:1px solid rgba(40,100,55,0.3);border-radius:20px;padding:28px 24px;width:90%;max-width:440px;display:flex;flex-direction:column;gap:14px;max-height:85vh;overflow-y:auto}
+        .modal-close{align-self:flex-end;background:none;border:none;color:rgba(255,255,255,0.3);font-size:20px;cursor:pointer}
+        .modal-close:hover{color:#e74c3c}
+        .modal-title{font-size:16px;font-weight:700;text-align:center}
+        .form-row{display:flex;flex-direction:column;gap:4px}
+        .form-row label{font-size:10px;font-weight:600;color:rgba(46,204,113,0.5);text-transform:uppercase;letter-spacing:0.06em}
+        .form-row input,.form-row textarea{background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:8px;padding:12px;font-size:13px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none;width:100%}
+        .form-row input::placeholder,.form-row textarea::placeholder{color:rgba(255,255,255,0.2)}
+        .form-row input:focus,.form-row textarea:focus{border-color:rgba(46,204,113,0.4)}
+        .form-row textarea{resize:vertical;min-height:70px}
+        .stars-input{display:flex;gap:6px}
+        .star-btn{font-size:28px;cursor:pointer;color:rgba(255,255,255,0.15);transition:color 0.15s,transform 0.1s;background:none;border:none;padding:0}
+        .star-btn.active{color:#f39c12}
+        .star-btn:hover{transform:scale(1.2)}
+        .btn-submit{background:#2ecc71;color:#040804;border:none;border-radius:10px;padding:12px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer}
+        .btn-submit:hover{opacity:0.85}
+        .btn-submit:disabled{opacity:0.4}
+        #modal-fb{font-size:12px;text-align:center;min-height:16px}
+        .af-ok{color:#2ecc71}.af-err{color:#e74c3c}
 
-        .section ul {
-            list-style: none; display: flex; flex-direction: column; gap: 6px;
-            font-size: 13px; color: rgba(255,255,255,0.5);
-        }
+        /* Progression modal */
+        .prog-section{display:flex;flex-direction:column;gap:10px;width:100%}
+        .prog-title{font-size:13px;font-weight:700;color:rgba(46,204,113,0.5)}
+        .prog-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+        .ps-box{background:rgba(0,0,0,0.2);border-radius:10px;padding:12px;text-align:center}
+        .ps-val{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#2ecc71}
+        .ps-label{font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;margin-top:3px}
+        .prog-bar-row{display:flex;align-items:center;gap:8px}
+        .prog-bar-name{width:80px;font-size:11px;color:rgba(255,255,255,0.4);text-align:right;flex-shrink:0}
+        .prog-bar-bg{flex:1;height:8px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden}
+        .prog-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#2ecc71,#27ae60)}
+        .prog-bar-score{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);width:50px}
 
-        .section ul li::before { content: '✓ '; color: #2ecc71; font-weight: 700; }
+        .not-found{font-size:13px;color:rgba(255,255,255,0.4);text-align:center;padding:20px}
 
-        /* ── Avis existants ── */
-        .avis-list {
-            display: flex; flex-direction: column; gap: 12px;
-        }
-
-        .avis-card {
-            background: rgba(0,0,0,0.2); border-radius: 12px; padding: 14px 16px;
-            display: flex; flex-direction: column; gap: 6px;
-        }
-
-        .avis-top { display: flex; justify-content: space-between; align-items: center; }
-        .avis-author-name { font-size: 13px; font-weight: 600; color: #e8f5e9; }
-        .avis-stars-display { color: #f39c12; font-size: 13px; letter-spacing: 1px; }
-        .avis-text-display { font-size: 12px; color: rgba(255,255,255,0.5); font-style: italic; line-height: 1.5; }
-        .avis-date { font-size: 10px; color: rgba(255,255,255,0.2); }
-
-        .no-avis { font-size: 13px; color: rgba(255,255,255,0.3); text-align: center; padding: 12px; }
-
-        /* ── Formulaire avis ── */
-        .form-avis {
-            display: flex; flex-direction: column; gap: 12px;
-        }
-
-        .form-row { display: flex; flex-direction: column; gap: 4px; }
-
-        .form-row label {
-            font-size: 11px; font-weight: 600; color: rgba(46,204,113,0.5);
-            text-transform: uppercase; letter-spacing: 0.06em;
-        }
-
-        .form-row input, .form-row textarea {
-            background: rgba(0,0,0,0.3); border: 1px solid rgba(40,100,55,0.25);
-            border-radius: 8px; padding: 12px 14px; font-size: 14px;
-            font-family: 'DM Sans', sans-serif; color: #e8f5e9; outline: none;
-            transition: border-color 0.2s; width: 100%;
-        }
-
-        .form-row input::placeholder, .form-row textarea::placeholder { color: rgba(255,255,255,0.2); }
-        .form-row input:focus, .form-row textarea:focus { border-color: rgba(46,204,113,0.4); }
-        .form-row textarea { resize: vertical; min-height: 80px; }
-
-        /* Étoiles cliquables */
-        .stars-input { display: flex; gap: 6px; }
-        .star-btn {
-            font-size: 28px; cursor: pointer; color: rgba(255,255,255,0.15);
-            transition: color 0.15s, transform 0.1s; background: none; border: none; padding: 0;
-        }
-        .star-btn.active { color: #f39c12; }
-        .star-btn:hover { transform: scale(1.2); }
-
-        .btn-submit-avis {
-            background: #2ecc71; color: #040804; border: none; border-radius: 10px;
-            padding: 14px; font-size: 15px; font-family: 'DM Sans', sans-serif;
-            font-weight: 700; cursor: pointer; transition: opacity 0.15s;
-        }
-        .btn-submit-avis:hover { opacity: 0.85; }
-        .btn-submit-avis:disabled { opacity: 0.4; cursor: default; }
-
-        #avis-feedback {
-            font-size: 13px; text-align: center; min-height: 18px;
-        }
-        .af-ok { color: #2ecc71; }
-        .af-err { color: #e74c3c; }
-
-        @media (max-width: 480px) {
-            .page-title { font-size: 22px; }
-        }
+        @media(max-width:520px){.grid-3{grid-template-columns:1fr}.page-title{font-size:22px}}
     </style>
 </head>
 <body>
 
-<div class="content">
-
-    <div class="nav">
-        <a href="index.html">← Accueil</a>
-        <span></span>
-    </div>
+<div class="page">
+    <div class="nav"><a href="index.html">← Accueil</a></div>
 
     <div class="page-header">
         <span class="page-icon">👨‍👩‍👧‍👦</span>
         <h1 class="page-title">Espace Parent</h1>
-        <p class="page-sub">Bienvenue !</p>
     </div>
 
-    <!-- Présentation -->
-    <div class="section">
-        <div class="section-title">📋 Notre approche</div>
-        <p>La Classe de Stef accompagne les élèves du secondaire avec une approche personnalisée, bienveillante et structurée. Nous travaillons sur :</p>
-        <ul>
-            <li>Le renforcement des bases en mathématiques</li>
-            <li>La méthodologie de travail et d'organisation</li>
-            <li>Le développement personnel et la confiance en soi</li>
-            <li>Des outils concrets pour progresser durablement</li>
-        </ul>
-    </div>
-
-    <!-- Avis -->
-    <div class="section">
-        <div class="section-title">⭐ Avis des parents et élèves</div>
-        <div class="avis-list" id="avis-list">
-            <div class="no-avis">Chargement des avis…</div>
+    <!-- Identification -->
+    <div id="identify-screen">
+        <div class="id-box">
+            <div class="id-title">Entrez le nom et le prénom de votre enfant</div>
+            <input type="text" class="id-input" id="child-lastname" placeholder="Nom de famille" autocomplete="off">
+            <input type="text" class="id-input" id="child-firstname" placeholder="Prénom" autocomplete="off">
+            <button class="id-btn" onclick="findChild()">Accéder</button>
+            <div id="id-error"></div>
         </div>
     </div>
 
-    <!-- Formulaire avis -->
-    <div class="section">
-        <div class="section-title">✍️ Laisser un avis</div>
-        <div class="form-avis">
-            <div class="form-row">
-                <label>Votre nom</label>
-                <input type="text" id="avis-name" placeholder="Parent de…" autocomplete="name">
+    <!-- Écran principal parent -->
+    <div id="parent-main">
+        <div class="parent-info">Élève : <strong id="child-display"></strong></div>
+
+        <div class="grid-3">
+            <div class="p-card" onclick="openAvisModal()">
+                <div class="p-card-icon">⭐</div>
+                <div class="p-card-title">Avis</div>
+                <span class="p-card-badge badge-ready">Écrire</span>
             </div>
-            <div class="form-row">
-                <label>Note</label>
-                <div class="stars-input" id="stars-input">
-                    <button class="star-btn active" data-val="1">★</button>
-                    <button class="star-btn active" data-val="2">★</button>
-                    <button class="star-btn active" data-val="3">★</button>
-                    <button class="star-btn active" data-val="4">★</button>
-                    <button class="star-btn active" data-val="5">★</button>
-                </div>
+
+            <div class="p-card" onclick="openProgressionModal()">
+                <div class="p-card-icon">📊</div>
+                <div class="p-card-title">Progression</div>
+                <span class="p-card-badge badge-ready">Consulter</span>
             </div>
-            <div class="form-row">
-                <label>Votre avis</label>
-                <textarea id="avis-text" placeholder="Partagez votre expérience…"></textarea>
+
+            <div class="p-card disabled">
+                <div class="p-card-icon">💳</div>
+                <div class="p-card-title">Paiements</div>
+                <span class="p-card-badge badge-soon">Bientôt</span>
             </div>
-            <button class="btn-submit-avis" id="btn-avis" onclick="submitAvis()">Envoyer mon avis</button>
-            <div id="avis-feedback"></div>
         </div>
     </div>
-
 </div>
 
-<!-- Firebase -->
+<!-- Modal Avis -->
+<div class="modal-overlay" id="avis-modal">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal('avis-modal')">✕</button>
+        <div class="modal-title">⭐ Laisser un avis</div>
+        <div class="form-row">
+            <label>Votre nom</label>
+            <input type="text" id="avis-name" placeholder="Parent de…">
+        </div>
+        <div class="form-row">
+            <label>Note</label>
+            <div class="stars-input" id="stars-input"></div>
+        </div>
+        <div class="form-row">
+            <label>Votre avis</label>
+            <textarea id="avis-text" placeholder="Partagez votre expérience…"></textarea>
+        </div>
+        <button class="btn-submit" id="btn-avis" onclick="submitAvis()">Envoyer</button>
+        <div id="modal-fb"></div>
+    </div>
+</div>
+
+<!-- Modal Progression -->
+<div class="modal-overlay" id="prog-modal">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal('prog-modal')">✕</button>
+        <div class="modal-title">📊 Progression de <span id="prog-child-name"></span></div>
+        <div id="prog-content"></div>
+    </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
 <script>
-const firebaseConfig = {
-    apiKey: "AIzaSyB0djV_ZDOsYngnUeceNiTUt60IEKP_Qvg",
-    authDomain: "classe-de-stef.firebaseapp.com",
-    projectId: "classe-de-stef",
-    storageBucket: "classe-de-stef.firebasestorage.app",
-    messagingSenderId: "16372668790",
-    appId: "1:16372668790:web:b1bfed825bfb36111b0257"
-};
-
+const firebaseConfig={apiKey:"AIzaSyB0djV_ZDOsYngnUeceNiTUt60IEKP_Qvg",authDomain:"classe-de-stef.firebaseapp.com",projectId:"classe-de-stef",storageBucket:"classe-de-stef.firebasestorage.app",messagingSenderId:"16372668790",appId:"1:16372668790:web:b1bfed825bfb36111b0257"};
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const db=firebase.firestore();
 
-// ── Étoiles cliquables ──
+let childProfile = null;
 let selectedStars = 5;
-document.querySelectorAll('.star-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        selectedStars = parseInt(btn.dataset.val);
-        document.querySelectorAll('.star-btn').forEach(b => {
-            b.classList.toggle('active', parseInt(b.dataset.val) <= selectedStars);
-        });
-    });
-});
 
-// ── Charger les avis ──
-async function loadAvis() {
-    const list = document.getElementById('avis-list');
-    try {
-        const snap = await db.collection('avis').orderBy('createdAt', 'desc').limit(30).get();
-        if (snap.empty) {
-            list.innerHTML = '<div class="no-avis">Aucun avis pour le moment. Soyez le premier !</div>';
-            return;
-        }
+// Enter key
+document.getElementById('child-firstname').addEventListener('keydown',e=>{if(e.key==='Enter')findChild()});
 
-        let html = '';
-        snap.forEach(doc => {
-            const a = doc.data();
-            const date = a.createdAt ? a.createdAt.toDate().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
-            html += `
-                <div class="avis-card">
-                    <div class="avis-top">
-                        <span class="avis-author-name">${a.author || 'Anonyme'}</span>
-                        <span class="avis-stars-display">${'★'.repeat(a.stars || 5)}${'☆'.repeat(5 - (a.stars || 5))}</span>
-                    </div>
-                    <div class="avis-text-display">"${a.text}"</div>
-                    <div class="avis-date">${date}</div>
-                </div>`;
+// Stars
+const starsContainer = document.getElementById('stars-input');
+for(let i=1;i<=5;i++){
+    const btn=document.createElement('button');btn.className='star-btn active';btn.textContent='★';btn.dataset.val=i;
+    btn.onclick=()=>{selectedStars=i;starsContainer.querySelectorAll('.star-btn').forEach(b=>{b.classList.toggle('active',parseInt(b.dataset.val)<=i)})};
+    starsContainer.appendChild(btn);
+}
+
+// Trouver l'enfant
+async function findChild(){
+    const ln=document.getElementById('child-lastname').value.trim().toLowerCase();
+    const fn=document.getElementById('child-firstname').value.trim().toLowerCase();
+    const err=document.getElementById('id-error');
+    err.textContent='';
+
+    if(!ln||!fn){err.textContent='Veuillez remplir les deux champs.';return}
+
+    try{
+        const snap=await db.collection('users').get();
+        let found=null;
+        snap.forEach(doc=>{
+            const d=doc.data();
+            const dName=(d.name||'').toLowerCase();
+            const dLast=(d.lastname||'').toLowerCase();
+            if(dName===fn && dLast===ln) found=d;
         });
-        list.innerHTML = html;
-    } catch (e) {
-        list.innerHTML = '<div class="no-avis">Impossible de charger les avis.</div>';
+
+        if(!found){err.textContent='Aucun élève trouvé avec ce nom. Vérifiez l\'orthographe.';return}
+
+        childProfile=found;
+        document.getElementById('child-display').textContent=found.name+' '+(found.lastname||'');
+        document.getElementById('prog-child-name').textContent=found.name;
+        document.getElementById('identify-screen').style.display='none';
+        const main=document.getElementById('parent-main');
+        main.style.display='flex';
+    }catch(e){
+        err.textContent='Erreur de connexion. Réessayez.';
     }
 }
 
-loadAvis();
+// Modals
+function openAvisModal(){document.getElementById('avis-modal').classList.add('open')}
+function openProgressionModal(){
+    renderProgression();
+    document.getElementById('prog-modal').classList.add('open');
+}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')})});
 
-// ── Soumettre un avis ──
-async function submitAvis() {
-    const name = document.getElementById('avis-name').value.trim();
-    const text = document.getElementById('avis-text').value.trim();
-    const fb = document.getElementById('avis-feedback');
-    const btn = document.getElementById('btn-avis');
-    fb.textContent = '';
+// Soumettre avis
+async function submitAvis(){
+    const name=document.getElementById('avis-name').value.trim();
+    const text=document.getElementById('avis-text').value.trim();
+    const fb=document.getElementById('modal-fb');
+    const btn=document.getElementById('btn-avis');
+    fb.textContent='';
 
-    if (!name || !text) { fb.textContent = 'Veuillez remplir tous les champs.'; fb.className = 'af-err'; return; }
-    if (text.length < 10) { fb.textContent = 'Votre avis doit contenir au moins 10 caractères.'; fb.className = 'af-err'; return; }
+    if(!name||!text){fb.textContent='Remplissez tous les champs.';fb.className='af-err';return}
+    if(text.length<10){fb.textContent='Votre avis doit contenir au moins 10 caractères.';fb.className='af-err';return}
 
-    btn.disabled = true;
-    btn.textContent = 'Envoi en cours…';
+    btn.disabled=true;btn.textContent='Envoi…';
+    try{
+        await db.collection('avis').add({author:name,text:text,stars:selectedStars,type:'parent',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+        fb.textContent='✓ Merci pour votre avis !';fb.className='af-ok';
+        document.getElementById('avis-name').value='';document.getElementById('avis-text').value='';
+        setTimeout(()=>closeModal('avis-modal'),1500);
+    }catch(e){fb.textContent='Erreur. Réessayez.';fb.className='af-err'}
+    btn.disabled=false;btn.textContent='Envoyer';
+}
 
-    try {
-        await db.collection('avis').add({
-            author: name,
-            text: text,
-            stars: selectedStars,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+// Progression
+function renderProgression(){
+    const p=childProfile;
+    if(!p){document.getElementById('prog-content').innerHTML='<div class="not-found">Données non disponibles.</div>';return}
 
-        fb.textContent = '✓ Merci pour votre avis !';
-        fb.className = 'af-ok';
-        document.getElementById('avis-name').value = '';
-        document.getElementById('avis-text').value = '';
-        selectedStars = 5;
-        document.querySelectorAll('.star-btn').forEach(b => b.classList.add('active'));
+    const totalEx=p.totalExercises||0;
+    const totalCo=p.totalCorrect||0;
+    const pct=totalEx>0?Math.round(totalCo/totalEx*100):0;
 
-        // Recharger les avis
-        setTimeout(loadAvis, 1000);
-    } catch (e) {
-        fb.textContent = 'Erreur lors de l\'envoi. Réessayez.';
-        fb.className = 'af-err';
-    }
+    let html=`
+        <div class="prog-section">
+            <div class="prog-title">Vue d'ensemble</div>
+            <div class="prog-stats">
+                <div class="ps-box"><div class="ps-val">${totalEx}</div><div class="ps-label">Exercices</div></div>
+                <div class="ps-box"><div class="ps-val">${totalCo}</div><div class="ps-label">Corrects</div></div>
+                <div class="ps-box"><div class="ps-val">${pct}%</div><div class="ps-label">Réussite</div></div>
+            </div>
+        </div>`;
 
-    btn.disabled = false;
-    btn.textContent = 'Envoyer mon avis';
+    // Angles
+    const ang=p.scores?.angles||{done:0,correct:0};
+    const angP=ang.done>0?Math.round(ang.correct/ang.done*100):0;
+    html+=`<div class="prog-section"><div class="prog-title">📐 Angles</div>${barRow('Mesure',ang.done,ang.correct,angP)}</div>`;
+
+    // Fractions
+    const fracKeys=['comparer','convertir','arrondir','simplifier','add-sub','multiplier','diviser'];
+    const fracLabels={comparer:'Comparer',convertir:'Convertir',arrondir:'Arrondir',simplifier:'Simplifier','add-sub':'Add/Soustr',multiplier:'Multiplier',diviser:'Diviser'};
+    let fracHTML='';
+    fracKeys.forEach(k=>{
+        const s=p.scores?.fractions?.[k]||{done:0,correct:0};
+        const sp=s.done>0?Math.round(s.correct/s.done*100):0;
+        fracHTML+=barRow(fracLabels[k],s.done,s.correct,sp);
+    });
+    html+=`<div class="prog-section"><div class="prog-title">½ Fractions</div>${fracHTML}</div>`;
+
+    // Algèbre
+    const algKeys=['comprendre','evaluer','simplifier','parentheses','developper','factoriser','identites','polynomes','problemes'];
+    const algLabels={comprendre:'Comprendre',evaluer:'Évaluer',simplifier:'Simplifier',parentheses:'Parenthèses',developper:'Développer',factoriser:'Factoriser',identites:'Identités',polynomes:'Polynômes',problemes:'Problèmes'};
+    let algHTML='';
+    algKeys.forEach(k=>{
+        const s=p.scores?.algebre?.[k]||{done:0,correct:0};
+        const sp=s.done>0?Math.round(s.correct/s.done*100):0;
+        algHTML+=barRow(algLabels[k],s.done,s.correct,sp);
+    });
+    html+=`<div class="prog-section"><div class="prog-title">𝑥 Algèbre</div>${algHTML}</div>`;
+
+    // Badges
+    const badges=p.badges||[];
+    html+=`<div class="prog-section"><div class="prog-title">🏆 Badges (${badges.length})</div><div style="font-size:28px;letter-spacing:4px;text-align:center;min-height:30px">${badges.length>0?badges.map(()=>'⭐').join(''):'Aucun badge pour le moment'}</div></div>`;
+
+    document.getElementById('prog-content').innerHTML=html;
+}
+
+function barRow(name,done,correct,pct){
+    return `<div class="prog-bar-row"><span class="prog-bar-name">${name}</span><div class="prog-bar-bg"><div class="prog-bar-fill" style="width:${pct}%"></div></div><span class="prog-bar-score">${correct}/${done}</span></div>`;
 }
 </script>
-
 </body>
 </html>

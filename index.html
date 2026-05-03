@@ -7,316 +7,107 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        html, body {
-            height: 100%;
-            overflow: hidden;
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html,body{height:100%;overflow:hidden}
+        body{
+            font-family:'DM Sans',sans-serif;
+            background:linear-gradient(135deg,#040804 0%,#061008 25%,#081a0e 50%,#0a2414 75%,#040804 100%);
+            background-size:400% 400%;animation:grad 20s ease infinite;
+            color:#e8f5e9;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;
         }
+        @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .math-symbols{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+        .math-sym{position:absolute;font-size:24px;opacity:0;color:rgba(46,204,113,0.06);animation:floatSym linear infinite;font-family:'JetBrains Mono',monospace;user-select:none}
+        @keyframes floatSym{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:0.08}90%{opacity:0.04}100%{transform:translateY(-80px) rotate(360deg);opacity:0}}
 
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: linear-gradient(135deg, #040804 0%, #061008 25%, #081a0e 50%, #0a2414 75%, #040804 100%);
-            background-size: 400% 400%;
-            animation: grad 20s ease infinite;
-            color: #e8f5e9;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
+        .page{position:relative;z-index:1;width:100%;max-width:660px;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 20px;gap:18px}
+        .logo-wrap{background:rgba(10,30,16,0.5);border:1px solid rgba(40,100,55,0.2);border-radius:20px;padding:14px 32px;backdrop-filter:blur(12px)}
+        .logo-wrap img{max-height:60px;width:auto;display:block}
+        .welcome-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;font-style:italic;text-align:center;line-height:1.2;background:linear-gradient(135deg,#2ecc71 0%,#a8f0c0 40%,#2ecc71 70%,#a8f0c0 100%);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 6s ease infinite}
+        @keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .subtitle{font-size:13px;color:rgba(46,204,113,0.45);text-align:center;letter-spacing:0.12em;text-transform:uppercase;font-weight:600}
 
-        @keyframes grad {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;width:100%}
+        .space-card{background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:22px;padding:32px 20px;text-decoration:none;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;transition:transform 0.2s,background 0.2s,border-color 0.2s,box-shadow 0.2s;backdrop-filter:blur(8px);position:relative;overflow:hidden}
+        .space-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 50% 30%,rgba(46,204,113,0.04),transparent 60%);pointer-events:none}
+        .space-card:hover{transform:translateY(-5px);background:rgba(20,50,28,0.7);border-color:rgba(46,204,113,0.45);box-shadow:0 16px 50px rgba(0,0,0,0.35)}
+        .space-icon{font-size:48px;width:80px;height:80px;display:flex;align-items:center;justify-content:center;border-radius:20px}
+        .si-eleve{background:rgba(46,204,113,0.1)}
+        .si-parent{background:rgba(52,152,219,0.1)}
+        .space-title{font-size:20px;font-weight:700}
+        .space-desc{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5}
 
-        /* Symboles flottants */
-        .math-symbols { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:hidden; }
-        .math-sym {
-            position: absolute; font-size: 24px; opacity: 0;
-            color: rgba(46,204,113,0.06);
-            animation: floatSym linear infinite;
-            font-family: 'JetBrains Mono', monospace; user-select: none;
-        }
-        @keyframes floatSym {
-            0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10%  { opacity: 0.08; }
-            90%  { opacity: 0.04; }
-            100% { transform: translateY(-80px) rotate(360deg); opacity: 0; }
-        }
+        .avis-wrap{width:100%;background:rgba(10,30,16,0.4);border:1px solid rgba(40,100,55,0.15);border-radius:14px;padding:12px 16px;overflow:hidden;position:relative;height:52px}
+        .avis-track{display:flex;flex-direction:column;animation:scrollAvis 20s linear infinite;gap:14px}
+        @keyframes scrollAvis{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
+        .avis-item{display:flex;align-items:center;gap:10px;white-space:nowrap;min-height:28px}
+        .avis-stars{color:#f39c12;font-size:12px;letter-spacing:1px}
+        .avis-text{font-size:12px;color:rgba(255,255,255,0.55);font-style:italic}
+        .avis-author{font-size:11px;color:rgba(46,204,113,0.5);font-weight:600}
 
-        /* ── Layout principal (tout dans la fenêtre) ── */
-        .page {
-            position: relative; z-index: 1;
-            width: 100%; max-width: 660px;
-            height: 100vh;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            padding: 16px 20px;
-            gap: 18px;
-        }
+        .stef-btn{position:fixed;bottom:50px;right:24px;z-index:10;width:50px;height:50px;border-radius:50%;background:rgba(46,204,113,0.15);border:2px solid rgba(46,204,113,0.3);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;transition:all 0.2s;text-decoration:none;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+        .stef-btn:hover{background:rgba(46,204,113,0.25);border-color:rgba(46,204,113,0.5);transform:scale(1.1)}
 
-        /* Logo */
-        .logo-wrap {
-            background: rgba(10,30,16,0.5);
-            border: 1px solid rgba(40,100,55,0.2);
-            border-radius: 20px; padding: 14px 32px;
-            backdrop-filter: blur(12px);
-        }
-        .logo-wrap img { max-height: 60px; width: auto; display: block; }
+        .footer{font-size:9px;color:rgba(46,204,113,0.18);text-align:center;letter-spacing:0.03em;line-height:1.4}
 
-        /* Titre */
-        .welcome-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 28px; font-weight: 700; font-style: italic;
-            text-align: center; line-height: 1.2;
-            background: linear-gradient(135deg, #2ecc71 0%, #a8f0c0 40%, #2ecc71 70%, #a8f0c0 100%);
-            background-size: 300% 300%;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text; animation: shimmer 6s ease infinite;
-        }
-        @keyframes shimmer { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+        .modal-overlay.open{display:flex}
+        .modal-box{background:#081a0e;border:1px solid rgba(40,100,55,0.3);border-radius:22px;padding:32px 28px;width:90%;max-width:440px;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;max-height:85vh;overflow-y:auto}
+        .modal-close{align-self:flex-end;background:none;border:none;color:rgba(255,255,255,0.3);font-size:22px;cursor:pointer}
+        .modal-close:hover{color:#e74c3c}
+        .modal-avatar-big{font-size:64px}
+        .modal-name{font-family:'Playfair Display',serif;font-style:italic;font-size:24px;font-weight:700;color:#2ecc71}
+        .modal-section{width:100%;text-align:left}
+        .modal-section-title{font-size:12px;font-weight:700;color:rgba(46,204,113,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+        .modal-section p{font-size:13px;line-height:1.7;color:rgba(255,255,255,0.6)}
+        .modal-contact{display:flex;flex-direction:column;gap:8px;width:100%}
+        .contact-row{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,0.55)}
+        .contact-row span:first-child{font-size:18px}
 
-        /* Mini badges */
-        #badges-mini {
-            display: none; align-items: center; gap: 6px;
-        }
-        #badges-mini a {
-            display: flex; align-items: center; gap: 6px;
-            background: rgba(46,204,113,0.08);
-            border: 1px solid rgba(46,204,113,0.18);
-            border-radius: 100px; padding: 5px 12px;
-            text-decoration: none; color: #2ecc71;
-            font-size: 11px; font-weight: 700;
-            transition: all 0.2s;
-        }
-        #badges-mini a:hover { background: rgba(46,204,113,0.15); border-color: rgba(46,204,113,0.4); }
-        #badges-mini .mini-emojis { font-size: 14px; letter-spacing: 1px; }
-
-        /* ── Grille 2 cartes ── */
-        .grid-2 {
-            display: grid; grid-template-columns: repeat(2, 1fr);
-            gap: 16px; width: 100%;
-        }
-
-        .space-card {
-            background: rgba(10,30,16,0.55);
-            border: 1px solid rgba(40,100,55,0.25);
-            border-radius: 22px;
-            padding: 32px 20px;
-            text-decoration: none; color: #e8f5e9;
-            display: flex; flex-direction: column;
-            align-items: center; text-align: center; gap: 16px;
-            transition: transform 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
-            backdrop-filter: blur(8px);
-            position: relative; overflow: hidden;
-        }
-
-        .space-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 30%, rgba(46,204,113,0.04), transparent 60%);
-            pointer-events: none;
-        }
-
-        .space-card:hover {
-            transform: translateY(-5px);
-            background: rgba(20,50,28,0.7);
-            border-color: rgba(46,204,113,0.45);
-            box-shadow: 0 16px 50px rgba(0,0,0,0.35);
-        }
-
-        .space-icon {
-            font-size: 48px; width: 80px; height: 80px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 20px;
-        }
-
-        .si-eleve  { background: rgba(46,204,113,0.1); }
-        .si-parent { background: rgba(52,152,219,0.1); }
-
-        .space-title { font-size: 20px; font-weight: 700; }
-
-        .space-desc { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.5; }
-
-        /* ── Avis défilant ── */
-        .avis-wrap {
-            width: 100%;
-            background: rgba(10,30,16,0.4);
-            border: 1px solid rgba(40,100,55,0.15);
-            border-radius: 14px;
-            padding: 12px 16px;
-            overflow: hidden;
-            position: relative;
-            height: 52px;
-        }
-
-        .avis-track {
-            display: flex; flex-direction: column;
-            animation: scrollAvis 20s linear infinite;
-            gap: 14px;
-        }
-
-        @keyframes scrollAvis {
-            0%   { transform: translateY(0); }
-            100% { transform: translateY(-50%); }
-        }
-
-        .avis-item {
-            display: flex; align-items: center; gap: 10px;
-            white-space: nowrap; min-height: 28px;
-        }
-
-        .avis-stars { color: #f39c12; font-size: 12px; letter-spacing: 1px; }
-        .avis-text  { font-size: 12px; color: rgba(255,255,255,0.55); font-style: italic; }
-        .avis-author { font-size: 11px; color: rgba(46,204,113,0.5); font-weight: 600; }
-
-        /* ── Bouton profil Stef ── */
-        .stef-btn {
-            position: fixed; bottom: 50px; right: 24px; z-index: 10;
-            width: 50px; height: 50px; border-radius: 50%;
-            background: rgba(46,204,113,0.15);
-            border: 2px solid rgba(46,204,113,0.3);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; cursor: pointer;
-            transition: all 0.2s; text-decoration: none;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-        .stef-btn:hover { background: rgba(46,204,113,0.25); border-color: rgba(46,204,113,0.5); transform: scale(1.1); }
-
-        /* ── Footer ── */
-        .footer {
-            font-size: 9px; color: rgba(46,204,113,0.18);
-            text-align: center; letter-spacing: 0.03em; line-height: 1.4;
-        }
-
-        /* ── Modal Stef ── */
-        .modal-overlay {
-            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.8); z-index: 1000;
-            align-items: center; justify-content: center;
-            backdrop-filter: blur(8px);
-        }
-        .modal-overlay.open { display: flex; }
-
-        .modal-box {
-            background: #081a0e;
-            border: 1px solid rgba(40,100,55,0.3);
-            border-radius: 22px; padding: 32px 28px;
-            width: 90%; max-width: 440px;
-            display: flex; flex-direction: column; align-items: center;
-            gap: 18px; text-align: center;
-            max-height: 85vh; overflow-y: auto;
-        }
-
-        .modal-close {
-            align-self: flex-end; background: none; border: none;
-            color: rgba(255,255,255,0.3); font-size: 22px; cursor: pointer;
-        }
-        .modal-close:hover { color: #e74c3c; }
-
-        .modal-avatar-big { font-size: 64px; }
-
-        .modal-name {
-            font-family: 'Playfair Display', serif; font-style: italic;
-            font-size: 24px; font-weight: 700; color: #2ecc71;
-        }
-
-        .modal-section {
-            width: 100%; text-align: left;
-        }
-
-        .modal-section-title {
-            font-size: 12px; font-weight: 700; color: rgba(46,204,113,0.5);
-            text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;
-        }
-
-        .modal-section p {
-            font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.6);
-        }
-
-        .modal-contact {
-            display: flex; flex-direction: column; gap: 8px; width: 100%;
-        }
-
-        .contact-row {
-            display: flex; align-items: center; gap: 10px;
-            font-size: 13px; color: rgba(255,255,255,0.55);
-        }
-
-        .contact-row span:first-child { font-size: 18px; }
-
-        @media (max-width: 520px) {
-            .welcome-title { font-size: 22px; }
-            .grid-2 { grid-template-columns: 1fr; }
-            .space-card { padding: 24px 16px; }
-            .stef-btn { bottom: 20px; right: 16px; width: 44px; height: 44px; font-size: 20px; }
-        }
+        @media(max-width:520px){.welcome-title{font-size:22px}.grid-2{grid-template-columns:1fr}.stef-btn{bottom:20px;right:16px;width:44px;height:44px;font-size:20px}}
     </style>
 </head>
 <body>
-
 <div class="math-symbols" id="math-bg"></div>
 
 <div class="page">
-
-    <div class="logo-wrap">
-        <img src="logo.png" alt="Logo">
-    </div>
-
+    <div class="logo-wrap"><img src="logo.png" alt="Logo"></div>
     <h1 class="welcome-title">Bienvenue dans la Classe de Stef</h1>
-
-    <div id="badges-mini"></div>
+    <p class="subtitle">Assistant scolaire interactif</p>
 
     <div class="grid-2">
         <a href="eleve.html" class="space-card">
             <div class="space-icon si-eleve">🎓</div>
             <div class="space-title">Espace Élève</div>
-            <div class="space-desc">Exercices, méthodologie, développement personnel et boîte à outils.</div>
+            <div class="space-desc">Exercices, méthodologie et développement personnel.</div>
         </a>
-
         <a href="parent.html" class="space-card">
             <div class="space-icon si-parent">👨‍👩‍👧‍👦</div>
             <div class="space-title">Espace Parent</div>
-            <div class="space-desc">Découvrez l'approche pédagogique, les avis et le suivi de votre enfant.</div>
+            <div class="space-desc">Suivi, avis et informations pratiques.</div>
         </a>
     </div>
 
-    <!-- Avis défilant -->
-    <div class="avis-wrap">
-        <div class="avis-track" id="avis-track">
-            <!-- Rempli par JS depuis Firebase -->
-        </div>
-    </div>
+    <div class="avis-wrap"><div class="avis-track" id="avis-track"></div></div>
 
-    <div class="footer">
-        © 2026 Laclassedestef. Tous droits réservés | site créé par N.Scotte et S.Gans
-    </div>
-
+    <div class="footer">© 2026 Laclassedestef. Tous droits réservés | site créé par N.Scotte et S.Gans</div>
 </div>
 
-<!-- Bouton rond profil Stef -->
 <div class="stef-btn" onclick="openStef()">👩‍🏫</div>
 
-<!-- Modal profil Stef -->
 <div class="modal-overlay" id="stef-modal">
     <div class="modal-box">
         <button class="modal-close" onclick="closeStef()">✕</button>
         <div class="modal-avatar-big">👩‍🏫</div>
         <div class="modal-name">Stef</div>
-
         <div class="modal-section">
             <div class="modal-section-title">🙋‍♀️ Qui suis-je ?</div>
-            <p>Enseignante passionnée, je crois que chaque élève a le potentiel de réussir. Mon approche mêle bienveillance, méthodologie et outils concrets pour accompagner les jeunes dans leur parcours scolaire.</p>
+            <p>Enseignante passionnée, je crois que chaque élève a le potentiel de réussir. Mon approche mêle bienveillance, méthodologie et outils concrets.</p>
         </div>
-
         <div class="modal-section">
             <div class="modal-section-title">📚 Mon parcours</div>
-            <p>Diplômée en sciences de l'éducation, j'accompagne des élèves du secondaire depuis plusieurs années. Spécialisée en remédiation et en méthodologie, j'ai développé des outils interactifs pour rendre l'apprentissage plus engageant.</p>
+            <p>Diplômée en sciences de l'éducation, j'accompagne des élèves du secondaire depuis plusieurs années. Spécialisée en remédiation et méthodologie.</p>
         </div>
-
         <div class="modal-section">
             <div class="modal-section-title">📬 Me contacter</div>
             <div class="modal-contact">
@@ -329,86 +120,35 @@
 </div>
 
 <script>
-function openStef() { document.getElementById('stef-modal').classList.add('open'); }
-function closeStef() { document.getElementById('stef-modal').classList.remove('open'); }
-document.getElementById('stef-modal').addEventListener('click', e => {
-    if (e.target === document.getElementById('stef-modal')) closeStef();
-});
+function openStef(){document.getElementById('stef-modal').classList.add('open')}
+function closeStef(){document.getElementById('stef-modal').classList.remove('open')}
+document.getElementById('stef-modal').addEventListener('click',e=>{if(e.target===document.getElementById('stef-modal'))closeStef()});
 
-// Symboles flottants
-const symbols = ['∑','π','√','∞','∠','△','÷','×','±','≈','½','𝑥','θ'];
-const mathBg = document.getElementById('math-bg');
-function createSym() {
-    const el = document.createElement('span');
-    el.className = 'math-sym';
-    el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-    el.style.left = Math.random() * 100 + '%';
-    el.style.fontSize = (16 + Math.random() * 24) + 'px';
-    el.style.animationDuration = (18 + Math.random() * 25) + 's';
-    el.style.animationDelay = Math.random() * 4 + 's';
-    mathBg.appendChild(el);
-    setTimeout(() => el.remove(), 45000);
-}
-for (let i = 0; i < 10; i++) setTimeout(createSym, i * 700);
-setInterval(createSym, 3000);
+const symbols=['∑','π','√','∞','∠','△','÷','×','±','≈','½','𝑥','θ'];
+const mathBg=document.getElementById('math-bg');
+function createSym(){const el=document.createElement('span');el.className='math-sym';el.textContent=symbols[Math.floor(Math.random()*symbols.length)];el.style.left=Math.random()*100+'%';el.style.fontSize=(16+Math.random()*24)+'px';el.style.animationDuration=(18+Math.random()*25)+'s';el.style.animationDelay=Math.random()*4+'s';mathBg.appendChild(el);setTimeout(()=>el.remove(),45000)}
+for(let i=0;i<10;i++)setTimeout(createSym,i*700);setInterval(createSym,3000);
 </script>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="auth.js"></script>
-<script src="badges-system.js"></script>
 <script>
-requireAuth((user, profile) => {
-    injectUserBar(user, profile);
+const firebaseConfig={apiKey:"AIzaSyB0djV_ZDOsYngnUeceNiTUt60IEKP_Qvg",authDomain:"classe-de-stef.firebaseapp.com",projectId:"classe-de-stef",storageBucket:"classe-de-stef.firebasestorage.app",messagingSenderId:"16372668790",appId:"1:16372668790:web:b1bfed825bfb36111b0257"};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.firestore();
 
-    // Mini badges
-    const userBadges = profile.badges || [];
-    const mini = document.getElementById('badges-mini');
-    if (userBadges.length > 0) {
-        const emojis = userBadges.slice(0, 6).map(id => {
-            const b = ALL_BADGES.find(x => x.id === id);
-            return b ? b.emoji : '';
-        }).join('');
-        mini.innerHTML = `<a href="badges.html"><span class="mini-emojis">${emojis}</span> 🏆 ${userBadges.length}/${ALL_BADGES.length}</a>`;
-    } else {
-        mini.innerHTML = `<a href="badges.html">🏆 Commence à collecter des succès !</a>`;
-    }
-    mini.style.display = 'flex';
-});
-
-// Charger les avis depuis Firebase
-async function loadAvis() {
-    const track = document.getElementById('avis-track');
-    try {
-        const snap = await db.collection('avis').orderBy('createdAt', 'desc').limit(20).get();
-        const avis = [];
-        snap.forEach(doc => avis.push(doc.data()));
-
-        if (avis.length === 0) {
-            track.innerHTML = '<div class="avis-item"><span class="avis-text">Soyez le premier à laisser un avis !</span></div>';
-            return;
-        }
-
-        // Doubler pour boucle infinie
-        const allAvis = [...avis, ...avis];
-        track.innerHTML = allAvis.map(a => `
-            <div class="avis-item">
-                <span class="avis-stars">${'★'.repeat(a.stars || 5)}</span>
-                <span class="avis-text">"${a.text}"</span>
-                <span class="avis-author">— ${a.author || 'Anonyme'}</span>
-            </div>
-        `).join('');
-
-        // Ajuster la durée de l'animation selon le nombre d'avis
-        track.style.animationDuration = (avis.length * 4) + 's';
-    } catch (e) {
-        track.innerHTML = '<div class="avis-item"><span class="avis-text">Chargement des avis…</span></div>';
-    }
+async function loadAvis(){
+    const track=document.getElementById('avis-track');
+    try{
+        const snap=await db.collection('avis').orderBy('createdAt','desc').limit(20).get();
+        const avis=[];snap.forEach(d=>avis.push(d.data()));
+        if(avis.length===0){track.innerHTML='<div class="avis-item"><span class="avis-text">Soyez le premier à laisser un avis !</span></div>';return}
+        const all=[...avis,...avis];
+        track.innerHTML=all.map(a=>`<div class="avis-item"><span class="avis-stars">${'★'.repeat(a.stars||5)}</span><span class="avis-text">"${a.text}"</span><span class="avis-author">— ${a.author||'Anonyme'}</span></div>`).join('');
+        track.style.animationDuration=(avis.length*4)+'s';
+    }catch(e){track.innerHTML='<div class="avis-item"><span class="avis-text">Chargement des avis…</span></div>'}
 }
 loadAvis();
 </script>
-
 </body>
 </html>

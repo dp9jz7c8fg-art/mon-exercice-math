@@ -7,173 +7,149 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #040804 0%, #061008 25%, #081a0e 50%, #0a2414 75%, #040804 100%);
-            background-size: 400% 400%;
-            animation: grad 20s ease infinite;
-            color: #e8f5e9;
-            display: flex; flex-direction: column; align-items: center;
-            overflow-x: hidden;
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html,body{height:100%;overflow:hidden}
+        body{
+            font-family:'DM Sans',sans-serif;
+            background:linear-gradient(135deg,#040804 0%,#061008 25%,#081a0e 50%,#0a2414 75%,#040804 100%);
+            background-size:400% 400%;animation:grad 20s ease infinite;
+            color:#e8f5e9;display:flex;flex-direction:column;align-items:center;justify-content:center;
         }
+        @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-        @keyframes grad {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        .page{width:100%;max-width:680px;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 18px;gap:14px}
 
-        .content {
-            width: 100%; max-width: 700px;
-            padding: 20px 16px 60px;
-            display: flex; flex-direction: column; align-items: center; gap: 24px;
-        }
+        /* Nav */
+        .nav{width:100%;display:flex;justify-content:space-between;align-items:center}
+        .nav a{color:rgba(46,204,113,0.5);text-decoration:none;font-size:13px;font-weight:600;transition:color 0.15s}
+        .nav a:hover{color:#2ecc71}
 
-        .nav { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-        .nav a { color: rgba(46,204,113,0.5); text-decoration: none; font-size: 13px; font-weight: 600; transition: color 0.15s; }
-        .nav a:hover { color: #2ecc71; }
+        /* Profil élève */
+        .eleve-profile{display:flex;align-items:center;gap:14px;width:100%;background:rgba(10,30,16,0.5);border:1px solid rgba(40,100,55,0.2);border-radius:16px;padding:12px 18px;backdrop-filter:blur(8px)}
+        .ep-avatar{font-size:38px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(46,204,113,0.08);border:2px solid rgba(46,204,113,0.2);flex-shrink:0;cursor:pointer;transition:border-color 0.2s}
+        .ep-avatar:hover{border-color:rgba(46,204,113,0.5)}
+        .ep-info{display:flex;flex-direction:column;gap:3px;flex:1}
+        .ep-name{font-size:17px;font-weight:700;color:#e8f5e9}
+        .ep-badges{display:flex;align-items:center;gap:6px}
+        .ep-badges a{display:flex;align-items:center;gap:5px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.15);border-radius:100px;padding:3px 10px;text-decoration:none;color:#2ecc71;font-size:10px;font-weight:700;transition:all 0.15s}
+        .ep-badges a:hover{background:rgba(46,204,113,0.15);border-color:rgba(46,204,113,0.3)}
+        .ep-badges .mini-emojis{font-size:13px;letter-spacing:1px}
+        .ep-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+        .ep-logout{background:none;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:4px 10px;font-size:10px;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.3);cursor:pointer;transition:all 0.15s}
+        .ep-logout:hover{border-color:rgba(239,68,68,0.3);color:#ef4444}
 
-        .page-header { text-align: center; display: flex; flex-direction: column; gap: 6px; align-items: center; }
-        .page-icon { font-size: 44px; }
-        .page-title {
-            font-family: 'Playfair Display', serif; font-style: italic;
-            font-size: 28px; font-weight: 700;
-            background: linear-gradient(135deg, #2ecc71, #a8f0c0, #2ecc71);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .page-sub { font-size: 12px; color: rgba(46,204,113,0.4); letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
+        /* Grille 2x2 */
+        .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;width:100%}
+        .card{background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:20px;padding:24px 16px;text-decoration:none;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;transition:transform 0.2s,background 0.2s,border-color 0.2s,box-shadow 0.2s;backdrop-filter:blur(8px);position:relative;overflow:hidden}
+        .card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 50% 30%,rgba(46,204,113,0.03),transparent 60%);pointer-events:none}
+        .card:hover{transform:translateY(-4px);background:rgba(20,50,28,0.7);border-color:rgba(46,204,113,0.4);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+        .card.disabled{opacity:0.4;pointer-events:none}
+        .card-icon{font-size:36px;width:60px;height:60px;display:flex;align-items:center;justify-content:center;border-radius:16px}
+        .ci-math{background:rgba(46,204,113,0.12)}.ci-methodo{background:rgba(52,152,219,0.12)}.ci-dev{background:rgba(155,89,182,0.12)}.ci-outils{background:rgba(243,156,18,0.12)}
+        .card-title{font-size:15px;font-weight:700}
+        .card-desc{font-size:11px;color:rgba(255,255,255,0.4);line-height:1.4}
+        .card-badge{display:inline-flex;padding:3px 8px;border-radius:100px;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase}
+        .badge-ready{background:rgba(46,204,113,0.15);color:#2ecc71}
+        .badge-soon{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.3)}
 
-        .grid {
-            display: grid; grid-template-columns: repeat(2, 1fr);
-            gap: 16px; width: 100%;
-        }
+        /* Bouton avis */
+        .btn-avis{width:100%;background:rgba(10,30,16,0.4);border:1px solid rgba(40,100,55,0.15);border-radius:12px;padding:10px;text-align:center;font-size:12px;font-weight:600;color:rgba(46,204,113,0.5);cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+        .btn-avis:hover{background:rgba(46,204,113,0.08);border-color:rgba(46,204,113,0.3);color:#2ecc71}
 
-        .card {
-            background: rgba(10,30,16,0.6);
-            border: 1px solid rgba(40,100,55,0.25);
-            border-radius: 20px; padding: 28px 20px;
-            text-decoration: none; color: #e8f5e9;
-            display: flex; flex-direction: column; align-items: center;
-            text-align: center; gap: 14px;
-            transition: transform 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
-            backdrop-filter: blur(8px); position: relative; overflow: hidden;
-        }
+        /* Modal avis */
+        .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+        .modal-overlay.open{display:flex}
+        .modal-box{background:#081a0e;border:1px solid rgba(40,100,55,0.3);border-radius:20px;padding:28px 24px;width:90%;max-width:420px;display:flex;flex-direction:column;gap:14px}
+        .modal-close{align-self:flex-end;background:none;border:none;color:rgba(255,255,255,0.3);font-size:20px;cursor:pointer}
+        .modal-close:hover{color:#e74c3c}
+        .modal-title{font-size:16px;font-weight:700;text-align:center}
+        .form-row{display:flex;flex-direction:column;gap:4px}
+        .form-row label{font-size:10px;font-weight:600;color:rgba(46,204,113,0.5);text-transform:uppercase;letter-spacing:0.06em}
+        .form-row textarea{background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:8px;padding:12px;font-size:13px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none;resize:vertical;min-height:70px;width:100%}
+        .form-row textarea::placeholder{color:rgba(255,255,255,0.2)}
+        .form-row textarea:focus{border-color:rgba(46,204,113,0.4)}
+        .stars-input{display:flex;gap:6px}
+        .star-btn{font-size:28px;cursor:pointer;color:rgba(255,255,255,0.15);transition:color 0.15s,transform 0.1s;background:none;border:none;padding:0}
+        .star-btn.active{color:#f39c12}
+        .star-btn:hover{transform:scale(1.2)}
+        .btn-submit{background:#2ecc71;color:#040804;border:none;border-radius:10px;padding:12px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;transition:opacity 0.15s}
+        .btn-submit:hover{opacity:0.85}
+        .btn-submit:disabled{opacity:0.4}
+        #avis-fb{font-size:12px;text-align:center;min-height:16px}
+        .af-ok{color:#2ecc71}.af-err{color:#e74c3c}
 
-        .card::before {
-            content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
-            background: radial-gradient(circle at 50% 30%, rgba(46,204,113,0.03), transparent 60%);
-            pointer-events: none;
-        }
-
-        .card:hover {
-            transform: translateY(-4px); background: rgba(20,50,28,0.7);
-            border-color: rgba(46,204,113,0.4); box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-        }
-
-        .card.disabled { opacity: 0.4; pointer-events: none; }
-
-        .card-icon {
-            font-size: 38px; width: 64px; height: 64px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 16px;
-        }
-
-        .ci-math    { background: rgba(46,204,113,0.12); }
-        .ci-methodo { background: rgba(52,152,219,0.12); }
-        .ci-dev     { background: rgba(155,89,182,0.12); }
-        .ci-outils  { background: rgba(243,156,18,0.12); }
-
-        .card-title { font-size: 17px; font-weight: 700; }
-        .card-desc { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.5; }
-
-        .card-tags { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
-        .tag { font-size: 9px; font-weight: 600; padding: 3px 8px; border-radius: 100px; }
-        .tag.green  { background: rgba(46,204,113,0.08); color: rgba(46,204,113,0.55); border: 1px solid rgba(46,204,113,0.1); }
-        .tag.blue   { background: rgba(52,152,219,0.08); color: rgba(52,152,219,0.65); border: 1px solid rgba(52,152,219,0.1); }
-        .tag.purple { background: rgba(155,89,182,0.08); color: rgba(155,89,182,0.65); border: 1px solid rgba(155,89,182,0.1); }
-        .tag.orange { background: rgba(243,156,18,0.08); color: rgba(243,156,18,0.65); border: 1px solid rgba(243,156,18,0.1); }
-
-        .card-badge {
-            display: inline-flex; padding: 4px 10px; border-radius: 100px;
-            font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-        }
-        .badge-ready { background: rgba(46,204,113,0.15); color: #2ecc71; }
-        .badge-soon  { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.3); }
-
-        @media (max-width: 520px) {
-            .grid { grid-template-columns: 1fr; }
-            .page-title { font-size: 22px; }
-        }
+        @media(max-width:520px){.grid{grid-template-columns:1fr}.page{gap:10px;padding:10px 14px}.ep-name{font-size:15px}.card{padding:18px 14px}}
     </style>
 </head>
 <body>
 
-<div class="content">
+<div class="page">
+
     <div class="nav">
         <a href="index.html">← Accueil</a>
         <a href="profil.html">Mon profil</a>
     </div>
 
-    <div class="page-header">
-        <span class="page-icon">🎓</span>
-        <h1 class="page-title">Espace Élève</h1>
-        <p class="page-sub">Choisis ton domaine</p>
+    <!-- Profil élève -->
+    <div class="eleve-profile">
+        <div class="ep-avatar" id="ep-avatar" onclick="window.location.href='profil.html'" title="Mon profil">🦊</div>
+        <div class="ep-info">
+            <div class="ep-name" id="ep-name">Chargement…</div>
+            <div class="ep-badges" id="ep-badges"></div>
+        </div>
+        <div class="ep-right">
+            <button class="ep-logout" onclick="logout()">Déconnexion</button>
+        </div>
     </div>
 
+    <!-- Grille 4 chapitres -->
     <div class="grid">
-
         <a href="maths.html" class="card">
             <div class="card-icon ci-math">📐</div>
             <div class="card-title">Mathématiques</div>
-            <div class="card-desc">Exercices en ligne et suivi en présentiel.</div>
-            <div class="card-tags">
-                <span class="tag green">Angles</span>
-                <span class="tag green">Fractions</span>
-                <span class="tag green">Algèbre</span>
-            </div>
+            <div class="card-desc">Exercices et suivi en présentiel.</div>
             <span class="card-badge badge-ready">Disponible</span>
         </a>
-
         <div class="card disabled">
             <div class="card-icon ci-methodo">🧠</div>
             <div class="card-title">Méthodologie</div>
-            <div class="card-desc">Apprendre à apprendre : cerveau, organisation et stratégies.</div>
-            <div class="card-tags">
-                <span class="tag blue">Cerveau</span>
-                <span class="tag blue">Organisation</span>
-                <span class="tag blue">Mémorisation</span>
-            </div>
+            <div class="card-desc">Apprendre à apprendre.</div>
             <span class="card-badge badge-soon">Bientôt</span>
         </div>
-
         <div class="card disabled">
             <div class="card-icon ci-dev">🌱</div>
             <div class="card-title">Développement de soi</div>
-            <div class="card-desc">Mieux te connaître et construire ton avenir.</div>
-            <div class="card-tags">
-                <span class="tag purple">Orientation</span>
-                <span class="tag purple">Émotions</span>
-                <span class="tag purple">Profil</span>
-            </div>
+            <div class="card-desc">Émotions, orientation, profil.</div>
             <span class="card-badge badge-soon">Bientôt</span>
         </div>
-
         <div class="card disabled">
             <div class="card-icon ci-outils">🧰</div>
             <div class="card-title">Boîte à outils</div>
-            <div class="card-desc">Fiches et ressources pour les cours.</div>
-            <div class="card-tags">
-                <span class="tag orange">Math</span>
-                <span class="tag orange">Français</span>
-                <span class="tag orange">Sciences</span>
-                <span class="tag orange">EDM</span>
-            </div>
+            <div class="card-desc">Fiches et ressources.</div>
             <span class="card-badge badge-soon">Bientôt</span>
         </div>
+    </div>
 
+    <!-- Bouton avis -->
+    <button class="btn-avis" onclick="openAvisModal()">✍️ Laisser un avis</button>
+
+</div>
+
+<!-- Modal avis -->
+<div class="modal-overlay" id="avis-modal">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeAvisModal()">✕</button>
+        <div class="modal-title">✍️ Ton avis compte !</div>
+        <div class="form-row">
+            <label>Note</label>
+            <div class="stars-input" id="stars-input"></div>
+        </div>
+        <div class="form-row">
+            <label>Ton avis</label>
+            <textarea id="avis-text" placeholder="Dis-nous ce que tu penses…"></textarea>
+        </div>
+        <button class="btn-submit" id="btn-avis-submit" onclick="submitAvis()">Envoyer</button>
+        <div id="avis-fb"></div>
     </div>
 </div>
 
@@ -181,7 +157,89 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="auth.js"></script>
-<script>requireAuth((user, profile) => { injectUserBar(user, profile); });</script>
+<script src="badges-system.js"></script>
+<script>
+let currentUserData = null;
 
+requireAuth((user, profile) => {
+    currentUserData = { user, profile };
+
+    // Afficher profil
+    document.getElementById('ep-avatar').textContent = profile.avatar || '🦊';
+    document.getElementById('ep-name').textContent = profile.name || 'Élève';
+
+    // Badges mini
+    const badges = profile.badges || [];
+    const container = document.getElementById('ep-badges');
+    if (badges.length > 0) {
+        const emojis = badges.slice(0, 6).map(id => {
+            const b = ALL_BADGES.find(x => x.id === id);
+            return b ? b.emoji : '';
+        }).join('');
+        container.innerHTML = `<a href="badges.html"><span class="mini-emojis">${emojis}</span> 🏆 ${badges.length}/${ALL_BADGES.length}</a>`;
+    } else {
+        container.innerHTML = `<a href="badges.html">🏆 0 succès</a>`;
+    }
+});
+
+// Avis modal
+let selectedStars = 5;
+
+function initStars() {
+    const container = document.getElementById('stars-input');
+    for (let i = 1; i <= 5; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'star-btn active';
+        btn.textContent = '★';
+        btn.dataset.val = i;
+        btn.onclick = () => {
+            selectedStars = i;
+            container.querySelectorAll('.star-btn').forEach(b => {
+                b.classList.toggle('active', parseInt(b.dataset.val) <= i);
+            });
+        };
+        container.appendChild(btn);
+    }
+}
+initStars();
+
+function openAvisModal() { document.getElementById('avis-modal').classList.add('open'); }
+function closeAvisModal() { document.getElementById('avis-modal').classList.remove('open'); }
+document.getElementById('avis-modal').addEventListener('click', e => { if (e.target.id === 'avis-modal') closeAvisModal(); });
+
+async function submitAvis() {
+    const text = document.getElementById('avis-text').value.trim();
+    const fb = document.getElementById('avis-fb');
+    const btn = document.getElementById('btn-avis-submit');
+    fb.textContent = '';
+
+    if (!text || text.length < 5) { fb.textContent = 'Écris au moins quelques mots !'; fb.className = 'af-err'; return; }
+
+    const authorName = currentUserData ? currentUserData.profile.name : 'Élève';
+
+    btn.disabled = true;
+    btn.textContent = 'Envoi…';
+
+    try {
+        await db.collection('avis').add({
+            author: authorName,
+            text: text,
+            stars: selectedStars,
+            type: 'eleve',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        fb.textContent = '✓ Merci pour ton avis !';
+        fb.className = 'af-ok';
+        document.getElementById('avis-text').value = '';
+        setTimeout(closeAvisModal, 1500);
+    } catch (e) {
+        fb.textContent = 'Erreur, réessaie.';
+        fb.className = 'af-err';
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Envoyer';
+}
+</script>
 </body>
 </html>
