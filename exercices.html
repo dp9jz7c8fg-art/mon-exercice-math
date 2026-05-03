@@ -33,7 +33,6 @@
             flex-direction: column;
             align-items: center;
             padding: 0 0 40px;
-            touch-action: none;
             overflow-x: hidden;
         }
 
@@ -970,6 +969,7 @@ window.addEventListener('touchmove', e => {
     lastAngle = cur;
     applyRotation();
     e.preventDefault();
+    e.stopPropagation();
 }, {passive:false});
 
 window.addEventListener('touchend', () => { isRotating = false; activeWheel = null; });
@@ -994,11 +994,13 @@ figZone.addEventListener('touchmove', e => {
         figSvg.style.transformOrigin = `${pinchOX}% ${pinchOY}%`;
         figSvg.style.transform = `scale(${zoomLevel})`;
         e.preventDefault();
+        e.stopPropagation();
     } else if (e.touches.length === 1) {
         const t = e.touches[0], rect = figZone.getBoundingClientRect();
         wrapper.style.left = (t.clientX - rect.left) + 'px';
         wrapper.style.top  = (t.clientY - rect.top)  + 'px';
         e.preventDefault();
+        e.stopPropagation();
     }
 }, {passive:false});
 
