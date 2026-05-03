@@ -55,11 +55,11 @@ function injectBadgeNotifStyle() {
             left: 50%;
             transform: translateX(-50%) translateY(-120px);
             z-index: 10000;
-            background: linear-gradient(135deg, #1a1a4e, #302b63);
-            border: 2px solid #f8d56e;
+            background: linear-gradient(135deg, #061008, #0a2414);
+            border: 2px solid #2ecc71;
             border-radius: 18px;
             padding: 18px 28px;
-            box-shadow: 0 8px 40px rgba(248,213,110,0.3);
+            box-shadow: 0 8px 40px rgba(46,204,113,0.3);
             backdrop-filter: blur(12px);
             text-align: center;
             transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -73,7 +73,7 @@ function injectBadgeNotifStyle() {
             transform: translateX(-50%) translateY(-120px);
         }
         .bn-emoji { font-size: 42px; display: block; margin-bottom: 8px; animation: bnBounce 0.6s ease; }
-        .bn-title { font-size: 11px; color: #f8d56e; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; margin-bottom: 4px; font-family: 'DM Sans', 'Syne', sans-serif; }
+        .bn-title { font-size: 11px; color: #2ecc71; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; margin-bottom: 4px; font-family: 'DM Sans', 'Syne', sans-serif; }
         .bn-name { font-size: 18px; font-weight: 800; color: #f0f0f8; font-family: 'DM Sans', 'Syne', sans-serif; }
         .bn-desc { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; font-family: 'DM Sans', 'Syne', sans-serif; }
         @keyframes bnBounce { 0% { transform: scale(0); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }

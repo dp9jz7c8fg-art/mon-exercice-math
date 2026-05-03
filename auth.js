@@ -108,11 +108,11 @@ function injectUserBar(user, profile) {
             z-index: 100;
         }
         .ub-left { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .ub-left:hover .ub-name { color: #f8d56e; }
+        .ub-left:hover .ub-name { color: #2ecc71; }
         .ub-avatar { font-size: 26px; }
         .ub-name { font-weight: 600; color: #f0f0f8; }
         .ub-right { display: flex; align-items: center; gap: 14px; }
-        .ub-stats { color: #f8d56e; font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+        .ub-stats { color: #2ecc71; font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
         .ub-logout {
             background: rgba(255,255,255,0.06);
             border: 1px solid rgba(255,255,255,0.12);
