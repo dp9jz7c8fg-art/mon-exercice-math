@@ -15,7 +15,7 @@
             background: linear-gradient(135deg, #040804 0%, #061008 25%, #081a0e 50%, #0a2414 75%, #040804 100%);
             background-size: 400% 400%;
             animation: gradientShift 20s ease infinite;
-            color: #f0f0f8;
+            color: #e8f5e9;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -29,207 +29,147 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* ── Symboles mathématiques flottants ── */
-        .math-symbols {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
+        .math-symbols { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:hidden; }
         .math-sym {
-            position: absolute;
-            font-size: 28px;
-            opacity: 0;
+            position: absolute; font-size: 28px; opacity: 0;
             color: rgba(46,204,113,0.07);
             animation: floatSym linear infinite;
-            font-family: 'JetBrains Mono', monospace;
-            user-select: none;
+            font-family: 'JetBrains Mono', monospace; user-select: none;
         }
-
         @keyframes floatSym {
             0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10%  { opacity: 0.12; }
-            90%  { opacity: 0.08; }
+            10%  { opacity: 0.1; }
+            90%  { opacity: 0.06; }
             100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
         }
 
-        /* ── Contenu principal ── */
         .content {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 680px;
-            padding: 40px 20px 60px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 36px;
+            position: relative; z-index: 1; width: 100%; max-width: 720px;
+            padding: 40px 20px 60px; display: flex; flex-direction: column;
+            align-items: center; gap: 36px;
         }
 
-        /* ── Logo ── */
         .logo-wrap {
-            background: rgba(255,255,255,0.06);
+            background: rgba(10,30,16,0.6);
             border: 1px solid rgba(40,100,55,0.25);
-            border-radius: 24px;
-            padding: 24px 40px;
+            border-radius: 24px; padding: 24px 40px;
             backdrop-filter: blur(12px);
             box-shadow: 0 8px 40px rgba(0,0,0,0.3);
         }
+        .logo-wrap img { max-height: 90px; width: auto; display: block; }
 
-        .logo-wrap img {
-            max-height: 90px;
-            width: auto;
-            display: block;
-        }
-
-        /* ── Titre calligraphie ── */
         .welcome-title {
             font-family: 'Playfair Display', serif;
-            font-size: 36px;
-            font-weight: 700;
-            font-style: italic;
-            text-align: center;
-            line-height: 1.3;
+            font-size: 36px; font-weight: 700; font-style: italic;
+            text-align: center; line-height: 1.3;
             background: linear-gradient(135deg, #2ecc71 0%, #a8f0c0 40%, #2ecc71 70%, #a8f0c0 100%);
             background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: titleShimmer 6s ease infinite;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; animation: titleShimmer 6s ease infinite;
         }
-
-        @keyframes titleShimmer {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        @keyframes titleShimmer { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         .subtitle {
-            font-size: 14px;
-            color: rgba(46,204,113,0.5);
-            text-align: center;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            font-weight: 600;
-            margin-top: -16px;
+            font-size: 14px; color: rgba(46,204,113,0.5); text-align: center;
+            letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; margin-top: -16px;
         }
 
-        /* ── Grille de boutons ── */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            width: 100%;
+        /* ── Section chapitres ── */
+        .section-label {
+            font-size: 11px; font-weight: 700; color: rgba(46,204,113,0.4);
+            text-transform: uppercase; letter-spacing: 0.12em;
+            align-self: flex-start; margin-top: 8px; margin-bottom: -20px;
         }
 
-        @media (max-width: 480px) {
-            .grid { grid-template-columns: 1fr; }
-            .welcome-title { font-size: 26px; }
+        .chapters {
+            display: flex; flex-direction: column; gap: 16px; width: 100%;
         }
 
-        .card {
+        .chapter-card {
             background: rgba(10,30,16,0.6);
             border: 1px solid rgba(40,100,55,0.25);
-            border-radius: 18px;
-            padding: 28px 22px;
-            text-decoration: none;
-            color: #f0f0f8;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
+            border-radius: 20px; padding: 24px; text-decoration: none; color: #e8f5e9;
+            display: flex; gap: 20px; align-items: flex-start;
             transition: transform 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
-            backdrop-filter: blur(8px);
-            position: relative;
-            overflow: hidden;
+            backdrop-filter: blur(8px); position: relative; overflow: hidden;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at 30% 30%, rgba(46,204,113,0.03), transparent 60%);
+        .chapter-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(46,204,113,0.03), transparent 60%);
             pointer-events: none;
         }
 
-        .card:hover {
-            transform: translateY(-4px);
+        .chapter-card:hover {
+            transform: translateY(-3px);
             background: rgba(20,50,28,0.7);
             border-color: rgba(46,204,113,0.4);
             box-shadow: 0 12px 40px rgba(0,0,0,0.3);
         }
 
-        .card-icon {
-            font-size: 36px;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 14px;
-            background: rgba(255,255,255,0.06);
+        .chapter-card.disabled {
+            opacity: 0.45; pointer-events: none; cursor: default;
         }
 
-        .card-icon.angles  { background: rgba(46,204,113,0.12); }
-        .card-icon.formes  { background: rgba(46,204,113,0.08); }
-        .card-icon.calcul  { background: rgba(46,204,113,0.1); }
-        .card-icon.fractions { background: rgba(46,204,113,0.08); }
-
-        .card-title {
-            font-size: 17px;
-            font-weight: 700;
-            letter-spacing: 0.01em;
+        .chapter-icon {
+            font-size: 38px; width: 64px; height: 64px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 16px; flex-shrink: 0;
         }
 
-        .card-desc {
-            font-size: 13px;
-            color: rgba(255,255,255,0.5);
-            line-height: 1.5;
+        .ci-methodo  { background: rgba(52,152,219,0.12); }
+        .ci-dev      { background: rgba(155,89,182,0.12); }
+        .ci-math     { background: rgba(46,204,113,0.12); }
+        .ci-outils   { background: rgba(243,156,18,0.12); }
+        .ci-badges   { background: rgba(46,204,113,0.1); }
+
+        .chapter-body { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+
+        .chapter-title { font-size: 18px; font-weight: 700; }
+
+        .chapter-desc {
+            font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5;
         }
 
-        .card-badge {
-            display: inline-flex;
-            align-self: flex-start;
-            padding: 4px 10px;
-            border-radius: 100px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
+        .chapter-tags {
+            display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;
         }
 
-        .badge-ready {
-            background: rgba(46,204,113,0.15);
-            color: #2ecc71;
+        .tag {
+            font-size: 10px; font-weight: 600; letter-spacing: 0.04em;
+            padding: 4px 10px; border-radius: 100px;
+            background: rgba(46,204,113,0.08); color: rgba(46,204,113,0.6);
+            border: 1px solid rgba(46,204,113,0.12);
         }
 
-        .badge-soon {
-            background: rgba(255,255,255,0.06);
-            color: rgba(255,255,255,0.35);
+        .tag.blue   { background: rgba(52,152,219,0.08); color: rgba(52,152,219,0.7); border-color: rgba(52,152,219,0.12); }
+        .tag.purple { background: rgba(155,89,182,0.08); color: rgba(155,89,182,0.7); border-color: rgba(155,89,182,0.12); }
+        .tag.orange { background: rgba(243,156,18,0.08); color: rgba(243,156,18,0.7); border-color: rgba(243,156,18,0.12); }
+
+        .chapter-badge {
+            display: inline-flex; align-self: flex-start;
+            padding: 4px 10px; border-radius: 100px;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
         }
 
-        .card.disabled {
-            opacity: 0.45;
-            pointer-events: none;
-            cursor: default;
-        }
+        .badge-ready { background: rgba(46,204,113,0.15); color: #2ecc71; }
+        .badge-soon  { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.3); }
 
-        /* ── Footer ── */
         .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: rgba(46,204,113,0.25);
-            text-align: center;
-            letter-spacing: 0.04em;
+            margin-top: 20px; font-size: 12px; color: rgba(46,204,113,0.25);
+            text-align: center; letter-spacing: 0.04em;
+        }
+
+        @media (max-width: 480px) {
+            .welcome-title { font-size: 26px; }
+            .chapter-card { flex-direction: column; align-items: center; text-align: center; }
+            .chapter-tags { justify-content: center; }
         }
     </style>
 </head>
 <body>
 
-<!-- Symboles mathématiques flottants -->
 <div class="math-symbols" id="math-bg"></div>
 
 <div class="content">
@@ -239,56 +179,95 @@
     </div>
 
     <h1 class="welcome-title">Bienvenue dans la Classe de Stef</h1>
-    <p class="subtitle">Exercices interactifs de mathématiques</p>
+    <p class="subtitle">Assistant scolaire interactif</p>
 
-    <div class="grid">
+    <div class="chapters">
 
-        <a href="exercices.html" class="card">
-            <div class="card-icon angles">📐</div>
-            <div class="card-title">Mesure d'angles</div>
-            <div class="card-desc">15 exercices avec l'équerre Aristo. Mesure des angles dans des triangles, quadrilatères et figures géométriques.</div>
-            <span class="card-badge badge-ready">Disponible</span>
-        </a>
-
-        <div class="card disabled">
-            <div class="card-icon formes">△</div>
-            <div class="card-title">Figures géométriques</div>
-            <div class="card-desc">Identifie et classe les polygones, calcule périmètres et aires.</div>
-            <span class="card-badge badge-soon">Bientôt</span>
+        <!-- MÉTHODOLOGIE -->
+        <div class="chapter-card disabled">
+            <div class="chapter-icon ci-methodo">🧠</div>
+            <div class="chapter-body">
+                <div class="chapter-title">Méthodologie</div>
+                <div class="chapter-desc">Ateliers pour apprendre à apprendre : comprendre comment fonctionne ton cerveau et développer tes stratégies d'apprentissage.</div>
+                <div class="chapter-tags">
+                    <span class="tag blue">Cerveau</span>
+                    <span class="tag blue">Organisation</span>
+                    <span class="tag blue">Planification</span>
+                    <span class="tag blue">Synthèse</span>
+                    <span class="tag blue">Mémorisation</span>
+                    <span class="tag blue">Consignes</span>
+                    <span class="tag blue">Place de l'erreur</span>
+                </div>
+                <span class="chapter-badge badge-soon">Bientôt</span>
+            </div>
         </div>
 
-        <a href="algebre.html" class="card">
-            <div class="card-icon calcul">𝑥</div>
-            <div class="card-title">Calcul algébrique</div>
-            <div class="card-desc">Expressions, développement, factorisation, identités remarquables et polynômes.</div>
-            <span class="card-badge badge-ready">Disponible</span>
+        <!-- DÉVELOPPEMENT DE SOI -->
+        <div class="chapter-card disabled">
+            <div class="chapter-icon ci-dev">🌱</div>
+            <div class="chapter-body">
+                <div class="chapter-title">Développement de soi</div>
+                <div class="chapter-desc">Ateliers pour mieux te connaître, gérer tes émotions et construire ton projet d'avenir.</div>
+                <div class="chapter-tags">
+                    <span class="tag purple">Orientation</span>
+                    <span class="tag purple">Gestion des émotions</span>
+                    <span class="tag purple">Profil d'apprentissage</span>
+                </div>
+                <span class="chapter-badge badge-soon">Bientôt</span>
+            </div>
+        </div>
+
+        <!-- MATH -->
+        <a href="maths.html" class="chapter-card">
+            <div class="chapter-icon ci-math">📐</div>
+            <div class="chapter-body">
+                <div class="chapter-title">Mathématiques</div>
+                <div class="chapter-desc">Suivi en présentiel et exercices en ligne : mesure d'angles, fractions, calcul algébrique et plus encore.</div>
+                <div class="chapter-tags">
+                    <span class="tag">Angles</span>
+                    <span class="tag">Fractions</span>
+                    <span class="tag">Algèbre</span>
+                </div>
+                <span class="chapter-badge badge-ready">Disponible</span>
+            </div>
         </a>
 
-        <a href="fractions.html" class="card">
-            <div class="card-icon fractions">½</div>
-            <div class="card-title">Fractions</div>
-            <div class="card-desc">Compare, convertis, simplifie, additionne, soustrais, multiplie et divise des fractions.</div>
-            <span class="card-badge badge-ready">Disponible</span>
-        </a>
+        <!-- BOÎTE À OUTILS -->
+        <div class="chapter-card disabled">
+            <div class="chapter-icon ci-outils">🧰</div>
+            <div class="chapter-body">
+                <div class="chapter-title">Boîte à outils</div>
+                <div class="chapter-desc">Ressources et fiches de synthèse pour les cours d'option et les cours généraux.</div>
+                <div class="chapter-tags">
+                    <span class="tag orange">Math</span>
+                    <span class="tag orange">Français</span>
+                    <span class="tag orange">Sciences</span>
+                    <span class="tag orange">Histoire/Géo (EDM)</span>
+                    <span class="tag orange">Langues</span>
+                </div>
+                <span class="chapter-badge badge-soon">Bientôt</span>
+            </div>
+        </div>
 
-        <a href="badges.html" class="card">
-            <div class="card-icon" style="background:rgba(46,204,113,0.1);">🏆</div>
-            <div class="card-title">Mes Succès</div>
-            <div class="card-desc">25 badges à débloquer ! Suis ta progression et collectionne-les tous.</div>
-            <span class="card-badge badge-ready">Disponible</span>
+        <!-- SUCCÈS -->
+        <a href="badges.html" class="chapter-card">
+            <div class="chapter-icon ci-badges">🏆</div>
+            <div class="chapter-body">
+                <div class="chapter-title">Mes Succès</div>
+                <div class="chapter-desc">25 badges à débloquer ! Suis ta progression et collectionne-les tous.</div>
+                <span class="chapter-badge badge-ready">Disponible</span>
+            </div>
         </a>
 
     </div>
 
-    <div class="footer">© 2026 La Classe de Stef — Fait avec ♥ pour apprendre les maths</div>
+    <div class="footer">© 2026 La Classe de Stef — Fait avec ♥ pour apprendre</div>
 
 </div>
 
 <script>
-// ── Symboles mathématiques flottants ──
-const symbols = ['∑','π','√','∞','∠','△','∫','÷','×','±','≈','≠','≤','≥','∆','Ω','θ','α','β','λ','μ','φ','∂','⊂','∪','∩','⊥','∥','≡','∝','ℝ','ℤ','ℕ'];
+const symbols = ['∑','π','√','∞','∠','△','∫','÷','×','±','≈','≠','≤','≥','∆','Ω','θ','α','β','λ','½','¾','𝑥'];
 const container = document.getElementById('math-bg');
-
 function createSymbol() {
     const el = document.createElement('span');
     el.className = 'math-sym';
@@ -298,18 +277,12 @@ function createSymbol() {
     el.style.animationDuration = (15 + Math.random() * 25) + 's';
     el.style.animationDelay = Math.random() * 5 + 's';
     container.appendChild(el);
-
     setTimeout(() => el.remove(), 45000);
 }
-
-// Créer des symboles régulièrement
-for (let i = 0; i < 15; i++) {
-    setTimeout(createSymbol, i * 800);
-}
+for (let i = 0; i < 15; i++) setTimeout(createSymbol, i * 800);
 setInterval(createSymbol, 2500);
 </script>
 
-<!-- Firebase + Auth -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
