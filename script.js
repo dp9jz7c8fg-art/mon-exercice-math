@@ -200,19 +200,63 @@ if (sizeSlider)   sizeSlider.addEventListener('input',   () => setEquerreSize(si
 if (sizeSliderFs) sizeSliderFs.addEventListener('input', () => setEquerreSize(sizeSliderFs.value));
 
 // ─── PLEIN ÉCRAN ──────────────────────────────────────────────────────────────
-container.addEventListener('dblclick', () => {
-    if (!document.fullscreenElement) {
-        container.requestFullscreen().catch(err => console.warn(err.message));
+const fsControls = document.getElementById('fullscreen-controls');
+
+function enterFullscreen() {
+    const el = container;
+    if      (el.requestFullscreen)       el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.mozRequestFullScreen)    el.mozRequestFullScreen();
+    else if (el.msRequestFullscreen)     el.msRequestFullscreen();
+}
+
+function exitFullscreen() {
+    if      (document.exitFullscreen)       document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    else if (document.mozCancelFullScreen)  document.mozCancelFullScreen();
+    else if (document.msExitFullscreen)     document.msExitFullscreen();
+}
+
+function isFullscreen() {
+    return !!(document.fullscreenElement
+           || document.webkitFullscreenElement
+           || document.mozFullScreenElement
+           || document.msFullscreenElement);
+}
+
+function onFullscreenChange() {
+    if (isFullscreen()) {
+        fsControls.style.display = 'flex';
+        container.style.width    = '100vw';
+        container.style.height   = '100vh';
+        container.style.borderRadius = '0';
+        container.style.border   = 'none';
+        container.style.background = '#000';
     } else {
-        document.exitFullscreen();
+        fsControls.style.display = 'none';
+        container.style.width    = '';
+        container.style.height   = '';
+        container.style.borderRadius = '';
+        container.style.border   = '';
+        container.style.background = '';
     }
+}
+
+document.addEventListener('fullscreenchange',       onFullscreenChange);
+document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+document.addEventListener('mozfullscreenchange',    onFullscreenChange);
+document.addEventListener('MSFullscreenChange',     onFullscreenChange);
+
+container.addEventListener('dblclick', () => {
+    if (isFullscreen()) exitFullscreen();
+    else enterFullscreen();
 });
 
 window.addEventListener('orientationchange', () => {
     if (window.orientation === 90 || window.orientation === -90) {
-        if (!document.fullscreenElement) container.requestFullscreen();
+        if (!isFullscreen()) enterFullscreen();
     } else {
-        if (document.fullscreenElement) document.exitFullscreen();
+        if (isFullscreen()) exitFullscreen();
     }
 });
 
