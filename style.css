@@ -326,6 +326,28 @@ header {
 .feedback-correct { color: var(--success); }
 .feedback-error   { color: var(--danger); }
 
+/* ── Bouton exercices ── */
+#btn-exercices {
+    display: block;
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 16px;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    color: var(--accent);
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    margin-top: 10px;
+}
+
+#btn-exercices:hover  { background: var(--surface2); }
+#btn-exercices:active { transform: scale(0.98); }
+
 
 
 /* ── Panneau grand écran (caché par défaut) ── */
