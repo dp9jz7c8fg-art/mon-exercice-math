@@ -5,65 +5,266 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suivi présentiel – La Classe de Stef</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        html,body{height:100%;overflow:hidden}
-        body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#040804 0%,#061008 25%,#081a0e 50%,#0a2414 75%,#040804 100%);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;justify-content:center}
+        body{font-family:'DM Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#040804,#061008,#081a0e,#0a2414,#040804);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center}
         @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-        .page{width:100%;max-width:700px;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:22px}
+        .content{width:100%;max-width:580px;padding:20px 16px 80px;display:flex;flex-direction:column;gap:18px;align-items:center}
         .nav{width:100%;display:flex;justify-content:flex-start}
         .nav a{color:rgba(46,204,113,0.5);text-decoration:none;font-size:13px;font-weight:600;transition:color 0.15s}
         .nav a:hover{color:#2ecc71}
         .page-header{text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center}
-        .page-icon{font-size:44px}
-        .page-title{font-family:'Playfair Display',serif;font-style:italic;font-size:26px;font-weight:700;background:linear-gradient(135deg,#2ecc71,#a8f0c0,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-        .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;width:100%}
-        .card{background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:20px;padding:28px 16px;text-decoration:none;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;transition:transform 0.2s,background 0.2s,border-color 0.2s,box-shadow 0.2s;backdrop-filter:blur(8px);position:relative;overflow:hidden}
-        .card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 50% 30%,rgba(46,204,113,0.03),transparent 60%);pointer-events:none}
-        .card:hover{transform:translateY(-4px);background:rgba(20,50,28,0.7);border-color:rgba(46,204,113,0.4);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
-        .card.disabled{opacity:0.4;pointer-events:none}
-        .card-icon{font-size:36px;width:60px;height:60px;display:flex;align-items:center;justify-content:center;border-radius:16px;background:rgba(46,204,113,0.1)}
-        .card-title{font-size:15px;font-weight:700}
-        .card-desc{font-size:11px;color:rgba(255,255,255,0.4);line-height:1.4}
-        .badge{display:inline-flex;padding:3px 8px;border-radius:100px;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase}
-        .badge-ready{background:rgba(46,204,113,0.15);color:#2ecc71}
-        .badge-soon{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.3)}
-        @media(max-width:520px){.grid-3{grid-template-columns:1fr}.page-title{font-size:22px}}
+        .page-icon{font-size:40px}
+        .page-title{font-family:'Playfair Display',serif;font-style:italic;font-size:24px;font-weight:700;background:linear-gradient(135deg,#2ecc71,#a8f0c0,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+        /* ── Sections ── */
+        .section{width:100%;background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:16px;padding:20px 18px;display:flex;flex-direction:column;gap:12px;backdrop-filter:blur(8px)}
+        .section-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+
+        /* ── Objectifs ── */
+        .obj-list{display:flex;flex-direction:column;gap:8px}
+        .obj-card{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:12px;background:rgba(0,0,0,0.2);transition:opacity 0.3s}
+        .obj-card.achieved{opacity:0.35}
+        .obj-status{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;min-width:48px}
+        .obj-status-btn{width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all 0.2s}
+        .obj-status-btn.not-started{border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.2)}
+        .obj-status-btn.in-progress{border-color:#f39c12;background:rgba(243,156,18,0.1);color:#f39c12}
+        .obj-status-btn.completed{border-color:#2ecc71;background:rgba(46,204,113,0.15);color:#2ecc71}
+        .obj-status-label{font-size:7px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.04em;font-weight:600;text-align:center;max-width:56px}
+        .obj-body{display:flex;flex-direction:column;gap:4px;flex:1}
+        .obj-text{font-size:13px;color:#e8f5e9;line-height:1.5}
+        .obj-card.achieved .obj-text{text-decoration:line-through;color:rgba(255,255,255,0.3)}
+        .obj-meta{font-size:10px;color:rgba(255,255,255,0.2)}
+
+        /* Ajouter objectif */
+        .add-row{display:flex;gap:8px}
+        .add-input{flex:1;background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none}
+        .add-input::placeholder{color:rgba(255,255,255,0.2)}
+        .add-input:focus{border-color:rgba(46,204,113,0.4)}
+        .add-btn{background:#2ecc71;color:#040804;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;white-space:nowrap}
+        .add-btn:hover{opacity:0.85}
+        .add-btn:disabled{opacity:0.4}
+
+        /* ── Questionnements ── */
+        .q-list{display:flex;flex-direction:column;gap:6px}
+        .q-card{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:rgba(0,0,0,0.2)}
+        .q-icon{font-size:18px;flex-shrink:0}
+        .q-text{font-size:13px;color:rgba(255,255,255,0.6);flex:1;line-height:1.4}
+        .q-date{font-size:9px;color:rgba(255,255,255,0.15);flex-shrink:0}
+        .q-del{background:none;border:none;color:rgba(255,255,255,0.15);font-size:14px;cursor:pointer;padding:4px;transition:color 0.15s}
+        .q-del:hover{color:#e74c3c}
+        .no-items{font-size:12px;color:rgba(255,255,255,0.2);text-align:center;padding:8px}
+
+        /* ── Bouton agenda flottant ── */
+        .agenda-float{position:fixed;bottom:24px;right:24px;z-index:10;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#2ecc71,#27ae60);border:none;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;box-shadow:0 6px 30px rgba(46,204,113,0.35);transition:transform 0.2s,box-shadow 0.2s;text-decoration:none}
+        .agenda-float:hover{transform:scale(1.1);box-shadow:0 8px 40px rgba(46,204,113,0.5)}
+        .agenda-float-label{position:fixed;bottom:90px;right:18px;z-index:10;font-size:10px;font-weight:700;color:#2ecc71;letter-spacing:0.06em;text-transform:uppercase;pointer-events:none;text-align:center}
+
+        /* Feedback */
+        .fb{font-size:11px;text-align:center;min-height:14px}
+        .fb-ok{color:#2ecc71}.fb-err{color:#e74c3c}
+
+        @media(max-width:480px){.page-title{font-size:20px}.agenda-float{width:52px;height:52px;font-size:24px;bottom:18px;right:18px}.agenda-float-label{bottom:76px;right:12px}}
     </style>
 </head>
 <body>
-<div class="page">
+
+<div class="content">
     <div class="nav"><a href="maths.html">← Mathématiques</a></div>
     <div class="page-header">
         <span class="page-icon">📋</span>
         <h1 class="page-title">Suivi en présentiel</h1>
     </div>
-    <div class="grid-3">
-        <a href="agenda.html" class="card">
-            <div class="card-icon">📅</div>
-            <div class="card-title">Mon agenda</div>
-            <div class="card-desc">Réserve tes prochains cours.</div>
-            <span class="badge badge-ready">Disponible</span>
-        </a>
-        <div class="card disabled">
-            <div class="card-icon">🎯</div>
-            <div class="card-title">Mes objectifs</div>
-            <div class="card-desc">Suis tes objectifs de progression.</div>
-            <span class="badge badge-soon">Bientôt</span>
+
+    <!-- OBJECTIFS -->
+    <div class="section">
+        <div class="section-title">🎯 Mes objectifs</div>
+        <div class="obj-list" id="obj-list">
+            <div class="no-items">Chargement…</div>
         </div>
-        <div class="card disabled">
-            <div class="card-icon">❓</div>
-            <div class="card-title">Mes questionnements</div>
-            <div class="card-desc">Note tes questions pour les séances.</div>
-            <span class="badge badge-soon">Bientôt</span>
+        <div class="add-row">
+            <input type="text" class="add-input" id="obj-input" placeholder="Ajouter un objectif…">
+            <button class="add-btn" id="btn-add-obj" onclick="addObjectif()">Ajouter</button>
         </div>
+        <div class="fb" id="obj-fb"></div>
+    </div>
+
+    <!-- QUESTIONNEMENTS -->
+    <div class="section">
+        <div class="section-title">❓ Mes questionnements</div>
+        <div class="q-list" id="q-list">
+            <div class="no-items">Chargement…</div>
+        </div>
+        <div class="add-row">
+            <input type="text" class="add-input" id="q-input" placeholder="Écrire une question pour Stef…">
+            <button class="add-btn" onclick="addQuestion()">Poser</button>
+        </div>
+        <div class="fb" id="q-fb"></div>
     </div>
 </div>
+
+<!-- Bouton agenda flottant -->
+<div class="agenda-float-label">Mon agenda</div>
+<a href="agenda.html" class="agenda-float" title="Mon agenda">📅</a>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="auth.js"></script>
-<script>requireAuth((u,p)=>{});</script>
+<script>
+let currentUser = null;
+
+const STATUS_CYCLE = ['not-started','in-progress','completed'];
+const STATUS_ICONS = {'not-started':'○','in-progress':'◐','completed':'✓'};
+const STATUS_LABELS = {'not-started':'Pas entamé','in-progress':'En cours','completed':'Atteint'};
+
+// Enter keys
+document.getElementById('obj-input').addEventListener('keydown',e=>{if(e.key==='Enter')addObjectif()});
+document.getElementById('q-input').addEventListener('keydown',e=>{if(e.key==='Enter')addQuestion()});
+
+requireAuth((user, profile) => {
+    currentUser = user;
+    loadObjectifs();
+    loadQuestions();
+});
+
+// ═══════════════════════════════════════════════════════════
+//  OBJECTIFS
+// ═══════════════════════════════════════════════════════════
+async function loadObjectifs(){
+    const list = document.getElementById('obj-list');
+    try{
+        const snap = await db.collection('objectifs')
+            .where('userId','==',currentUser.uid)
+            .orderBy('createdAt','desc').get();
+
+        if(snap.empty){list.innerHTML='<div class="no-items">Aucun objectif pour le moment.</div>';return}
+
+        // Trier : non-atteints en premier, atteints en bas
+        const docs = [];
+        snap.forEach(doc => docs.push({id:doc.id,...doc.data()}));
+        docs.sort((a,b) => {
+            if(a.status==='completed' && b.status!=='completed') return 1;
+            if(a.status!=='completed' && b.status==='completed') return -1;
+            return 0;
+        });
+
+        let html='';
+        docs.forEach(obj => {
+            const isAchieved = obj.status === 'completed';
+            const date = obj.createdAt ? obj.createdAt.toDate().toLocaleDateString('fr-FR',{day:'numeric',month:'short'}) : '';
+            const author = obj.addedBy === 'eleve' ? 'Moi' : 'Stef';
+
+            html += `
+            <div class="obj-card ${isAchieved?'achieved':''}">
+                <div class="obj-status">
+                    <button class="obj-status-btn ${obj.status||'not-started'}" onclick="cycleStatus('${obj.id}','${obj.status||'not-started'}')" title="Cliquer pour changer">
+                        ${STATUS_ICONS[obj.status||'not-started']}
+                    </button>
+                    <span class="obj-status-label">${STATUS_LABELS[obj.status||'not-started']}</span>
+                </div>
+                <div class="obj-body">
+                    <div class="obj-text">${obj.text}</div>
+                    <div class="obj-meta">Ajouté par ${author} · ${date}</div>
+                </div>
+            </div>`;
+        });
+        list.innerHTML = html;
+    }catch(e){
+        console.error(e);
+        list.innerHTML='<div class="no-items">Erreur de chargement.</div>';
+    }
+}
+
+async function addObjectif(){
+    const input = document.getElementById('obj-input');
+    const text = input.value.trim();
+    const fb = document.getElementById('obj-fb');
+    fb.textContent='';
+    if(!text){fb.textContent='Écris un objectif.';fb.className='fb fb-err';return}
+
+    try{
+        await db.collection('objectifs').add({
+            userId: currentUser.uid,
+            text: text,
+            status: 'not-started',
+            addedBy: 'eleve',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        input.value='';
+        fb.textContent='✓ Objectif ajouté !';fb.className='fb fb-ok';
+        setTimeout(()=>{fb.textContent=''},2000);
+        loadObjectifs();
+    }catch(e){fb.textContent='Erreur.';fb.className='fb fb-err'}
+}
+
+async function cycleStatus(docId, current){
+    const idx = STATUS_CYCLE.indexOf(current);
+    const next = STATUS_CYCLE[(idx+1) % STATUS_CYCLE.length];
+    try{
+        await db.collection('objectifs').doc(docId).update({status:next});
+        loadObjectifs();
+    }catch(e){console.error(e)}
+}
+
+// ═══════════════════════════════════════════════════════════
+//  QUESTIONNEMENTS
+// ═══════════════════════════════════════════════════════════
+async function loadQuestions(){
+    const list = document.getElementById('q-list');
+    try{
+        const snap = await db.collection('questions')
+            .where('userId','==',currentUser.uid)
+            .orderBy('createdAt','desc').get();
+
+        if(snap.empty){list.innerHTML='<div class="no-items">Aucune question pour le moment.</div>';return}
+
+        let html='';
+        snap.forEach(doc => {
+            const q = doc.data();
+            const date = q.createdAt ? q.createdAt.toDate().toLocaleDateString('fr-FR',{day:'numeric',month:'short'}) : '';
+            html += `
+            <div class="q-card">
+                <span class="q-icon">💬</span>
+                <span class="q-text">${q.text}</span>
+                <span class="q-date">${date}</span>
+                <button class="q-del" onclick="deleteQuestion('${doc.id}')" title="Supprimer">✕</button>
+            </div>`;
+        });
+        list.innerHTML = html;
+    }catch(e){
+        console.error(e);
+        list.innerHTML='<div class="no-items">Erreur de chargement.</div>';
+    }
+}
+
+async function addQuestion(){
+    const input = document.getElementById('q-input');
+    const text = input.value.trim();
+    const fb = document.getElementById('q-fb');
+    fb.textContent='';
+    if(!text){fb.textContent='Écris ta question.';fb.className='fb fb-err';return}
+
+    try{
+        await db.collection('questions').add({
+            userId: currentUser.uid,
+            text: text,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        input.value='';
+        fb.textContent='✓ Question ajoutée !';fb.className='fb fb-ok';
+        setTimeout(()=>{fb.textContent=''},2000);
+        loadQuestions();
+    }catch(e){fb.textContent='Erreur.';fb.className='fb fb-err'}
+}
+
+async function deleteQuestion(docId){
+    try{
+        await db.collection('questions').doc(docId).delete();
+        loadQuestions();
+    }catch(e){console.error(e)}
+}
+</script>
 </body>
 </html>
