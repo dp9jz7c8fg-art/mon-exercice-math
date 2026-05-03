@@ -1,5 +1,548 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap');
 
+Claude a terminé la réponse.
+Vous avez dit : j'ai créer une petite app htlm avec gemini mais je ne suis pas satisfait du résultat.
+j'ai créer une petite app htlm avec gemini mais je ne suis pas satisfait du résultat. puis-je te copier mes fichiers index.htlm, script.js et style.css pour que nous puissions y travailler? je travail avec visual studio code et GitHub Desktop
+
+07:20
+Claude a répondu : Bien sûr, copiez-collez vos fichiers ici et on travaille ensemble dessus !
+Bien sûr, copiez-collez vos fichiers ici et on travaille ensemble dessus !
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Exercice Angles - Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="header-logo">
+        <img src="logo.png" alt="Logo" class="site-logo">
+    </div>
+
+    <div id="main-content">
+        <header>
+            <div id="score-board">
+                Score : <span id="current-score">0</span> / <span id="total-questions">0</span>
+            </div>
+            
+            <div id="rotation-control">
+                <div id="rotation-wheel"></div>
+                <span>Pivoter</span>
+            </div>
+        </header>
+
+        <div id="toolbar">
+            <button class="zoom-btn" onclick="ajusterZoom(0.2)">🔍 +</button>
+            <button class="zoom-btn" onclick="ajusterZoom(-0.2)">🔍 -</button>
+            <button class="zoom-btn" onclick="resetZoom()">🔄</button>
+            <span class="hint-pc">Dbl-clic pour Plein Écran</span>
+        </div>
+
+        <div id="exercice-container">
+            <img src="IMG_0906.jpg" alt="Fiche" id="fond-exercice">
+            <div id="cursor-wrapper">
+                <img src="equerre.png" alt="Équerre" id="custom-cursor">
+            </div>
+        </div>
+
+        <div class="reponses-eleve">
+            <div class="input-group">
+                <input type="number" id="user-answer" placeholder="Degrés">
+                <button id="btn-valider" onclick="verifierReponse()">Valider</button>
+            </div>
+            <p id="feedback"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+Afficher plus
+07:20
+Claude a répondu : Parfait, j'ai le HTML.
+Parfait, j'ai le HTML. Envoyez maintenant script.js et style.css et on pourra tout analyser ensemble avant de commencer !
+
+const wheel = document.getElementById('rotation-wheel');
+const wrapper = document.getElementById('cursor-wrapper');
+const container = document.getElementById('exercice-container');
+const fond = document.getElementById('fond-exercice');
+
+let rotation = 0;
+let zoomLevel = 1;
+let isRotating = false;
+let lastAngle = 0;
+
+// 1. DÉPLACER L'ÉQUERRE (En touchant la zone de l'exercice)
+container.addEventListener('touchmove', (e) => {
+    if (isRotating) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect = container.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    wrapper.style.left = x + 'px';
+    wrapper.style.top = y + 'px';
+}, { passive: false });
+
+// 2. FAIRE PIVOTER (En touchant le volant)
+wheel.addEventListener('touchstart', (e) => {
+    isRotating = true;
+    const touch = e.touches[0];
+    const rect = wheel.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    lastAngle = Math.atan2(touch.clientY - centerY, touch.clientX - centerX);
+    e.preventDefault();
+}, { passive: false });
+
+window.addEventListener('touchmove', (e) => {
+    if (!isRotating) return;
+    const touch = e.touches[0];
+    const rect = wheel.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    const currentAngle = Math.atan2(touch.clientY - centerY, touch.clientX - centerX);
+    rotation += (currentAngle - lastAngle) * (180 / Math.PI);
+    lastAngle = currentAngle;
+
+    wrapper.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+    wheel.style.transform = `rotate(${rotation}deg)`;
+}, { passive: false });
+
+window.addEventListener('touchend', () => { isRotating = false; });
+
+// 3. ZOOM
+function ajusterZoom(delta) {
+    zoomLevel = Math.max(1, Math.min(3, zoomLevel + delta));
+    fond.style.transform = `scale(${zoomLevel})`;
+}
+function resetZoom() {
+    zoomLevel = 1;
+    fond.style.transform = `scale(1)`;
+}
+// --- GESTION DU PLEIN ÉCRAN ---
+
+const containerExercice = document.getElementById('exercice-container');
+
+// 1. Double-clic sur PC
+containerExercice.addEventListener('dblclick', () => {
+    if (!document.fullscreenElement) {
+        containerExercice.requestFullscreen().catch(err => {
+            alert(`Erreur : ${err.message}`);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+});
+
+// 2. Mode Paysage sur Smartphone
+window.addEventListener("orientationchange", () => {
+    // Si l'écran passe à 90 ou -90 degrés (paysage)
+    if (window.orientation === 90 || window.orientation === -90) {
+        if (!document.fullscreenElement) {
+            containerExercice.requestFullscreen();
+        }
+    } else {
+        // Si on revient en portrait, on quitte le plein écran
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        }
+    }
+});
+Afficher plus
+07:21
+Claude a répondu : Reçu !
+Reçu ! Envoyez maintenant le style.css et on aura tout le code pour commencer l'analyse.
+
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    touch-action: none; 
+}
+
+#header-logo {
+    width: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: center; /* Centre le logo horizontalement */
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.site-logo {
+    max-height: 80px; /* Force la hauteur pour que ça ne prenne pas tout l'écran */
+    width: auto;      /* Garde les proportions */
+}
+
+#main-content {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+/* LE VOLANT DE ROTATION */
+#rotation-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #3498db;
+}
+
+#rotation-wheel {
+    width: 60px;
+    height: 60px;
+    border: 5px dashed #3498db;
+    border-radius: 50%;
+    background: white;
+    touch-action: none; /* Crucial pour le tactile */
+}
+
+#exercice-container {
+    width: 100%;
+    height: 350px;
+    background: white;
+    border: 2px solid #333;
+    position: relative;
+    overflow: hidden;
+    touch-action: none;
+}
+
+#fond-exercice {
+    width: 100%; height: 100%; object-fit: contain;
+    transform-origin: center center;
+}
+
+#cursor-wrapper {
+    position: absolute;
+    width: 200px;
+    pointer-events: none;
+    z-index: 1000;
+    transform: translate(-50%, -50%) rotate(0deg);
+}
+
+#custom-cursor { width: 100%; opacity: 0.7; }
+
+.reponses-eleve { margin-top: 15px; text-align: center; }
+.zoom-btn { padding: 10px; margin: 5px; font-size: 18px; }
+#exercice-container:fullscreen {
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#exercice-container:fullscreen #fond-exercice {
+    max-height: 100%;
+    width: auto;
+}
+
+.hint-pc {
+    font-size: 10px;
+    color: #666;
+    margin-left: 10px;
+}
+
+/* Cache l'astuce sur mobile */
+@media (max-width: 600px) {
+    .hint-pc { display: none; }
+}
+Afficher plus
+07:21
+Claude a répondu : Parfait, j'ai tout le code !
+Parfait, j'ai tout le code ! Avant de plonger dedans, dites-moi ce qui vous déçoit et ce que vous aimeriez améliorer.
+
+Vous avez dit : Q : Qu'est-ce qui vous déçoit le plus dans l'app actuelle ?
+Q : Qu'est-ce qui vous déçoit le plus dans l'app actuelle ? (Sélectionnez toutes les réponses applicables)
+R : Le zoom sur l'image, Le comportement de l'équerre (déplacement/rotation), Le design / l'apparence
+
+Q : Sur quel appareil l'app sera principalement utilisée ?
+R : Les deux
+
+07:21
+Claude a répondu : Merci !
+Merci ! Quelques questions de plus pour bien cibler les problèmes.
+
+Vous avez dit : Q : Quel est le problème avec le zoom ?
+Q : Quel est le problème avec le zoom ? (Sélectionnez toutes les réponses applicables)
+R : On ne peut pas zoomer avec les doigts (pinch-to-zoom), Le zoom ne suit pas là où je touche
+
+Q : Quel est le problème avec l'équerre ? (Sélectionnez toutes les réponses applicables)
+R : Elle est trop grande ou trop petite
+
+Q : Pour le design, qu'est-ce qui vous gêne ? (Sélectionnez toutes les réponses applicables)
+R : C'est trop basique / pas assez pro
+
+Afficher plus
+07:22
+Claude a répondu : Parfait, j'ai une image claire de tout ce qu'on doit améliorer.
+Parfait, j'ai une image claire de tout ce qu'on doit améliorer. Voici mon plan avant de coder :
+
+🔧 Ce qu'on va corriger :
+
+Zoom — Ajouter le pinch-to-zoom natif avec les deux doigts, et faire en sorte que le zoom soit centré là où vous pincez (pas toujours au centre de l'image)
+Équerre — Ajouter un curseur ou slider pour régler sa taille à la volée
+Design — Look plus professionnel : meilleure typographie, palette cohérente, boutons soignés, layout plus aéré
+📋 Ce qu'on garde :
+
+La logique de déplacement tactile de l'équerre
+Le volant de rotation
+La structure HTML globale
+La compatibilité PC + mobile
+On y va fichier par fichier. Je commence par lequel ?
+
+Vous avez dit : Q : Par quel fichier voulez-vous commencer ?
+Q : Par quel fichier voulez-vous commencer ?
+R : Les deux en même temps
+
+07:23
+Claude a répondu : Parfait !
+Parfait ! Je relis le code et je prépare une version complète et améliorée des deux fichiers.
+
+
+Reading frontend design skill
+Reading frontend design skill
+Je prépare maintenant les trois fichiers améliorés. Voici ce que je fais concrètement :
+
+script.js — pinch-to-zoom centré sur les doigts, slider de taille pour l'équerre, déplacement et rotation conservés et affinés.
+
+style.css — design propre et professionnel : palette sombre et précise, typographie soignée, boutons modernes, layout adapté mobile/PC.
+
+
+2 fichiers créés
+2 fichiers créés
+Le HTML a aussi besoin d'une petite mise à jour pour ajouter le slider de taille et l'affichage de l'angle :
+
+
+Fichier créé, lu un fichier
+Fichier créé, lu un fichier
+Voici le récapitulatif de tout ce qui a été amélioré :
+
+🎨 Design (style.css)
+
+Thème sombre professionnel avec palette cohérente (bleu accent, jaune highlight)
+Typographie : DM Sans + Space Mono pour les chiffres
+Boutons, champs et conteneurs avec bordures fines, ombres et états hover/active soignés
+Volant de rotation avec indicateur de direction visuel
+⚙️ Script (script.js)
+
+Pinch-to-zoom natif avec deux doigts, centré exactement là où vous pincez
+Zoom molette sur PC, également centré sur le curseur
+Déplacement de l'équerre à la souris sur PC (clic + glisser)
+Rotation à la souris sur PC (clic + glisser sur le volant)
+Affichage de l'angle en temps réel pendant la rotation
+📐 HTML (index.html)
+
+Slider pour régler la taille de l'équerre (80px → 320px) en direct
+Affichage de l'angle courant sous le volant
+Remplacez vos trois fichiers dans VS Code par ceux-ci (les noms logo.png, equerre.png et IMG_0906.jpg restent inchangés). Dites-moi si quelque chose ne se comporte pas comme attendu !
+
+
+
+Script
+JS 
+
+Style
+Code · CSS 
+Vous avez dit : ok j'ai bien recut tes fichiers, mais c'est la première fois que je travail avec toi, peux tu me dire ce que je dois en faire?
+ok j'ai bien recut tes fichiers, mais c'est la première fois que je travail avec toi, peux tu me dire ce que je dois en faire?
+
+07:31
+Claude a répondu : Bien sûr !
+Bien sûr ! C'est simple. Voici exactement quoi faire dans VS Code :
+
+1. Ouvrez votre dossier de projet Dans VS Code, allez dans Fichier → Ouvrir le dossier et sélectionnez le dossier où se trouvent vos fichiers actuels (index.html, script.js, style.css).
+
+2. Remplacez les trois fichiers Les fichiers que vous avez téléchargés ici remplacent directement les vôtres. Deux options :
+
+Option A (simple) — Ouvrez chaque fichier téléchargé, copiez tout le contenu, puis collez-le dans le fichier correspondant dans VS Code (en remplaçant tout).
+Option B (rapide) — Copiez les trois fichiers téléchargés directement dans votre dossier de projet via l'explorateur de fichiers Windows/Mac, et confirmez le remplacement.
+3. Testez dans le navigateur Ouvrez index.html dans votre navigateur (clic droit sur le fichier dans VS Code → Ouvrir avec Live Server si vous avez l'extension, sinon glissez-déposez le fichier dans Chrome).
+
+4. Publiez sur GitHub Une fois satisfait du résultat, ouvrez GitHub Desktop, vous verrez les changements listés automatiquement → écrivez un petit message de commit (ex: "Amélioration zoom et design") → cliquez Commit puis Push.
+
+Les fichiers logo.png, equerre.png et IMG_0906.jpg restent exactement là où ils sont, on n'y touche pas.
+
+Dites-moi à quelle étape vous êtes et si quelque chose bloque !
+
+Vous avez dit : voilà j'ai fais le "push" depuis GitHub Desktop, que faire maintenant?
+voilà j'ai fais le "push" depuis GitHub Desktop, que faire maintenant?
+
+07:37
+Claude a répondu : Bravo, votre code est maintenant sauvegardé sur GitHub !
+Bravo, votre code est maintenant sauvegardé sur GitHub ! 🎉
+
+Maintenant, deux questions :
+
+Est-ce que votre site est hébergé quelque part ? Par exemple sur GitHub Pages (gratuit, directement depuis GitHub), ou un autre service comme Netlify, Vercel, etc. ?
+
+Si oui, le site se met normalement à jour automatiquement en quelques secondes après le push — il suffit de rafraîchir la page.
+
+Si non, et que vous voulez que l'app soit accessible depuis un smartphone ou partageable avec vos élèves, on peut activer GitHub Pages en 2 minutes. Il suffit d'aller dans les Settings de votre dépôt GitHub → Pages → choisir la branche main → Save. Votre app aura alors une adresse publique du type https://votre-nom.github.io/votre-projet.
+
+Est-ce que vous avez pu tester l'app dans le navigateur avant le push ? Tout fonctionnait correctement ?
+
+Vous avez dit : non je n'ai encore rien tester, je n'y parviens pas.
+non je n'ai encore rien tester, je n'y parviens pas. ma page est hébergée sur github mais je ne sais pas quoi faire pour voir le résultat
+
+07:39
+Claude a répondu : Pas de souci, on va régler ça étape par étape !
+Pas de souci, on va régler ça étape par étape !
+
+D'abord, trouvons votre adresse GitHub Pages :
+
+Allez sur github.com et connectez-vous
+Cliquez sur votre dépôt (le nom de votre projet)
+Cliquez sur Settings (l'onglet en haut à droite)
+Dans le menu à gauche, cliquez sur Pages
+Là vous verrez soit :
+
+✅ Une adresse verte du type https://votre-nom.github.io/votre-projet → c'est votre site, cliquez dessus !
+⚠️ Aucune adresse → GitHub Pages n'est pas encore activé
+Qu'est-ce que vous voyez sur cette page Pages ? Dites-moi et on continue depuis là.
+
+Vous avez dit : le résultat est très chouette, mais quand je mets en pleine écran, je ne peux plus faire pivoter mon équerre
+le résultat est très chouette, mais quand je mets en pleine écran, je ne peux plus faire pivoter mon équerre
+
+07:42
+Claude a répondu : Super que le design vous plaise !
+Super que le design vous plaise ! C'est un bug classique : en mode plein écran, le volant de rotation reste dans la page normale et n'est plus accessible.
+
+La solution est de dupliquer le volant à l'intérieur du conteneur d'exercice, comme ça il suit en plein écran. Voici les modifications :
+
+Dans index.html, ajoutez le volant à l'intérieur de #exercice-container :
+
+
+Fichier créé, fichier modifié
+Fichier créé, fichier modifié
+Maintenant le CSS pour afficher ces contrôles uniquement en plein écran :
+
+
+Add fullscreen controls CSS
+Add fullscreen controls CSS
+Et enfin le JS pour brancher le second volant et le slider plein écran :
+
+
+Add fullscreen wheel and slider JS logic
+Add fullscreen wheel and slider JS logic
+Il faut aussi mettre à jour les fonctions existantes pour utiliser updateAngleDisplays() à la place des anciens appels directs :
+
+
+2 fichiers modifiés, lu un fichier
+2 fichiers modifiés, lu un fichier
+Voici ce qui a changé :
+
+Le principe — En plein écran, un panneau de contrôle flottant apparaît en bas à droite de l'image, avec le volant, les boutons zoom et le slider de taille. En mode normal, ce panneau est invisible.
+
+Remplacez les trois fichiers dans VS Code comme la dernière fois, puis faites un nouveau commit + push depuis GitHub Desktop. Testez ensuite en double-cliquant sur la zone d'exercice pour passer en plein écran — le volant sera là !
+
+
+
+Script
+JS 
+
+Style
+Code · CSS 
+Vous avez dit : je viens de faire le test après avoir copier/coller tes nouvelles pages dans mon dossier GitHub, clicker sur push, mais le problème du mode plein écran persist…
+je viens de faire le test après avoir copier/coller tes nouvelles pages dans mon dossier GitHub, clicker sur push, mais le problème du mode plein écran persiste. je ne peux pas faire de rotation de l'équerre en plein écran.
+
+07:54
+Claude a répondu : Merci pour le retour !
+Merci pour le retour ! Le problème vient probablement du fait que le volant plein écran n'est pas correctement branché aux événements touch/mouse. Laissez-moi relire le script complet pour trouver exactement ce qui cloche.
+
+
+Read current script.js to find the bug
+Read current script.js to find the bug
+J'ai trouvé le problème ! Il y a deux bugs :
+
+wheelFs est utilisé avant d'être déclaré (lignes 96 et 128 référencent wheelFs alors qu'il n'est déclaré qu'à la ligne 189) → erreur JavaScript silencieuse.
+Le touchmove global écoute le centre du wheel normal, pas du wheelFs — donc en plein écran, le calcul d'angle est complètement faux.
+Je réécris le script proprement de zéro pour corriger tout ça :
+
+
+A exécuté une commande, lu un fichier
+A exécuté une commande, lu un fichier
+Voici exactement ce qui était cassé et ce qui est maintenant corrigé :
+
+Bug 1 — wheelFs utilisé avant d'exister : dans l'ancienne version, les lignes 96 et 128 appelaient wheelFs alors qu'il n'était déclaré qu'à la ligne 189. JavaScript plantait silencieusement dès le départ.
+
+Bug 2 — Mauvais centre de calcul en plein écran : le touchmove global calculait toujours l'angle par rapport au centre du wheel normal (hors écran en plein écran), pas du wheelFs. L'angle était donc complètement faux.
+
+Ce qui est nouveau : une variable activeWheel retient quel volant a été touché en dernier, et tous les calculs d'angle utilisent ce volant-là. Même logique pour la souris avec activeWheelMouse.
+
+À faire : remplacez uniquement script.js dans VS Code (le index.html et style.css ne changent pas), puis commit + push depuis GitHub Desktop.
+
+
+Script
+JS 
+Vous avez dit : j'ai remplacer le script.
+j'ai remplacer le script.js mais le problème persiste
+
+07:57
+Claude a répondu : Merci pour votre patience.
+Merci pour votre patience. Le problème vient probablement du CSS — en mode plein écran, le navigateur isole complètement le conteneur, et les événements touch du volant sont peut-être interceptés par le container avant d'atteindre le wheelFs.
+
+Dites-moi d'abord : vous testez sur smartphone ou PC en ce moment ?
+
+Vous avez dit : Q : Sur quel appareil testez-vous le plein écran ?
+Q : Sur quel appareil testez-vous le plein écran ?
+R : PC (souris)
+
+Q : Que se passe-t-il exactement en plein écran ?
+R : Le volant n'apparait pas du tout en plein écran
+
+07:58
+Claude a répondu : Le problème est clairement dans le CSS — le panneau #fullscreen-controls ne s'affiche pas.
+Le problème est clairement dans le CSS — le panneau #fullscreen-controls ne s'affiche pas. La règle :fullscreen a besoin de préfixes selon le navigateur. Quel navigateur utilisez-vous ?
+
+Vous avez dit : Q : Quel navigateur utilisez-vous ?
+Q : Quel navigateur utilisez-vous ?
+R : opera
+
+07:58
+Claude a répondu : Voilà le problème !
+Voilà le problème ! Opera utilise le préfixe -webkit- pour le plein écran, et nos règles CSS n'utilisaient que :fullscreen. Il faut ajouter :-webkit-full-screen partout.
+
+Je corrige le CSS :
+
+
+A consulté 2 fichiers, exécuté 2 commandes, fichier modifié
+A consulté 2 fichiers, exécuté 2 commandes, fichier modifié
+Remplacez uniquement le style.css dans VS Code, puis commit + push.
+
+Ce qui était le problème : Opera (comme Safari) utilise :-webkit-full-screen au lieu de :fullscreen pour reconnaître le mode plein écran. Notre panneau avait display: none par défaut, et la règle :fullscreen qui devait l'afficher était tout simplement ignorée par Opera — donc le volant restait invisible.
+
+
+Style
+Code · CSS 
+
+
+
+
+Claude est une IA et peut faire des erreurs. Veuillez vérifier les réponses.
+Style · CSS
+Copier
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap');
+ 
 /* ── Variables ── */
 :root {
     --bg:        #12141a;
@@ -15,10 +558,10 @@
     --radius:    12px;
     --shadow:    0 4px 24px rgba(0,0,0,0.4);
 }
-
+ 
 /* ── Reset & base ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
 body {
     font-family: 'DM Sans', sans-serif;
     background-color: var(--bg);
@@ -29,7 +572,7 @@ body {
     min-height: 100vh;
     touch-action: none;
 }
-
+ 
 /* ── Logo header ── */
 #header-logo {
     width: 100%;
@@ -41,12 +584,12 @@ body {
     border-bottom: 1px solid var(--border);
     box-shadow: 0 2px 12px rgba(0,0,0,0.3);
 }
-
+ 
 .site-logo {
     max-height: 56px;
     width: auto;
 }
-
+ 
 /* ── Main layout ── */
 #main-content {
     width: 100%;
@@ -57,7 +600,7 @@ body {
     padding: 16px 12px 24px;
     gap: 14px;
 }
-
+ 
 /* ── Header (score + rotation) ── */
 header {
     width: 100%;
@@ -70,7 +613,7 @@ header {
     padding: 12px 16px;
     box-shadow: var(--shadow);
 }
-
+ 
 /* Score */
 #score-board {
     font-family: 'Space Mono', monospace;
@@ -80,24 +623,24 @@ header {
     align-items: center;
     gap: 6px;
 }
-
+ 
 #score-board::before {
     content: '◆';
     color: var(--accent);
     font-size: 10px;
 }
-
+ 
 #current-score {
     color: var(--accent2);
     font-weight: 700;
     font-size: 20px;
 }
-
+ 
 #total-questions {
     color: var(--text);
     font-size: 18px;
 }
-
+ 
 /* Volant de rotation */
 #rotation-control {
     display: flex;
@@ -105,7 +648,7 @@ header {
     align-items: center;
     gap: 5px;
 }
-
+ 
 #rotation-control span {
     font-size: 10px;
     font-weight: 600;
@@ -113,7 +656,7 @@ header {
     text-transform: uppercase;
     color: var(--text-muted);
 }
-
+ 
 #rotation-wheel {
     width: 52px;
     height: 52px;
@@ -126,7 +669,7 @@ header {
     transition: border-color 0.2s;
     box-shadow: 0 0 0 4px rgba(79,142,247,0.12);
 }
-
+ 
 #rotation-wheel::after {
     content: '';
     position: absolute;
@@ -138,9 +681,9 @@ header {
     background: var(--accent);
     border-radius: 2px;
 }
-
+ 
 #rotation-wheel:active { cursor: grabbing; border-color: var(--accent2); }
-
+ 
 /* Affichage de l'angle */
 #angle-display {
     font-family: 'Space Mono', monospace;
@@ -149,7 +692,7 @@ header {
     min-width: 38px;
     text-align: center;
 }
-
+ 
 /* ── Toolbar ── */
 #toolbar {
     width: 100%;
@@ -158,7 +701,7 @@ header {
     gap: 8px;
     flex-wrap: wrap;
 }
-
+ 
 .zoom-btn {
     background: var(--surface2);
     color: var(--text);
@@ -171,10 +714,10 @@ header {
     transition: background 0.15s, border-color 0.15s, transform 0.1s;
     touch-action: manipulation;
 }
-
+ 
 .zoom-btn:hover  { background: var(--surface); border-color: var(--accent); }
 .zoom-btn:active { transform: scale(0.95); }
-
+ 
 /* Slider taille équerre */
 #size-control {
     display: flex;
@@ -185,7 +728,7 @@ header {
     font-size: 12px;
     font-weight: 500;
 }
-
+ 
 #equerre-size {
     -webkit-appearance: none;
     appearance: none;
@@ -196,7 +739,7 @@ header {
     outline: none;
     cursor: pointer;
 }
-
+ 
 #equerre-size::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 16px;
@@ -206,19 +749,19 @@ header {
     cursor: pointer;
     transition: background 0.15s;
 }
-
+ 
 #equerre-size::-webkit-slider-thumb:hover { background: var(--accent2); }
-
+ 
 .hint-pc {
     font-size: 10px;
     color: var(--text-muted);
     letter-spacing: 0.04em;
 }
-
+ 
 @media (max-width: 600px) {
     .hint-pc { display: none; }
 }
-
+ 
 /* ── Zone exercice ── */
 #exercice-container {
     width: 100%;
@@ -232,7 +775,7 @@ header {
     box-shadow: var(--shadow);
     cursor: crosshair;
 }
-
+ 
 #fond-exercice {
     width: 100%;
     height: 100%;
@@ -242,7 +785,7 @@ header {
     user-select: none;
     pointer-events: none;
 }
-
+ 
 #cursor-wrapper {
     position: absolute;
     width: 180px;
@@ -254,13 +797,13 @@ header {
     filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
     transition: width 0.1s;
 }
-
+ 
 #custom-cursor {
     width: 100%;
     opacity: 0.85;
     user-select: none;
 }
-
+ 
 /* ── Réponse ── */
 .reponses-eleve {
     width: 100%;
@@ -270,12 +813,12 @@ header {
     padding: 16px;
     box-shadow: var(--shadow);
 }
-
+ 
 .input-group {
     display: flex;
     gap: 10px;
 }
-
+ 
 #user-answer {
     flex: 1;
     background: var(--surface2);
@@ -289,13 +832,13 @@ header {
     transition: border-color 0.2s;
     -moz-appearance: textfield;
 }
-
+ 
 #user-answer::-webkit-inner-spin-button,
 #user-answer::-webkit-outer-spin-button { -webkit-appearance: none; }
-
+ 
 #user-answer::placeholder { color: var(--text-muted); font-size: 14px; }
 #user-answer:focus { border-color: var(--accent); }
-
+ 
 #btn-valider {
     background: var(--accent);
     color: white;
@@ -310,10 +853,10 @@ header {
     touch-action: manipulation;
     white-space: nowrap;
 }
-
+ 
 #btn-valider:hover  { background: #6ba3fa; }
 #btn-valider:active { transform: scale(0.97); }
-
+ 
 /* Feedback */
 #feedback {
     margin-top: 10px;
@@ -322,16 +865,18 @@ header {
     min-height: 20px;
     letter-spacing: 0.01em;
 }
-
+ 
 .feedback-correct { color: var(--success); }
 .feedback-error   { color: var(--danger); }
-
+ 
 /* ── Contrôles plein écran (cachés en mode normal) ── */
 #fullscreen-controls {
     display: none;
 }
-
-#exercice-container:fullscreen #fullscreen-controls {
+ 
+#exercice-container:fullscreen #fullscreen-controls,
+#exercice-container:-webkit-full-screen #fullscreen-controls,
+#exercice-container:-moz-full-screen #fullscreen-controls {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -347,7 +892,7 @@ header {
     backdrop-filter: blur(8px);
     box-shadow: var(--shadow);
 }
-
+ 
 #rotation-control-fs {
     display: flex;
     flex-direction: column;
@@ -359,7 +904,7 @@ header {
     text-transform: uppercase;
     color: var(--text-muted);
 }
-
+ 
 #rotation-wheel-fs {
     width: 60px;
     height: 60px;
@@ -371,7 +916,7 @@ header {
     position: relative;
     box-shadow: 0 0 0 4px rgba(79,142,247,0.12);
 }
-
+ 
 #rotation-wheel-fs::after {
     content: '';
     position: absolute;
@@ -383,9 +928,9 @@ header {
     background: var(--accent);
     border-radius: 2px;
 }
-
+ 
 #rotation-wheel-fs:active { cursor: grabbing; border-color: var(--accent2); }
-
+ 
 #angle-display-fs {
     font-family: 'Space Mono', monospace;
     font-size: 13px;
@@ -393,12 +938,12 @@ header {
     min-width: 38px;
     text-align: center;
 }
-
+ 
 #fs-buttons {
     display: flex;
     gap: 6px;
 }
-
+ 
 .zoom-btn-fs {
     background: var(--surface2);
     color: var(--text);
@@ -410,9 +955,9 @@ header {
     transition: background 0.15s, border-color 0.15s;
     touch-action: manipulation;
 }
-
+ 
 .zoom-btn-fs:hover { background: var(--surface); border-color: var(--accent); }
-
+ 
 #size-control-fs {
     display: flex;
     align-items: center;
@@ -420,7 +965,7 @@ header {
     color: var(--text-muted);
     font-size: 12px;
 }
-
+ 
 #equerre-size-fs {
     -webkit-appearance: none;
     appearance: none;
@@ -431,7 +976,7 @@ header {
     outline: none;
     cursor: pointer;
 }
-
+ 
 #equerre-size-fs::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 16px;
@@ -440,9 +985,11 @@ header {
     background: var(--accent);
     cursor: pointer;
 }
-
+ 
 /* ── Plein écran ── */
-#exercice-container:fullscreen {
+#exercice-container:fullscreen,
+#exercice-container:-webkit-full-screen,
+#exercice-container:-moz-full-screen {
     width: 100vw;
     height: 100vh;
     border-radius: 0;
@@ -452,8 +999,11 @@ header {
     align-items: center;
     justify-content: center;
 }
-
-#exercice-container:fullscreen #fond-exercice {
+ 
+#exercice-container:fullscreen #fond-exercice,
+#exercice-container:-webkit-full-screen #fond-exercice,
+#exercice-container:-moz-full-screen #fond-exercice {
     max-height: 100%;
     width: auto;
 }
+ 
