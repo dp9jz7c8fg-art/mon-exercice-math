@@ -1107,7 +1107,11 @@ genererSerie();
 afficherExercice();
 // Sauvegarder le score dans Firebase
 function saveAngleScore(isCorrect) {
-    if (typeof saveScore === 'function') saveScore('angles', null, isCorrect);
+    if (typeof saveScore === 'function') {
+        saveScore('angles', null, isCorrect).then(() => {
+            if (typeof checkBadges === 'function') checkBadges();
+        });
+    }
 }
 </script>
 
@@ -1116,6 +1120,7 @@ function saveAngleScore(isCorrect) {
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="auth.js"></script>
+<script src="badges-system.js"></script>
 <script>
     requireAuth((user, profile) => {
         injectUserBar(user, profile);

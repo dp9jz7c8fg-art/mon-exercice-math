@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Succès – La Classe de Stef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29 0%, #1a1a4e 25%, #24243e 50%, #302b63 75%, #0f0c29 100%);
+            background-size: 400% 400%;
+            animation: grad 20s ease infinite;
+            color: #f0f0f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes grad {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .content {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px 14px 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav a {
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: color 0.15s;
+        }
+
+        .nav a:hover { color: #f0f0f8; }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            background: linear-gradient(135deg, #f8d56e, #f0a0a0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .progress-summary {
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .progress-summary strong {
+            color: #f8d56e;
+            font-size: 22px;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 10px;
+        }
+
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .badge-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .badge-card.unlocked {
+            background: rgba(248,213,110,0.05);
+            border-color: rgba(248,213,110,0.2);
+        }
+
+        .badge-card.unlocked::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            left: -30%;
+            width: 160%;
+            height: 160%;
+            background: radial-gradient(circle at 50% 50%, rgba(248,213,110,0.06), transparent 50%);
+            pointer-events: none;
+        }
+
+        .badge-card.locked {
+            opacity: 0.4;
+        }
+
+        .badge-emoji {
+            font-size: 40px;
+            transition: transform 0.2s;
+        }
+
+        .badge-card.unlocked:hover .badge-emoji { transform: scale(1.2); }
+
+        .badge-card.locked .badge-emoji {
+            filter: grayscale(1);
+        }
+
+        .badge-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #f0f0f8;
+        }
+
+        .badge-card.locked .badge-name { color: rgba(255,255,255,0.4); }
+
+        .badge-desc {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            line-height: 1.4;
+        }
+
+        .badge-check {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 14px;
+        }
+
+        .badge-lock {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+            opacity: 0.4;
+        }
+
+        #loading-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40vh;
+            font-size: 14px;
+            color: rgba(255,255,255,0.4);
+            gap: 10px;
+        }
+
+        .spinner {
+            width: 20px; height: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top-color: #f8d56e;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 420px) {
+            .badge-grid { grid-template-columns: 1fr; }
+            .page-title { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="content">
+
+    <div class="nav">
+        <a href="index.html">← Accueil</a>
+        <a href="profil.html">Mon profil</a>
+    </div>
+
+    <h1 class="page-title">🏆 Mes Succès</h1>
+
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <span>Chargement…</span>
+    </div>
+
+    <div id="badges-content" style="display:none;">
+        <div class="progress-summary" id="progress-summary"></div>
+
+        <div class="section-label">🌱 Premiers pas</div>
+        <div class="badge-grid" id="grid-premiers"></div>
+
+        <div class="section-label">📊 Volume</div>
+        <div class="badge-grid" id="grid-volume"></div>
+
+        <div class="section-label">⭐ Précision</div>
+        <div class="badge-grid" id="grid-precision"></div>
+
+        <div class="section-label">📐 Angles</div>
+        <div class="badge-grid" id="grid-angles"></div>
+
+        <div class="section-label">🍕 Fractions</div>
+        <div class="badge-grid" id="grid-fractions"></div>
+
+        <div class="section-label">🎓 Perfection</div>
+        <div class="badge-grid" id="grid-perfection"></div>
+    </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+<script src="badges-system.js"></script>
+
+<script>
+const CATEGORIES = {
+    'premiers':   ['first_step', 'first_correct', 'five_correct'],
+    'volume':     ['ten_ex', 'twenty_five_ex', 'fifty_ex', 'hundred_ex', 'two_hundred_ex', 'five_hundred_ex'],
+    'precision':  ['ten_correct', 'fifty_correct', 'hundred_correct'],
+    'angles':     ['angle_first', 'angle_ten', 'angle_master'],
+    'fractions':  ['frac_first', 'frac_comparer', 'frac_simplifier', 'frac_convertir', 'frac_arrondir', 'frac_addsub', 'frac_multiplier', 'frac_diviser', 'frac_all_ten'],
+    'perfection': ['perfectionist'],
+};
+
+requireAuth((user, profile) => {
+    injectUserBar(user, profile);
+    document.getElementById('loading-screen').style.display = 'none';
+    const content = document.getElementById('badges-content');
+    content.style.display = 'flex';
+    content.style.flexDirection = 'column';
+    content.style.gap = '16px';
+
+    const userBadges = profile.badges || [];
+    const totalBadges = ALL_BADGES.length;
+    const unlockedCount = userBadges.length;
+
+    document.getElementById('progress-summary').innerHTML =
+        `<strong>${unlockedCount}</strong> / ${totalBadges} succès débloqués`;
+
+    for (const [cat, ids] of Object.entries(CATEGORIES)) {
+        const grid = document.getElementById('grid-' + cat);
+        grid.innerHTML = '';
+        ids.forEach(id => {
+            const badge = ALL_BADGES.find(b => b.id === id);
+            if (!badge) return;
+            const unlocked = userBadges.includes(id);
+            grid.innerHTML += `
+                <div class="badge-card ${unlocked ? 'unlocked' : 'locked'}">
+                    ${unlocked ? '<span class="badge-check">✅</span>' : '<span class="badge-lock">🔒</span>'}
+                    <span class="badge-emoji">${badge.emoji}</span>
+                    <span class="badge-name">${badge.name}</span>
+                    <span class="badge-desc">${badge.desc}</span>
+                </div>`;
+        });
+    }
+});
+</script>
+
+</body>
+</html>

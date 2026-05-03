@@ -420,6 +420,10 @@
         <div class="section-title">½ Fractions</div>
         <div class="progress-list" id="fractions-progress"></div>
 
+        <div class="section-title">🏆 Succès</div>
+        <div id="badges-summary" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+        <a href="badges.html" style="color:rgba(248,213,110,0.7);font-size:13px;font-weight:600;text-decoration:none;text-align:center;margin-top:4px;">Voir tous les succès →</a>
+
     </div>
 
 </div>
@@ -441,6 +445,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="auth.js"></script>
+<script src="badges-system.js"></script>
 
 <script>
 const AVATARS = ['🦊','🐱','🐶','🐼','🦁','🐸','🦉','🐙','🦋','🐢','🐬','🦄','🐧','🐰','🐝'];
@@ -468,6 +473,7 @@ requireAuth((user, profile) => {
     document.getElementById('profile-content').style.gap = '20px';
 
     renderProfile(profile);
+    renderBadgesSummary(profile);
 });
 
 function renderProfile(p) {
@@ -552,6 +558,24 @@ async function saveAvatar() {
         console.error('Erreur avatar:', e);
         alert('Erreur lors de la sauvegarde.');
     }
+}
+
+function renderBadgesSummary(p) {
+    const container = document.getElementById('badges-summary');
+    const userBadges = p.badges || [];
+
+    if (userBadges.length === 0) {
+        container.innerHTML = '<span style="font-size:13px;color:rgba(255,255,255,0.3);">Aucun succès pour le moment — continue à t\'entraîner !</span>';
+        return;
+    }
+
+    let html = '';
+    for (const id of userBadges) {
+        const badge = ALL_BADGES.find(b => b.id === id);
+        if (!badge) continue;
+        html += `<span title="${badge.name}: ${badge.desc}" style="font-size:32px;cursor:default;transition:transform 0.15s;display:inline-block;" onmouseover="this.style.transform='scale(1.3)'" onmouseout="this.style.transform='scale(1)'">${badge.emoji}</span>`;
+    }
+    container.innerHTML = html;
 }
 </script>
 
