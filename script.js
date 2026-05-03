@@ -1,30 +1,30 @@
-// ─── Éléments ───────────────────────────────────────────────────────────────
-const wheel        = document.getElementById('rotation-wheel');
-const wheelFs      = document.getElementById('rotation-wheel-fs');
-const wrapper      = document.getElementById('cursor-wrapper');
-const container    = document.getElementById('exercice-container');
-const fond         = document.getElementById('fond-exercice');
-const sizeSlider   = document.getElementById('equerre-size');
-const sizeSliderFs = document.getElementById('equerre-size-fs');
+// ─── ÉLÉMENTS ────────────────────────────────────────────────────────────────
+const wheel      = document.getElementById('rotation-wheel');
+const wheelGe    = document.getElementById('rotation-wheel-ge');
+const wrapper    = document.getElementById('cursor-wrapper');
+const container  = document.getElementById('exercice-container');
+const fond       = document.getElementById('fond-exercice');
+const sizeSlider = document.getElementById('equerre-size');
+const sizeSliderGe = document.getElementById('equerre-size-ge');
+const geControls = document.getElementById('grand-ecran-controls');
 
-// ─── État ────────────────────────────────────────────────────────────────────
-let rotation   = 0;
-let zoomLevel  = 1;
-let lastAngle  = 0;
+// ─── ÉTAT ────────────────────────────────────────────────────────────────────
+let rotation  = 0;
+let zoomLevel = 1;
+let lastAngle = 0;
+let grandEcran = false;
 
-let isRotating      = false;   // doigt sur un volant
-let activeWheel     = null;    // quel volant est actif (wheel ou wheelFs)
-
-let isDraggingWheel   = false; // souris sur un volant
-let activeWheelMouse  = null;
-
+let isRotating       = false;
+let activeWheel      = null;
+let isDraggingWheel  = false;
+let activeWheelMouse = null;
 let isDraggingEquerre = false;
 
 let initialPinchDistance = null;
 let initialZoom = 1;
 let pinchOriginX = 0, pinchOriginY = 0;
 
-// ─── Utilitaires ─────────────────────────────────────────────────────────────
+// ─── UTILITAIRES ─────────────────────────────────────────────────────────────
 function getDistance(t1, t2) {
     const dx = t1.clientX - t2.clientX;
     const dy = t1.clientY - t2.clientY;
@@ -33,26 +33,49 @@ function getDistance(t1, t2) {
 
 function updateAngleDisplays() {
     const deg = Math.round(((rotation % 360) + 360) % 360);
-    const txt = deg + '°';
-    const a   = document.getElementById('angle-display');
-    const aFs = document.getElementById('angle-display-fs');
-    if (a)   a.textContent   = txt;
-    if (aFs) aFs.textContent = txt;
+    document.getElementById('angle-display').textContent    = deg + '°';
+    document.getElementById('angle-display-ge').textContent = deg + '°';
 }
 
 function applyRotation() {
-    wrapper.style.transform  = `translate(-50%, -50%) rotate(${rotation}deg)`;
-    wheel.style.transform    = `rotate(${rotation}deg)`;
-    if (wheelFs) wheelFs.style.transform = `rotate(${rotation}deg)`;
+    wrapper.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+    wheel.style.transform   = `rotate(${rotation}deg)`;
+    wheelGe.style.transform = `rotate(${rotation}deg)`;
     updateAngleDisplays();
 }
 
-function getWheelCenter(wheelEl) {
-    const rect = wheelEl.getBoundingClientRect();
-    return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+function getWheelCenter(el) {
+    const r = el.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
 }
 
-// ─── TOUCH : démarrage sur un volant ─────────────────────────────────────────
+// ─── GRAND ÉCRAN (faux plein écran JS pur) ───────────────────────────────────
+function toggleGrandEcran() {
+    grandEcran = !grandEcran;
+    if (grandEcran) {
+        container.style.position   = 'fixed';
+        container.style.top        = '0';
+        container.style.left       = '0';
+        container.style.width      = '100vw';
+        container.style.height     = '100vh';
+        container.style.zIndex     = '9999';
+        container.style.borderRadius = '0';
+        geControls.style.display   = 'flex';
+        document.querySelector('.zoom-btn[onclick*="toggleGrandEcran"]').textContent = '✕ Réduire';
+    } else {
+        container.style.position   = '';
+        container.style.top        = '';
+        container.style.left       = '';
+        container.style.width      = '';
+        container.style.height     = '';
+        container.style.zIndex     = '';
+        container.style.borderRadius = '';
+        geControls.style.display   = 'none';
+        document.querySelector('.zoom-btn[onclick*="toggleGrandEcran"]').textContent = '⛶ Agrandir';
+    }
+}
+
+// ─── TOUCH : volants ──────────────────────────────────────────────────────────
 function onWheelTouchStart(wheelEl, e) {
     isRotating  = true;
     activeWheel = wheelEl;
@@ -65,18 +88,16 @@ function onWheelTouchStart(wheelEl, e) {
 
 wheel.addEventListener('touchstart',
     (e) => onWheelTouchStart(wheel, e), { passive: false });
+wheelGe.addEventListener('touchstart',
+    (e) => onWheelTouchStart(wheelGe, e), { passive: false });
 
-if (wheelFs) wheelFs.addEventListener('touchstart',
-    (e) => onWheelTouchStart(wheelFs, e), { passive: false });
-
-// ─── TOUCH : mouvement global ─────────────────────────────────────────────────
 window.addEventListener('touchmove', (e) => {
     if (!isRotating || !activeWheel) return;
     const t = e.touches[0];
     const c = getWheelCenter(activeWheel);
-    const currentAngle = Math.atan2(t.clientY - c.y, t.clientX - c.x);
-    rotation += (currentAngle - lastAngle) * (180 / Math.PI);
-    lastAngle = currentAngle;
+    const cur = Math.atan2(t.clientY - c.y, t.clientX - c.x);
+    rotation += (cur - lastAngle) * (180 / Math.PI);
+    lastAngle = cur;
     applyRotation();
     e.preventDefault();
 }, { passive: false });
@@ -86,7 +107,7 @@ window.addEventListener('touchend', () => {
     activeWheel = null;
 });
 
-// ─── TOUCH : déplacement équerre + pinch-zoom dans le container ───────────────
+// ─── TOUCH : déplacement équerre + pinch-zoom ─────────────────────────────────
 container.addEventListener('touchstart', (e) => {
     if (e.touches.length === 2) {
         initialPinchDistance = getDistance(e.touches[0], e.touches[1]);
@@ -99,11 +120,10 @@ container.addEventListener('touchstart', (e) => {
 }, { passive: false });
 
 container.addEventListener('touchmove', (e) => {
-    if (isRotating) return; // le volant gère son propre mouvement
-
+    if (isRotating) return;
     if (e.touches.length === 2 && initialPinchDistance !== null) {
-        const dist  = getDistance(e.touches[0], e.touches[1]);
-        zoomLevel   = Math.max(1, Math.min(4, initialZoom * dist / initialPinchDistance));
+        const dist = getDistance(e.touches[0], e.touches[1]);
+        zoomLevel  = Math.max(1, Math.min(4, initialZoom * dist / initialPinchDistance));
         fond.style.transformOrigin = `${pinchOriginX}% ${pinchOriginY}%`;
         fond.style.transform = `scale(${zoomLevel})`;
         e.preventDefault();
@@ -120,7 +140,7 @@ container.addEventListener('touchend', (e) => {
     if (e.touches.length < 2) initialPinchDistance = null;
 });
 
-// ─── SOURIS : rotation via un volant ─────────────────────────────────────────
+// ─── SOURIS : volants ─────────────────────────────────────────────────────────
 function onWheelMouseDown(wheelEl, e) {
     isDraggingWheel  = true;
     activeWheelMouse = wheelEl;
@@ -130,18 +150,15 @@ function onWheelMouseDown(wheelEl, e) {
     e.stopPropagation();
 }
 
-wheel.addEventListener('mousedown',
-    (e) => onWheelMouseDown(wheel, e));
-
-if (wheelFs) wheelFs.addEventListener('mousedown',
-    (e) => onWheelMouseDown(wheelFs, e));
+wheel.addEventListener('mousedown',   (e) => onWheelMouseDown(wheel, e));
+wheelGe.addEventListener('mousedown', (e) => onWheelMouseDown(wheelGe, e));
 
 window.addEventListener('mousemove', (e) => {
     if (isDraggingWheel && activeWheelMouse) {
         const c = getWheelCenter(activeWheelMouse);
-        const currentAngle = Math.atan2(e.clientY - c.y, e.clientX - c.x);
-        rotation += (currentAngle - lastAngle) * (180 / Math.PI);
-        lastAngle = currentAngle;
+        const cur = Math.atan2(e.clientY - c.y, e.clientX - c.x);
+        rotation += (cur - lastAngle) * (180 / Math.PI);
+        lastAngle = cur;
         applyRotation();
         return;
     }
@@ -153,15 +170,15 @@ window.addEventListener('mousemove', (e) => {
 });
 
 window.addEventListener('mouseup', () => {
-    isDraggingWheel  = false;
-    activeWheelMouse = null;
+    isDraggingWheel   = false;
+    activeWheelMouse  = null;
     isDraggingEquerre = false;
 });
 
 // ─── SOURIS : déplacement équerre ────────────────────────────────────────────
 container.addEventListener('mousedown', (e) => {
-    if (e.target === wheel || wheel.contains(e.target)) return;
-    if (wheelFs && (e.target === wheelFs || wheelFs.contains(e.target))) return;
+    if (wheel.contains(e.target) || wheelGe.contains(e.target)) return;
+    if (geControls.contains(e.target)) return;
     isDraggingEquerre = true;
 });
 
@@ -192,73 +209,12 @@ container.addEventListener('wheel', (e) => {
 // ─── TAILLE ÉQUERRE ───────────────────────────────────────────────────────────
 function setEquerreSize(val) {
     wrapper.style.width = val + 'px';
-    if (sizeSlider)   sizeSlider.value   = val;
-    if (sizeSliderFs) sizeSliderFs.value = val;
+    sizeSlider.value    = val;
+    sizeSliderGe.value  = val;
 }
 
-if (sizeSlider)   sizeSlider.addEventListener('input',   () => setEquerreSize(sizeSlider.value));
-if (sizeSliderFs) sizeSliderFs.addEventListener('input', () => setEquerreSize(sizeSliderFs.value));
-
-// ─── PLEIN ÉCRAN ──────────────────────────────────────────────────────────────
-const fsControls = document.getElementById('fullscreen-controls');
-
-function enterFullscreen() {
-    const el = container;
-    if      (el.requestFullscreen)       el.requestFullscreen();
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-    else if (el.mozRequestFullScreen)    el.mozRequestFullScreen();
-    else if (el.msRequestFullscreen)     el.msRequestFullscreen();
-}
-
-function exitFullscreen() {
-    if      (document.exitFullscreen)       document.exitFullscreen();
-    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-    else if (document.mozCancelFullScreen)  document.mozCancelFullScreen();
-    else if (document.msExitFullscreen)     document.msExitFullscreen();
-}
-
-function isFullscreen() {
-    return !!(document.fullscreenElement
-           || document.webkitFullscreenElement
-           || document.mozFullScreenElement
-           || document.msFullscreenElement);
-}
-
-function onFullscreenChange() {
-    if (isFullscreen()) {
-        fsControls.style.display = 'flex';
-        container.style.width    = '100vw';
-        container.style.height   = '100vh';
-        container.style.borderRadius = '0';
-        container.style.border   = 'none';
-        container.style.background = '#000';
-    } else {
-        fsControls.style.display = 'none';
-        container.style.width    = '';
-        container.style.height   = '';
-        container.style.borderRadius = '';
-        container.style.border   = '';
-        container.style.background = '';
-    }
-}
-
-document.addEventListener('fullscreenchange',       onFullscreenChange);
-document.addEventListener('webkitfullscreenchange', onFullscreenChange);
-document.addEventListener('mozfullscreenchange',    onFullscreenChange);
-document.addEventListener('MSFullscreenChange',     onFullscreenChange);
-
-container.addEventListener('dblclick', () => {
-    if (isFullscreen()) exitFullscreen();
-    else enterFullscreen();
-});
-
-window.addEventListener('orientationchange', () => {
-    if (window.orientation === 90 || window.orientation === -90) {
-        if (!isFullscreen()) enterFullscreen();
-    } else {
-        if (isFullscreen()) exitFullscreen();
-    }
-});
+sizeSlider.addEventListener('input',   () => setEquerreSize(sizeSlider.value));
+sizeSliderGe.addEventListener('input', () => setEquerreSize(sizeSliderGe.value));
 
 // ─── VALIDATION RÉPONSE ───────────────────────────────────────────────────────
 function verifierReponse() {

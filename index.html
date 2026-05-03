@@ -16,7 +16,6 @@
             <div id="score-board">
                 Score : <span id="current-score">0</span> / <span id="total-questions">0</span>
             </div>
-
             <div id="rotation-control">
                 <div id="rotation-wheel"></div>
                 <span id="angle-display">0°</span>
@@ -28,8 +27,7 @@
             <button class="zoom-btn" onclick="ajusterZoom(0.2)">🔍 +</button>
             <button class="zoom-btn" onclick="ajusterZoom(-0.2)">🔍 −</button>
             <button class="zoom-btn" onclick="resetZoom()">🔄</button>
-            <span class="hint-pc">Dbl-clic → Plein écran</span>
-
+            <button class="zoom-btn" onclick="toggleGrandEcran()">⛶ Agrandir</button>
             <div id="size-control">
                 <span>📐</span>
                 <input type="range" id="equerre-size" min="80" max="320" value="180">
@@ -42,21 +40,19 @@
                 <img src="equerre.png" alt="Équerre" id="custom-cursor">
             </div>
 
-            <!-- Contrôles flottants visibles uniquement en plein écran -->
-            <div id="fullscreen-controls">
-                <div id="rotation-control-fs">
-                    <div id="rotation-wheel-fs"></div>
-                    <span id="angle-display-fs">0°</span>
+            <!-- Panneau flottant TOUJOURS dans le container, affiché seulement en grand écran -->
+            <div id="grand-ecran-controls">
+                <div id="rotation-control-ge">
+                    <div id="rotation-wheel-ge"></div>
+                    <span id="angle-display-ge">0°</span>
                     <span>Pivoter</span>
                 </div>
-                <div id="fs-buttons">
-                    <button class="zoom-btn-fs" onclick="ajusterZoom(0.2)">🔍+</button>
-                    <button class="zoom-btn-fs" onclick="ajusterZoom(-0.2)">🔍−</button>
-                    <button class="zoom-btn-fs" onclick="resetZoom()">🔄</button>
-                </div>
-                <div id="size-control-fs">
-                    <span>📐</span>
-                    <input type="range" id="equerre-size-fs" min="80" max="320" value="180">
+                <div id="ge-buttons">
+                    <button class="zoom-btn-ge" onclick="ajusterZoom(0.2)">🔍+</button>
+                    <button class="zoom-btn-ge" onclick="ajusterZoom(-0.2)">🔍−</button>
+                    <button class="zoom-btn-ge" onclick="resetZoom()">🔄</button>
+                    <input type="range" id="equerre-size-ge" min="80" max="320" value="180">
+                    <button class="zoom-btn-ge btn-fermer" onclick="toggleGrandEcran()">✕</button>
                 </div>
             </div>
         </div>
