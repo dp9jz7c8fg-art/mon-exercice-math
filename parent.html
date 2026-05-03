@@ -3,32 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espace Parent – La Classe de Stef</title>
+    <title>Espace Partenaires – La Classe de Stef</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        html,body{height:100%;overflow:hidden}
-        body{
-            font-family:'DM Sans',sans-serif;
-            background:linear-gradient(135deg,#040804 0%,#061008 25%,#081a0e 50%,#0a2414 75%,#040804 100%);
-            background-size:400% 400%;animation:grad 20s ease infinite;
-            color:#e8f5e9;display:flex;flex-direction:column;align-items:center;justify-content:center;
-        }
+        body{font-family:'DM Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#040804 0%,#061008 25%,#081a0e 50%,#0a2414 75%,#040804 100%);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center}
         @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-
-        .page{width:100%;max-width:600px;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:20px}
-
+        .content{width:100%;max-width:620px;padding:20px 16px 60px;display:flex;flex-direction:column;align-items:center;gap:18px}
         .nav{width:100%;display:flex;justify-content:flex-start}
         .nav a{color:rgba(46,204,113,0.5);text-decoration:none;font-size:13px;font-weight:600;transition:color 0.15s}
         .nav a:hover{color:#2ecc71}
-
         .page-header{text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center}
         .page-icon{font-size:44px}
         .page-title{font-family:'Playfair Display',serif;font-style:italic;font-size:26px;font-weight:700;background:linear-gradient(135deg,#2ecc71,#a8f0c0,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .page-sub{font-size:12px;color:rgba(46,204,113,0.4);letter-spacing:0.1em;text-transform:uppercase;font-weight:600}
 
-        /* Écran d'identification */
-        #identify-screen{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%}
+        /* ── Étapes ── */
+        .step{display:none;width:100%;flex-direction:column;gap:16px;align-items:center}
+        .step.active{display:flex}
+
+        /* ── Step 1 : Identification élève ── */
         .id-box{background:rgba(10,30,16,0.6);border:1px solid rgba(40,100,55,0.25);border-radius:18px;padding:28px 24px;width:100%;display:flex;flex-direction:column;gap:14px;backdrop-filter:blur(8px)}
         .id-title{font-size:14px;font-weight:600;color:rgba(255,255,255,0.6);text-align:center}
         .id-input{background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:10px;padding:14px 16px;font-size:15px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none;width:100%;transition:border-color 0.2s}
@@ -38,138 +33,161 @@
         .id-btn:hover{opacity:0.85}
         #id-error{font-size:12px;color:#e74c3c;text-align:center;min-height:16px}
 
-        /* Écran principal parent */
-        #parent-main{display:none;flex-direction:column;align-items:center;gap:16px;width:100%}
-        .parent-info{font-size:13px;color:rgba(46,204,113,0.5);text-align:center}
-        .parent-info strong{color:#2ecc71}
+        /* ── Step 2 : Qui êtes-vous ? ── */
+        .role-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%}
+        .role-btn{background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:14px;padding:16px 12px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;font-size:14px;color:#e8f5e9;font-weight:500}
+        .role-btn:hover{border-color:rgba(46,204,113,0.4);background:rgba(20,50,28,0.5)}
+        .role-btn.selected{border-color:#2ecc71;background:rgba(46,204,113,0.12)}
+        .role-icon{font-size:24px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(46,204,113,0.08);flex-shrink:0}
+        .role-btn.selected .role-icon{background:rgba(46,204,113,0.2)}
 
-        .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%}
-        .p-card{background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:18px;padding:24px 16px;text-decoration:none;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;transition:transform 0.2s,background 0.2s,border-color 0.2s,box-shadow 0.2s;backdrop-filter:blur(8px);position:relative;overflow:hidden;cursor:pointer}
-        .p-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 50% 30%,rgba(46,204,113,0.03),transparent 60%);pointer-events:none}
-        .p-card:hover{transform:translateY(-4px);background:rgba(20,50,28,0.7);border-color:rgba(46,204,113,0.4);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
-        .p-card.disabled{opacity:0.4;pointer-events:none}
-        .p-card-icon{font-size:34px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:rgba(46,204,113,0.1)}
-        .p-card-title{font-size:14px;font-weight:700}
-        .p-card-badge{font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:100px}
-        .badge-ready{background:rgba(46,204,113,0.15);color:#2ecc71}
-        .badge-soon{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.3)}
+        /* ── Step 3 : Dashboard partenaire ── */
+        .partner-header{width:100%;display:flex;align-items:center;justify-content:space-between;background:rgba(10,30,16,0.5);border:1px solid rgba(40,100,55,0.2);border-radius:14px;padding:12px 16px}
+        .ph-left{display:flex;flex-direction:column;gap:2px}
+        .ph-child{font-size:15px;font-weight:700}
+        .ph-role{font-size:11px;color:rgba(46,204,113,0.6);font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+        .ph-btn{background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.2);border-radius:8px;padding:6px 12px;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;color:#2ecc71;cursor:pointer;transition:all 0.15s}
+        .ph-btn:hover{background:rgba(46,204,113,0.15)}
 
-        /* Modal avis parent */
-        .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
-        .modal-overlay.open{display:flex}
-        .modal-box{background:#081a0e;border:1px solid rgba(40,100,55,0.3);border-radius:20px;padding:28px 24px;width:90%;max-width:440px;display:flex;flex-direction:column;gap:14px;max-height:85vh;overflow-y:auto}
-        .modal-close{align-self:flex-end;background:none;border:none;color:rgba(255,255,255,0.3);font-size:20px;cursor:pointer}
-        .modal-close:hover{color:#e74c3c}
-        .modal-title{font-size:16px;font-weight:700;text-align:center}
-        .form-row{display:flex;flex-direction:column;gap:4px}
-        .form-row label{font-size:10px;font-weight:600;color:rgba(46,204,113,0.5);text-transform:uppercase;letter-spacing:0.06em}
-        .form-row input,.form-row textarea{background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:8px;padding:12px;font-size:13px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none;width:100%}
-        .form-row input::placeholder,.form-row textarea::placeholder{color:rgba(255,255,255,0.2)}
-        .form-row input:focus,.form-row textarea:focus{border-color:rgba(46,204,113,0.4)}
-        .form-row textarea{resize:vertical;min-height:70px}
+        /* Stats */
+        .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
+        .stat-box{background:rgba(10,30,16,0.5);border:1px solid rgba(40,100,55,0.2);border-radius:12px;padding:16px;text-align:center}
+        .stat-val{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:#2ecc71}
+        .stat-label{font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.06em;margin-top:4px;font-weight:600}
+
+        /* Sections */
+        .section{width:100%;background:rgba(10,30,16,0.5);border:1px solid rgba(40,100,55,0.2);border-radius:14px;padding:18px 16px;display:flex;flex-direction:column;gap:12px}
+        .section-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+
+        /* Barres de progression */
+        .prog-row{display:flex;align-items:center;gap:8px}
+        .prog-name{width:90px;font-size:11px;color:rgba(255,255,255,0.4);text-align:right;flex-shrink:0}
+        .prog-bar-bg{flex:1;height:8px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden}
+        .prog-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#2ecc71,#27ae60)}
+        .prog-score{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);width:50px}
+
+        /* Notes/Remarques */
+        .notes-list{display:flex;flex-direction:column;gap:8px;max-height:200px;overflow-y:auto}
+        .note-card{background:rgba(0,0,0,0.2);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+        .note-top{display:flex;justify-content:space-between;align-items:center}
+        .note-author{font-size:12px;font-weight:600;color:#e8f5e9}
+        .note-role{font-size:9px;color:rgba(46,204,113,0.5);font-weight:600;text-transform:uppercase;letter-spacing:0.04em}
+        .note-date{font-size:9px;color:rgba(255,255,255,0.2)}
+        .note-text{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.5}
+        .no-notes{font-size:12px;color:rgba(255,255,255,0.2);text-align:center;padding:8px}
+
+        /* Formulaire note */
+        .note-form{display:flex;flex-direction:column;gap:10px;margin-top:6px;padding-top:10px;border-top:1px solid rgba(40,100,55,0.15)}
+        .note-textarea{background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:8px;padding:12px;font-size:13px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none;resize:vertical;min-height:60px;width:100%}
+        .note-textarea::placeholder{color:rgba(255,255,255,0.2)}
+        .note-textarea:focus{border-color:rgba(46,204,113,0.4)}
+        .note-submit{background:#2ecc71;color:#040804;border:none;border-radius:8px;padding:10px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;align-self:flex-end;padding-left:20px;padding-right:20px}
+        .note-submit:hover{opacity:0.85}
+        .note-submit:disabled{opacity:0.4}
+        #note-fb{font-size:11px;text-align:center;min-height:14px}
+        .af-ok{color:#2ecc71}.af-err{color:#e74c3c}
+
+        /* Avis */
+        .avis-section{width:100%}
         .stars-input{display:flex;gap:6px}
         .star-btn{font-size:28px;cursor:pointer;color:rgba(255,255,255,0.15);transition:color 0.15s,transform 0.1s;background:none;border:none;padding:0}
         .star-btn.active{color:#f39c12}
         .star-btn:hover{transform:scale(1.2)}
-        .btn-submit{background:#2ecc71;color:#040804;border:none;border-radius:10px;padding:12px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer}
-        .btn-submit:hover{opacity:0.85}
-        .btn-submit:disabled{opacity:0.4}
-        #modal-fb{font-size:12px;text-align:center;min-height:16px}
-        .af-ok{color:#2ecc71}.af-err{color:#e74c3c}
+        #avis-fb{font-size:11px;text-align:center;min-height:14px}
 
-        /* Progression modal */
-        .prog-section{display:flex;flex-direction:column;gap:10px;width:100%}
-        .prog-title{font-size:13px;font-weight:700;color:rgba(46,204,113,0.5)}
-        .prog-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-        .ps-box{background:rgba(0,0,0,0.2);border-radius:10px;padding:12px;text-align:center}
-        .ps-val{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#2ecc71}
-        .ps-label{font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;margin-top:3px}
-        .prog-bar-row{display:flex;align-items:center;gap:8px}
-        .prog-bar-name{width:80px;font-size:11px;color:rgba(255,255,255,0.4);text-align:right;flex-shrink:0}
-        .prog-bar-bg{flex:1;height:8px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden}
-        .prog-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#2ecc71,#27ae60)}
-        .prog-bar-score{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);width:50px}
-
-        .not-found{font-size:13px;color:rgba(255,255,255,0.4);text-align:center;padding:20px}
-
-        @media(max-width:520px){.grid-3{grid-template-columns:1fr}.page-title{font-size:22px}}
+        @media(max-width:520px){.role-grid{grid-template-columns:1fr}.stats-row{grid-template-columns:1fr 1fr 1fr}.page-title{font-size:22px}}
     </style>
 </head>
 <body>
 
-<div class="page">
+<div class="content">
     <div class="nav"><a href="index.html">← Accueil</a></div>
 
     <div class="page-header">
-        <span class="page-icon">👨‍👩‍👧‍👦</span>
-        <h1 class="page-title">Espace Parent</h1>
+        <span class="page-icon">🤝</span>
+        <h1 class="page-title">Espace Partenaires</h1>
+        <p class="page-sub">Suivi collaboratif de l'élève</p>
     </div>
 
-    <!-- Identification -->
-    <div id="identify-screen">
+    <!-- STEP 1 : Identification -->
+    <div class="step active" id="step-1">
         <div class="id-box">
-            <div class="id-title">Entrez le nom et le prénom de votre enfant</div>
+            <div class="id-title">Entrez le nom et le prénom de l'élève</div>
             <input type="text" class="id-input" id="child-lastname" placeholder="Nom de famille" autocomplete="off">
             <input type="text" class="id-input" id="child-firstname" placeholder="Prénom" autocomplete="off">
-            <button class="id-btn" onclick="findChild()">Accéder</button>
+            <button class="id-btn" onclick="findChild()">Continuer</button>
             <div id="id-error"></div>
         </div>
     </div>
 
-    <!-- Écran principal parent -->
-    <div id="parent-main">
-        <div class="parent-info">Élève : <strong id="child-display"></strong></div>
-
-        <div class="grid-3">
-            <div class="p-card" onclick="openAvisModal()">
-                <div class="p-card-icon">⭐</div>
-                <div class="p-card-title">Avis</div>
-                <span class="p-card-badge badge-ready">Écrire</span>
-            </div>
-
-            <div class="p-card" onclick="openProgressionModal()">
-                <div class="p-card-icon">📊</div>
-                <div class="p-card-title">Progression</div>
-                <span class="p-card-badge badge-ready">Consulter</span>
-            </div>
-
-            <div class="p-card disabled">
-                <div class="p-card-icon">💳</div>
-                <div class="p-card-title">Paiements</div>
-                <span class="p-card-badge badge-soon">Bientôt</span>
-            </div>
+    <!-- STEP 2 : Qui êtes-vous ? -->
+    <div class="step" id="step-2">
+        <div class="id-box">
+            <div class="id-title">Vous êtes…</div>
+            <div class="role-grid" id="role-grid"></div>
+            <button class="id-btn" onclick="confirmRole()">Accéder au suivi</button>
+            <div id="role-error" style="font-size:12px;color:#e74c3c;text-align:center;min-height:16px"></div>
         </div>
     </div>
-</div>
 
-<!-- Modal Avis -->
-<div class="modal-overlay" id="avis-modal">
-    <div class="modal-box">
-        <button class="modal-close" onclick="closeModal('avis-modal')">✕</button>
-        <div class="modal-title">⭐ Laisser un avis</div>
-        <div class="form-row">
-            <label>Votre nom</label>
-            <input type="text" id="avis-name" placeholder="Parent de…">
+    <!-- STEP 3 : Dashboard -->
+    <div class="step" id="step-3">
+        <div class="partner-header">
+            <div class="ph-left">
+                <div class="ph-child" id="display-child"></div>
+                <div class="ph-role" id="display-role"></div>
+            </div>
+            <button class="ph-btn" onclick="resetPartner()">Changer d'élève</button>
         </div>
-        <div class="form-row">
-            <label>Note</label>
-            <div class="stars-input" id="stars-input"></div>
-        </div>
-        <div class="form-row">
-            <label>Votre avis</label>
-            <textarea id="avis-text" placeholder="Partagez votre expérience…"></textarea>
-        </div>
-        <button class="btn-submit" id="btn-avis" onclick="submitAvis()">Envoyer</button>
-        <div id="modal-fb"></div>
-    </div>
-</div>
 
-<!-- Modal Progression -->
-<div class="modal-overlay" id="prog-modal">
-    <div class="modal-box">
-        <button class="modal-close" onclick="closeModal('prog-modal')">✕</button>
-        <div class="modal-title">📊 Progression de <span id="prog-child-name"></span></div>
-        <div id="prog-content"></div>
+        <!-- Stats globales -->
+        <div class="stats-row">
+            <div class="stat-box"><div class="stat-val" id="s-exercises">0</div><div class="stat-label">Exercices</div></div>
+            <div class="stat-box"><div class="stat-val" id="s-correct">0</div><div class="stat-label">Corrects</div></div>
+            <div class="stat-box"><div class="stat-val" id="s-pct">0%</div><div class="stat-label">Réussite</div></div>
+        </div>
+
+        <!-- Progression -->
+        <div class="section">
+            <div class="section-title">📊 Progression par objectif</div>
+            <div id="progression-bars"></div>
+        </div>
+
+        <!-- Cours & ateliers -->
+        <div class="section">
+            <div class="section-title">📅 Cours & Ateliers</div>
+            <div class="stats-row" style="margin-top:4px">
+                <div class="stat-box"><div class="stat-val" id="s-cours">0</div><div class="stat-label">Cours réservés</div></div>
+                <div class="stat-box"><div class="stat-val" id="s-badges">0</div><div class="stat-label">Badges</div></div>
+                <div class="stat-box"><div class="stat-val" id="s-ateliers">—</div><div class="stat-label">Ateliers</div></div>
+            </div>
+        </div>
+
+        <!-- Notes partagées -->
+        <div class="section">
+            <div class="section-title">📝 Notes & Remarques</div>
+            <div class="notes-list" id="notes-list"></div>
+            <div class="note-form">
+                <textarea class="note-textarea" id="note-text" placeholder="Ajouter une note sur l'élève…"></textarea>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                    <div id="note-fb"></div>
+                    <button class="note-submit" id="btn-note" onclick="submitNote()">Envoyer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Laisser un avis -->
+        <div class="section avis-section">
+            <div class="section-title">⭐ Laisser un avis</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+                <div class="stars-input" id="stars-input"></div>
+                <textarea class="note-textarea" id="avis-text" placeholder="Votre avis sur La Classe de Stef…"></textarea>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                    <div id="avis-fb"></div>
+                    <button class="note-submit" onclick="submitAvis()">Envoyer</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -180,137 +198,195 @@ const firebaseConfig={apiKey:"AIzaSyB0djV_ZDOsYngnUeceNiTUt60IEKP_Qvg",authDomai
 firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore();
 
+const ROLES = [
+    {id:'papa',label:'Papa',icon:'👨'},
+    {id:'maman',label:'Maman',icon:'👩'},
+    {id:'logopede',label:'Logopède',icon:'🗣️'},
+    {id:'neuropsy',label:'Neuropsychologue',icon:'🧠'},
+    {id:'coach',label:'Coach scolaire',icon:'🎯'},
+    {id:'prof',label:'Professeur',icon:'👩‍🏫'},
+    {id:'educateur',label:'Éducateur',icon:'🤝'},
+    {id:'autre',label:'Autre',icon:'👤'},
+];
+
 let childProfile = null;
+let childId = null;
+let selectedRole = null;
 let selectedStars = 5;
 
-// Enter key
+// Enter keys
 document.getElementById('child-firstname').addEventListener('keydown',e=>{if(e.key==='Enter')findChild()});
 
+// Build role grid
+const roleGrid = document.getElementById('role-grid');
+ROLES.forEach(r => {
+    const btn = document.createElement('div');
+    btn.className = 'role-btn';
+    btn.innerHTML = `<div class="role-icon">${r.icon}</div><span>${r.label}</span>`;
+    btn.onclick = () => {
+        roleGrid.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedRole = r;
+    };
+    roleGrid.appendChild(btn);
+});
+
 // Stars
-const starsContainer = document.getElementById('stars-input');
+const starsEl = document.getElementById('stars-input');
 for(let i=1;i<=5;i++){
     const btn=document.createElement('button');btn.className='star-btn active';btn.textContent='★';btn.dataset.val=i;
-    btn.onclick=()=>{selectedStars=i;starsContainer.querySelectorAll('.star-btn').forEach(b=>{b.classList.toggle('active',parseInt(b.dataset.val)<=i)})};
-    starsContainer.appendChild(btn);
+    btn.onclick=()=>{selectedStars=i;starsEl.querySelectorAll('.star-btn').forEach(b=>{b.classList.toggle('active',parseInt(b.dataset.val)<=i)})};
+    starsEl.appendChild(btn);
 }
 
-// Trouver l'enfant
+function showStep(n){
+    document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+    document.getElementById('step-'+n).classList.add('active');
+}
+
+// STEP 1: Find child
 async function findChild(){
     const ln=document.getElementById('child-lastname').value.trim().toLowerCase();
     const fn=document.getElementById('child-firstname').value.trim().toLowerCase();
     const err=document.getElementById('id-error');
     err.textContent='';
-
     if(!ln||!fn){err.textContent='Veuillez remplir les deux champs.';return}
 
     try{
         const snap=await db.collection('users').get();
-        let found=null;
+        let found=null;let fId=null;
         snap.forEach(doc=>{
             const d=doc.data();
-            const dName=(d.name||'').toLowerCase();
-            const dLast=(d.lastname||'').toLowerCase();
-            if(dName===fn && dLast===ln) found=d;
+            if((d.name||'').toLowerCase()===fn && (d.lastname||'').toLowerCase()===ln){found=d;fId=doc.id}
         });
-
-        if(!found){err.textContent='Aucun élève trouvé avec ce nom. Vérifiez l\'orthographe.';return}
-
-        childProfile=found;
-        document.getElementById('child-display').textContent=found.name+' '+(found.lastname||'');
-        document.getElementById('prog-child-name').textContent=found.name;
-        document.getElementById('identify-screen').style.display='none';
-        const main=document.getElementById('parent-main');
-        main.style.display='flex';
-    }catch(e){
-        err.textContent='Erreur de connexion. Réessayez.';
-    }
+        if(!found){err.textContent='Aucun élève trouvé. Vérifiez l\'orthographe.';return}
+        childProfile=found;childId=fId;
+        showStep(2);
+    }catch(e){err.textContent='Erreur de connexion.'}
 }
 
-// Modals
-function openAvisModal(){document.getElementById('avis-modal').classList.add('open')}
-function openProgressionModal(){
-    renderProgression();
-    document.getElementById('prog-modal').classList.add('open');
-}
-function closeModal(id){document.getElementById(id).classList.remove('open')}
-document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')})});
-
-// Soumettre avis
-async function submitAvis(){
-    const name=document.getElementById('avis-name').value.trim();
-    const text=document.getElementById('avis-text').value.trim();
-    const fb=document.getElementById('modal-fb');
-    const btn=document.getElementById('btn-avis');
-    fb.textContent='';
-
-    if(!name||!text){fb.textContent='Remplissez tous les champs.';fb.className='af-err';return}
-    if(text.length<10){fb.textContent='Votre avis doit contenir au moins 10 caractères.';fb.className='af-err';return}
-
-    btn.disabled=true;btn.textContent='Envoi…';
-    try{
-        await db.collection('avis').add({author:name,text:text,stars:selectedStars,type:'parent',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-        fb.textContent='✓ Merci pour votre avis !';fb.className='af-ok';
-        document.getElementById('avis-name').value='';document.getElementById('avis-text').value='';
-        setTimeout(()=>closeModal('avis-modal'),1500);
-    }catch(e){fb.textContent='Erreur. Réessayez.';fb.className='af-err'}
-    btn.disabled=false;btn.textContent='Envoyer';
+// STEP 2: Confirm role
+function confirmRole(){
+    const err=document.getElementById('role-error');
+    err.textContent='';
+    if(!selectedRole){err.textContent='Veuillez sélectionner votre rôle.';return}
+    showStep(3);
+    renderDashboard();
 }
 
-// Progression
-function renderProgression(){
+function resetPartner(){
+    childProfile=null;childId=null;selectedRole=null;
+    roleGrid.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));
+    document.getElementById('child-lastname').value='';
+    document.getElementById('child-firstname').value='';
+    showStep(1);
+}
+
+// STEP 3: Dashboard
+async function renderDashboard(){
     const p=childProfile;
-    if(!p){document.getElementById('prog-content').innerHTML='<div class="not-found">Données non disponibles.</div>';return}
+    const fullName=(p.name||'')+' '+(p.lastname||'');
+    document.getElementById('display-child').textContent=fullName;
+    document.getElementById('display-role').textContent=selectedRole.icon+' '+selectedRole.label;
 
     const totalEx=p.totalExercises||0;
     const totalCo=p.totalCorrect||0;
     const pct=totalEx>0?Math.round(totalCo/totalEx*100):0;
 
-    let html=`
-        <div class="prog-section">
-            <div class="prog-title">Vue d'ensemble</div>
-            <div class="prog-stats">
-                <div class="ps-box"><div class="ps-val">${totalEx}</div><div class="ps-label">Exercices</div></div>
-                <div class="ps-box"><div class="ps-val">${totalCo}</div><div class="ps-label">Corrects</div></div>
-                <div class="ps-box"><div class="ps-val">${pct}%</div><div class="ps-label">Réussite</div></div>
-            </div>
-        </div>`;
+    document.getElementById('s-exercises').textContent=totalEx;
+    document.getElementById('s-correct').textContent=totalCo;
+    document.getElementById('s-pct').textContent=pct+'%';
+    document.getElementById('s-badges').textContent=(p.badges||[]).length;
+
+    // Count bookings
+    try{
+        const bSnap=await db.collection('bookings').where('userId','==',childId).get();
+        document.getElementById('s-cours').textContent=bSnap.size;
+    }catch(e){document.getElementById('s-cours').textContent='—'}
+
+    // Progression bars
+    let barsHTML='';
 
     // Angles
     const ang=p.scores?.angles||{done:0,correct:0};
-    const angP=ang.done>0?Math.round(ang.correct/ang.done*100):0;
-    html+=`<div class="prog-section"><div class="prog-title">📐 Angles</div>${barRow('Mesure',ang.done,ang.correct,angP)}</div>`;
+    barsHTML+=barRow('📐 Angles',ang.done,ang.correct);
 
     // Fractions
     const fracKeys=['comparer','convertir','arrondir','simplifier','add-sub','multiplier','diviser'];
     const fracLabels={comparer:'Comparer',convertir:'Convertir',arrondir:'Arrondir',simplifier:'Simplifier','add-sub':'Add/Soustr',multiplier:'Multiplier',diviser:'Diviser'};
-    let fracHTML='';
-    fracKeys.forEach(k=>{
-        const s=p.scores?.fractions?.[k]||{done:0,correct:0};
-        const sp=s.done>0?Math.round(s.correct/s.done*100):0;
-        fracHTML+=barRow(fracLabels[k],s.done,s.correct,sp);
-    });
-    html+=`<div class="prog-section"><div class="prog-title">½ Fractions</div>${fracHTML}</div>`;
+    fracKeys.forEach(k=>{const s=p.scores?.fractions?.[k]||{done:0,correct:0};barsHTML+=barRow('½ '+fracLabels[k],s.done,s.correct)});
 
     // Algèbre
     const algKeys=['comprendre','evaluer','simplifier','parentheses','developper','factoriser','identites','polynomes','problemes'];
     const algLabels={comprendre:'Comprendre',evaluer:'Évaluer',simplifier:'Simplifier',parentheses:'Parenthèses',developper:'Développer',factoriser:'Factoriser',identites:'Identités',polynomes:'Polynômes',problemes:'Problèmes'};
-    let algHTML='';
-    algKeys.forEach(k=>{
-        const s=p.scores?.algebre?.[k]||{done:0,correct:0};
-        const sp=s.done>0?Math.round(s.correct/s.done*100):0;
-        algHTML+=barRow(algLabels[k],s.done,s.correct,sp);
-    });
-    html+=`<div class="prog-section"><div class="prog-title">𝑥 Algèbre</div>${algHTML}</div>`;
+    algKeys.forEach(k=>{const s=p.scores?.algebre?.[k]||{done:0,correct:0};barsHTML+=barRow('𝑥 '+algLabels[k],s.done,s.correct)});
 
-    // Badges
-    const badges=p.badges||[];
-    html+=`<div class="prog-section"><div class="prog-title">🏆 Badges (${badges.length})</div><div style="font-size:28px;letter-spacing:4px;text-align:center;min-height:30px">${badges.length>0?badges.map(()=>'⭐').join(''):'Aucun badge pour le moment'}</div></div>`;
+    document.getElementById('progression-bars').innerHTML=barsHTML;
 
-    document.getElementById('prog-content').innerHTML=html;
+    // Load notes
+    loadNotes();
 }
 
-function barRow(name,done,correct,pct){
-    return `<div class="prog-bar-row"><span class="prog-bar-name">${name}</span><div class="prog-bar-bg"><div class="prog-bar-fill" style="width:${pct}%"></div></div><span class="prog-bar-score">${correct}/${done}</span></div>`;
+function barRow(name,done,correct){
+    const pct=done>0?Math.round(correct/done*100):0;
+    return `<div class="prog-row"><span class="prog-name">${name}</span><div class="prog-bar-bg"><div class="prog-bar-fill" style="width:${pct}%"></div></div><span class="prog-score">${correct}/${done}</span></div>`;
+}
+
+// Notes
+async function loadNotes(){
+    const list=document.getElementById('notes-list');
+    try{
+        const snap=await db.collection('notes').where('childId','==',childId).orderBy('createdAt','desc').limit(30).get();
+        if(snap.empty){list.innerHTML='<div class="no-notes">Aucune note pour le moment.</div>';return}
+        let html='';
+        snap.forEach(doc=>{
+            const n=doc.data();
+            const date=n.createdAt?n.createdAt.toDate().toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+            html+=`<div class="note-card"><div class="note-top"><div><span class="note-author">${n.authorName||'Anonyme'}</span> <span class="note-role">${n.authorRole||''}</span></div><span class="note-date">${date}</span></div><div class="note-text">${n.text}</div></div>`;
+        });
+        list.innerHTML=html;
+    }catch(e){list.innerHTML='<div class="no-notes">Erreur de chargement.</div>'}
+}
+
+async function submitNote(){
+    const text=document.getElementById('note-text').value.trim();
+    const fb=document.getElementById('note-fb');
+    const btn=document.getElementById('btn-note');
+    fb.textContent='';
+    if(!text){fb.textContent='Écrivez une note.';fb.className='af-err';return}
+    btn.disabled=true;btn.textContent='…';
+    try{
+        await db.collection('notes').add({
+            childId:childId,
+            childName:(childProfile.name||'')+' '+(childProfile.lastname||''),
+            authorName:selectedRole.label,
+            authorRole:selectedRole.id,
+            authorIcon:selectedRole.icon,
+            text:text,
+            createdAt:firebase.firestore.FieldValue.serverTimestamp()
+        });
+        fb.textContent='✓ Note ajoutée !';fb.className='af-ok';
+        document.getElementById('note-text').value='';
+        loadNotes();
+    }catch(e){fb.textContent='Erreur.';fb.className='af-err'}
+    btn.disabled=false;btn.textContent='Envoyer';
+}
+
+// Avis
+async function submitAvis(){
+    const text=document.getElementById('avis-text').value.trim();
+    const fb=document.getElementById('avis-fb');
+    fb.textContent='';
+    if(!text||text.length<10){fb.textContent='Votre avis doit contenir au moins 10 caractères.';fb.className='af-err';return}
+    try{
+        await db.collection('avis').add({
+            author:selectedRole.label+' de '+(childProfile.name||''),
+            text:text,stars:selectedStars,type:'partenaire',role:selectedRole.id,
+            createdAt:firebase.firestore.FieldValue.serverTimestamp()
+        });
+        fb.textContent='✓ Merci !';fb.className='af-ok';
+        document.getElementById('avis-text').value='';
+    }catch(e){fb.textContent='Erreur.';fb.className='af-err'}
 }
 </script>
 </body>
