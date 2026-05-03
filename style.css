@@ -245,10 +245,11 @@ header {
 
 #cursor-wrapper {
     position: absolute;
-    width: 180px;
+    width: 220px;
     pointer-events: none;
     z-index: 10;
-    transform: translate(-50%, -50%) rotate(0deg);
+    transform: translate(-50%, -87.5%) rotate(0deg);
+    transform-origin: 50% 87.5%;
     top: 50%;
     left: 50%;
     filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));

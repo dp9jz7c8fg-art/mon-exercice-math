@@ -149,7 +149,8 @@
             width: 200px;
             pointer-events: none;
             z-index: 20;
-            transform: translate(-50%, -50%) rotate(0deg);
+            transform: translate(-50%, -87.5%) rotate(0deg);
+            transform-origin: 50% 87.5%;
             top: 50%;
             left: 50%;
             filter: drop-shadow(0 2px 12px rgba(0,0,0,0.6));
@@ -496,7 +497,7 @@
     <div id="figure-zone">
         <svg id="figure-svg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"></svg>
         <div id="equerre-wrapper">
-            <img src="equerre.png" alt="Équerre" id="equerre-img">
+            <img src="equerre-aristo.svg" alt="Équerre" id="equerre-img">
         </div>
         <div id="grand-ecran-controls">
             <div id="rotation-wheel-ge"></div>
@@ -940,7 +941,7 @@ function updateAngleReadouts() {
 }
 
 function applyRotation() {
-    wrapper.style.transform = `translate(-50%,-50%) rotate(${rotation}deg)`;
+    wrapper.style.transform = `translate(-50%,-87.5%) rotate(${rotation}deg)`;
     wheel.style.transform   = `rotate(${rotation}deg)`;
     wheelGe.style.transform = `rotate(${rotation}deg)`;
     updateAngleReadouts();

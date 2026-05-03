@@ -38,7 +38,7 @@ function updateAngleDisplays() {
 }
 
 function applyRotation() {
-    wrapper.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+    wrapper.style.transform = `translate(-50%, -87.5%) rotate(${rotation}deg)`;
     wheel.style.transform   = `rotate(${rotation}deg)`;
     wheelGe.style.transform = `rotate(${rotation}deg)`;
     updateAngleDisplays();
