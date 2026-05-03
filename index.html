@@ -16,18 +16,24 @@
             <div id="score-board">
                 Score : <span id="current-score">0</span> / <span id="total-questions">0</span>
             </div>
-            
+
             <div id="rotation-control">
                 <div id="rotation-wheel"></div>
+                <span id="angle-display">0°</span>
                 <span>Pivoter</span>
             </div>
         </header>
 
         <div id="toolbar">
             <button class="zoom-btn" onclick="ajusterZoom(0.2)">🔍 +</button>
-            <button class="zoom-btn" onclick="ajusterZoom(-0.2)">🔍 -</button>
+            <button class="zoom-btn" onclick="ajusterZoom(-0.2)">🔍 −</button>
             <button class="zoom-btn" onclick="resetZoom()">🔄</button>
-            <span class="hint-pc">Dbl-clic pour Plein Écran</span>
+            <span class="hint-pc">Dbl-clic → Plein écran</span>
+
+            <div id="size-control">
+                <span>📐</span>
+                <input type="range" id="equerre-size" min="80" max="320" value="180">
+            </div>
         </div>
 
         <div id="exercice-container">
@@ -39,7 +45,7 @@
 
         <div class="reponses-eleve">
             <div class="input-group">
-                <input type="number" id="user-answer" placeholder="Degrés">
+                <input type="number" id="user-answer" placeholder="Entrez les degrés…">
                 <button id="btn-valider" onclick="verifierReponse()">Valider</button>
             </div>
             <p id="feedback"></p>
