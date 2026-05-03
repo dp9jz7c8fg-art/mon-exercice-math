@@ -740,6 +740,9 @@ function valider() {
     document.getElementById('sc-bon').textContent = bonnes;
     document.getElementById('sc-total').textContent = total;
 
+    // Sauvegarder dans Firebase
+    if (typeof saveScore === 'function') saveScore('fractions', objectifActif, isCorrect);
+
     // Feedback
     const fbBox = document.getElementById('feedback-box');
     const fbResult = document.getElementById('feedback-result');
@@ -767,6 +770,17 @@ function suivant() {
 // ═══════════════════════════════════════════════════════════
 buildTabs();
 genExo();
+</script>
+
+<!-- Firebase + Auth -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+<script>
+    requireAuth((user, profile) => {
+        injectUserBar(user, profile);
+    });
 </script>
 
 </body>
