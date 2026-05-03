@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mesure d'angles – Exercices</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:       #0d0f14;
+            --card:     #13161e;
+            --surface:  #1a1e28;
+            --border:   #272c3a;
+            --accent:   #00d4aa;
+            --accent2:  #ff6b35;
+            --blue:     #4f8ef7;
+            --text:     #e2e8f0;
+            --muted:    #64748b;
+            --success:  #00d4aa;
+            --danger:   #ff6b35;
+            --radius:   14px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Syne', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 0 40px;
+            touch-action: none;
+            overflow-x: hidden;
+        }
+
+        /* ── HEADER ── */
+        #app-header {
+            width: 100%;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        #app-title {
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            color: var(--accent);
+        }
+
+        #score-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #score-display strong { color: var(--accent); font-size: 18px; }
+
+        #progress-bar-wrap {
+            width: 100%;
+            height: 3px;
+            background: var(--border);
+        }
+
+        #progress-bar {
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--blue));
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        /* ── MAIN ── */
+        #main {
+            width: 100%;
+            max-width: 560px;
+            padding: 20px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* ── BADGE VARIANTE ── */
+        #variante-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--muted);
+            align-self: flex-start;
+        }
+
+        #variante-badge .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* ── CONSIGNE ── */
+        #consigne-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text);
+        }
+
+        #consigne-box strong { color: var(--accent2); }
+
+        /* ── ZONE FIGURE ── */
+        #figure-zone {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            position: relative;
+            overflow: hidden;
+            height: 340px;
+            touch-action: none;
+            cursor: crosshair;
+        }
+
+        #figure-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Équerre curseur */
+        #equerre-wrapper {
+            position: absolute;
+            width: 200px;
+            pointer-events: none;
+            z-index: 20;
+            transform: translate(-50%, -50%) rotate(0deg);
+            top: 50%;
+            left: 50%;
+            filter: drop-shadow(0 2px 12px rgba(0,0,0,0.6));
+            transition: width 0.1s;
+        }
+
+        #equerre-img {
+            width: 100%;
+            opacity: 0.82;
+            user-select: none;
+        }
+
+        /* ── TOOLBAR ── */
+        #toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tbtn {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-family: 'Syne', sans-serif;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, transform 0.1s;
+            touch-action: manipulation;
+        }
+
+        .tbtn:hover  { background: var(--border); border-color: var(--accent); }
+        .tbtn:active { transform: scale(0.95); }
+
+        /* Volant */
+        #rotation-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            margin-left: auto;
+        }
+
+        #rotation-wheel {
+            width: 52px; height: 52px;
+            border: 3px solid var(--accent);
+            border-radius: 50%;
+            background: var(--surface);
+            touch-action: none;
+            cursor: grab;
+            position: relative;
+            box-shadow: 0 0 0 4px rgba(0,212,170,0.1);
+        }
+
+        #rotation-wheel::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -100%);
+            width: 3px; height: 13px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        #rotation-wheel:active { cursor: grabbing; border-color: var(--accent2); }
+
+        #angle-readout {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--accent);
+        }
+
+        #wheel-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+        }
+
+        /* Slider taille */
+        #size-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 80px; height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px; height: 15px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+
+        /* ── RÉPONSE ── */
+        #reponse-zone {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        #input-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        #angle-input {
+            flex: 1;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 18px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s;
+            -moz-appearance: textfield;
+        }
+
+        #angle-input::-webkit-inner-spin-button,
+        #angle-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+        #angle-input::placeholder { color: var(--muted); font-size: 14px; }
+        #angle-input:focus { border-color: var(--accent); }
+
+        #unit-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            color: var(--muted);
+        }
+
+        #btn-valider {
+            background: var(--accent);
+            color: #0d0f14;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.15s, transform 0.1s;
+            touch-action: manipulation;
+        }
+
+        #btn-valider:hover  { opacity: 0.85; }
+        #btn-valider:active { transform: scale(0.97); }
+
+        /* Feedback */
+        #feedback {
+            font-size: 14px;
+            font-weight: 600;
+            min-height: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .fb-correct { color: var(--success); }
+        .fb-wrong   { color: var(--danger); }
+
+        /* ── BOUTON SUIVANT ── */
+        #btn-suivant {
+            display: none;
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 14px;
+            font-size: 15px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            color: var(--accent);
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            letter-spacing: 0.04em;
+            touch-action: manipulation;
+        }
+
+        #btn-suivant:hover  { background: var(--border); }
+        #btn-suivant:active { transform: scale(0.98); }
+
+        /* ── FIN ── */
+        #ecran-fin {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        #ecran-fin h2 { font-size: 28px; font-weight: 800; color: var(--accent); }
+        #ecran-fin p  { font-size: 16px; color: var(--muted); }
+
+        #score-final {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        #btn-recommencer {
+            background: var(--accent);
+            color: #0d0f14;
+            border: none;
+            border-radius: var(--radius);
+            padding: 14px 32px;
+            font-size: 16px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        /* ── GRAND ÉCRAN ── */
+        #grand-ecran-controls {
+            display: none;
+            position: absolute;
+            bottom: 14px;
+            right: 14px;
+            z-index: 100;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            background: rgba(13,15,20,0.95);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        #rotation-wheel-ge {
+            width: 56px; height: 56px;
+            border: 3px solid var(--accent);
+            border-radius: 50%;
+            background: var(--surface);
+            touch-action: none;
+            cursor: grab;
+            position: relative;
+            box-shadow: 0 0 0 4px rgba(0,212,170,0.1);
+        }
+
+        #rotation-wheel-ge::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -100%);
+            width: 3px; height: 13px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        #rotation-wheel-ge:active { cursor: grabbing; }
+
+        #angle-readout-ge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--accent);
+        }
+
+        .ge-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .tbtn-ge {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 5px 9px;
+            font-size: 12px;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .tbtn-ge:hover { border-color: var(--accent); }
+
+        #equerre-size-ge {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 70px; height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        #equerre-size-ge::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+
+        .btn-close-ge {
+            border-color: var(--danger) !important;
+            color: var(--danger) !important;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-header">
+    <span id="app-title">◈ MESURE D'ANGLES</span>
+    <div id="score-display">
+        Score&nbsp;<strong id="sc-bon">0</strong>&nbsp;/&nbsp;<span id="sc-total">0</span>
+    </div>
+</div>
+<div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+
+<div id="main">
+
+    <div id="variante-badge"><span class="dot"></span><span id="variante-txt">Variante A</span></div>
+
+    <div id="consigne-box">
+        <span id="consigne-txt">Chargement…</span>
+    </div>
+
+    <div id="figure-zone">
+        <svg id="figure-svg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div id="equerre-wrapper">
+            <img src="equerre.png" alt="Équerre" id="equerre-img">
+        </div>
+        <div id="grand-ecran-controls">
+            <div id="rotation-wheel-ge"></div>
+            <span id="angle-readout-ge">0°</span>
+            <div class="ge-row">
+                <button class="tbtn-ge" onclick="ajusterZoom(0.2)">🔍+</button>
+                <button class="tbtn-ge" onclick="ajusterZoom(-0.2)">🔍−</button>
+                <button class="tbtn-ge" onclick="resetZoom()">🔄</button>
+                <input type="range" id="equerre-size-ge" min="80" max="340" value="200">
+                <button class="tbtn-ge btn-close-ge" onclick="toggleGrandEcran()">✕</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toolbar">
+        <button class="tbtn" onclick="ajusterZoom(0.2)">🔍 +</button>
+        <button class="tbtn" onclick="ajusterZoom(-0.2)">🔍 −</button>
+        <button class="tbtn" onclick="resetZoom()">🔄</button>
+        <button class="tbtn" onclick="toggleGrandEcran()">⛶ Agrandir</button>
+        <div id="size-wrap">
+            📐 <input type="range" id="equerre-size" min="80" max="340" value="200">
+        </div>
+        <div id="rotation-zone">
+            <div id="rotation-wheel"></div>
+            <span id="angle-readout">0°</span>
+            <span id="wheel-label">Pivoter</span>
+        </div>
+    </div>
+
+    <div id="reponse-zone">
+        <div id="input-row">
+            <input type="number" id="angle-input" placeholder="Votre mesure…" min="0" max="360">
+            <span id="unit-label">°</span>
+            <button id="btn-valider" onclick="valider()">Valider</button>
+        </div>
+        <div id="feedback"></div>
+    </div>
+
+    <button id="btn-suivant" onclick="exerciceSuivant()">Exercice suivant →</button>
+
+    <div id="ecran-fin">
+        <h2>Exercice terminé !</h2>
+        <div id="score-final"></div>
+        <p id="score-msg"></p>
+        <button id="btn-recommencer" onclick="recommencer()">Recommencer</button>
+    </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  GÉNÉRATEUR D'EXERCICES
+// ═══════════════════════════════════════════════════════════
+
+const COULEURS = {
+    trait:   '#4f8ef7',
+    remplir: 'rgba(79,142,247,0.08)',
+    arc:     '#00d4aa',
+    label:   '#e2e8f0',
+    point:   '#ff6b35',
+    grille:  'rgba(255,255,255,0.04)',
+};
+
+// Angles "sympas" pour le secondaire
+const ANGLES_CIBLES = [30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150];
+
+function angleAléatoire() {
+    return ANGLES_CIBLES[Math.floor(Math.random() * ANGLES_CIBLES.length)];
+}
+
+function rad(deg) { return deg * Math.PI / 180; }
+
+// ── Générateurs de figures SVG ───────────────────────────────────────────────
+
+function genTriangle(angleCible) {
+    // Triangle avec un angle marqué en A
+    const cx = 250, cy = 200;
+    const base = 180 + Math.random() * 60;
+    const haut = 120 + Math.random() * 50;
+
+    const A = { x: cx - base / 2, y: cy + haut * 0.3 };
+    const B = { x: cx + base / 2, y: cy + haut * 0.3 };
+    // C positionné pour que l'angle en A soit angleCible
+    const lenAC = 150 + Math.random() * 40;
+    // Angle en A = angleCible → direction de AC
+    const dirBase = Math.atan2(B.y - A.y, B.x - A.x); // → droite
+    const dirAC   = dirBase - rad(angleCible);
+    const C = { x: A.x + lenAC * Math.cos(dirAC), y: A.y + lenAC * Math.sin(dirAC) };
+
+    const arcR = 28;
+    const arcStart = dirBase;
+    const arcEnd   = dirAC;
+    const arcX1 = A.x + arcR * Math.cos(arcStart);
+    const arcY1 = A.y + arcR * Math.sin(arcStart);
+    const arcX2 = A.x + arcR * Math.cos(arcEnd);
+    const arcY2 = A.y + arcR * Math.sin(arcEnd);
+    const sweep = angleCible > 180 ? 1 : 0;
+
+    return `
+    <defs>
+      <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 Z" fill="${COULEURS.trait}" opacity="0.6"/>
+      </marker>
+    </defs>
+    <!-- Grille légère -->
+    <pattern id="g" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M30,0 L0,0 L0,30" fill="none" stroke="${COULEURS.grille}" stroke-width="1"/>
+    </pattern>
+    <rect width="500" height="320" fill="url(#g)"/>
+
+    <!-- Triangle -->
+    <polygon points="${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y}"
+             fill="${COULEURS.remplir}" stroke="${COULEURS.trait}" stroke-width="2" stroke-linejoin="round"/>
+
+    <!-- Arc de l'angle en A -->
+    <path d="M ${arcX1} ${arcY1} A ${arcR} ${arcR} 0 ${sweep} 0 ${arcX2} ${arcY2}"
+          fill="none" stroke="${COULEURS.arc}" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Points -->
+    <circle cx="${A.x}" cy="${A.y}" r="5" fill="${COULEURS.point}"/>
+    <circle cx="${B.x}" cy="${B.y}" r="4" fill="${COULEURS.trait}" opacity="0.7"/>
+    <circle cx="${C.x}" cy="${C.y}" r="4" fill="${COULEURS.trait}" opacity="0.7"/>
+
+    <!-- Labels -->
+    <text x="${A.x - 18}" y="${A.y + 5}" fill="${COULEURS.point}" font-size="16" font-weight="bold" font-family="Syne,sans-serif">A</text>
+    <text x="${B.x + 8}"  y="${B.y + 5}" fill="${COULEURS.label}" font-size="14" font-family="Syne,sans-serif">B</text>
+    <text x="${C.x + 6}"  y="${C.y - 6}" fill="${COULEURS.label}" font-size="14" font-family="Syne,sans-serif">C</text>
+
+    <!-- Indication angle -->
+    <text x="${A.x + arcR * 1.6 * Math.cos((arcStart + arcEnd) / 2)}"
+          y="${A.y + arcR * 1.6 * Math.sin((arcStart + arcEnd) / 2) + 4}"
+          fill="${COULEURS.arc}" font-size="12" font-weight="600" font-family="JetBrains Mono,monospace">?</text>
+    `;
+}
+
+function genAngleSeul(angleCible) {
+    // Deux demi-droites formant l'angle, avec arc
+    const O  = { x: 200, y: 220 };
+    const len = 160;
+
+    // Première demi-droite → horizontale droite
+    const dir1 = 0;
+    const dir2  = -rad(angleCible);
+
+    const P1 = { x: O.x + len * Math.cos(dir1), y: O.y + len * Math.sin(dir1) };
+    const P2 = { x: O.x + len * Math.cos(dir2), y: O.y + len * Math.sin(dir2) };
+
+    const arcR = 35;
+    const aX1 = O.x + arcR * Math.cos(dir1);
+    const aY1 = O.y + arcR * Math.sin(dir1);
+    const aX2 = O.x + arcR * Math.cos(dir2);
+    const aY2 = O.y + arcR * Math.sin(dir2);
+
+    const midDir = (dir1 + dir2) / 2;
+
+    return `
+    <pattern id="g" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M30,0 L0,0 L0,30" fill="none" stroke="${COULEURS.grille}" stroke-width="1"/>
+    </pattern>
+    <rect width="500" height="320" fill="url(#g)"/>
+
+    <!-- Demi-droites -->
+    <line x1="${O.x}" y1="${O.y}" x2="${P1.x}" y2="${P1.y}"
+          stroke="${COULEURS.trait}" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="${O.x}" y1="${O.y}" x2="${P2.x}" y2="${P2.y}"
+          stroke="${COULEURS.trait}" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Arc -->
+    <path d="M ${aX1} ${aY1} A ${arcR} ${arcR} 0 0 0 ${aX2} ${aY2}"
+          fill="none" stroke="${COULEURS.arc}" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Sommet -->
+    <circle cx="${O.x}" cy="${O.y}" r="5" fill="${COULEURS.point}"/>
+    <text x="${O.x - 18}" y="${O.y + 5}" fill="${COULEURS.point}"
+          font-size="15" font-weight="bold" font-family="Syne,sans-serif">O</text>
+
+    <!-- ? au milieu de l'arc -->
+    <text x="${O.x + arcR * 1.8 * Math.cos(midDir)}"
+          y="${O.y + arcR * 1.8 * Math.sin(midDir) + 4}"
+          fill="${COULEURS.arc}" font-size="14" font-weight="600"
+          font-family="JetBrains Mono,monospace">?</text>
+    `;
+}
+
+function genQuadrilatere(angleCible) {
+    // Rectangle/trapèze avec un angle marqué
+    const cx = 250, cy = 160;
+    const w  = 160 + Math.random() * 60;
+    const h  = 90  + Math.random() * 50;
+    const decal = (Math.random() - 0.5) * 60; // trapèze
+
+    const A = { x: cx - w/2,        y: cy + h/2 };
+    const B = { x: cx + w/2,        y: cy + h/2 };
+    const C = { x: cx + w/2 + decal, y: cy - h/2 };
+    const D = { x: cx - w/2 + decal, y: cy - h/2 };
+
+    // Angle réel en A = angle DAB
+    const dirAB = Math.atan2(B.y - A.y, B.x - A.x);
+    const dirAD = Math.atan2(D.y - A.y, D.x - A.x);
+    let realAngle = Math.abs((dirAB - dirAD) * 180 / Math.PI);
+    if (realAngle > 180) realAngle = 360 - realAngle;
+
+    const arcR = 24;
+    const aX1 = A.x + arcR * Math.cos(dirAB);
+    const aY1 = A.y + arcR * Math.sin(dirAB);
+    const aX2 = A.x + arcR * Math.cos(dirAD);
+    const aY2 = A.y + arcR * Math.sin(dirAD);
+    const midDir = (dirAB + dirAD) / 2;
+
+    return `
+    <pattern id="g" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M30,0 L0,0 L0,30" fill="none" stroke="${COULEURS.grille}" stroke-width="1"/>
+    </pattern>
+    <rect width="500" height="320" fill="url(#g)"/>
+
+    <polygon points="${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y} ${D.x},${D.y}"
+             fill="${COULEURS.remplir}" stroke="${COULEURS.trait}" stroke-width="2" stroke-linejoin="round"/>
+
+    <path d="M ${aX1} ${aY1} A ${arcR} ${arcR} 0 0 1 ${aX2} ${aY2}"
+          fill="none" stroke="${COULEURS.arc}" stroke-width="2.5" stroke-linecap="round"/>
+
+    <circle cx="${A.x}" cy="${A.y}" r="5" fill="${COULEURS.point}"/>
+    <text x="${A.x - 20}" y="${A.y + 5}" fill="${COULEURS.point}"
+          font-size="15" font-weight="bold" font-family="Syne,sans-serif">A</text>
+    <text x="${B.x + 6}"  y="${B.y + 5}" fill="${COULEURS.label}" font-size="13" font-family="Syne,sans-serif">B</text>
+    <text x="${C.x + 6}"  y="${C.y - 4}" fill="${COULEURS.label}" font-size="13" font-family="Syne,sans-serif">C</text>
+    <text x="${D.x - 18}" y="${D.y - 4}" fill="${COULEURS.label}" font-size="13" font-family="Syne,sans-serif">D</text>
+
+    <text x="${A.x + arcR * 1.9 * Math.cos(midDir)}"
+          y="${A.y + arcR * 1.9 * Math.sin(midDir) + 4}"
+          fill="${COULEURS.arc}" font-size="13" font-weight="600"
+          font-family="JetBrains Mono,monospace">?</text>
+    `;
+}
+
+// ── Types de figures ──────────────────────────────────────────────────────────
+const FIGURES = [
+    {
+        gen: genTriangle,
+        nom: 'triangle',
+        variante: 'A',
+        consigne: (a) => `Place l'équerre sur le sommet <strong>A</strong> du triangle. Aligne un côté sur [AB], puis lis la valeur de l'angle <strong>Â</strong> directement sur l'équerre.`
+    },
+    {
+        gen: genAngleSeul,
+        nom: 'angle',
+        variante: 'B',
+        consigne: (a) => `Pivote l'équerre à l'aide du volant pour qu'elle s'aligne sur les deux côtés de l'angle en <strong>O</strong>. Lis la valeur et entre-la ci-dessous.`
+    },
+    {
+        gen: genQuadrilatere,
+        nom: 'quadrilatère',
+        variante: 'A',
+        consigne: (a) => `Place l'équerre au sommet <strong>A</strong> du quadrilatère. Aligne un côté sur [AB] et lis l'angle <strong>DAB</strong> sur l'équerre.`
+    },
+    {
+        gen: genAngleSeul,
+        nom: 'angle isolé',
+        variante: 'B',
+        consigne: (a) => `Pivote l'équerre pour mesurer l'angle en <strong>O</strong>. Entre ta mesure ci-dessous.`
+    },
+    {
+        gen: genTriangle,
+        nom: 'triangle',
+        variante: 'B',
+        consigne: (a) => `Utilise l'équerre pour mesurer l'angle <strong>Â</strong> du triangle. Pivote-la jusqu'à ce qu'elle corresponde à l'angle, puis entre la valeur.`
+    },
+];
+
+// ═══════════════════════════════════════════════════════════
+//  ÉTAT DE L'APP
+// ═══════════════════════════════════════════════════════════
+
+const NB_EXERCICES = 15;
+let exercices = [];
+let indexEx   = 0;
+let bonnes    = 0;
+let tentatives= 0;
+let dejaTente = false;
+
+let rotation   = 0;
+let zoomLevel  = 1;
+let lastAngle  = 0;
+let grandEcran = false;
+
+let isRotating      = false;
+let activeWheel     = null;
+let isDraggingWheel = false;
+let activeWheelMouse= null;
+let isDraggingEq    = false;
+
+let initialPinch = null, initialZoom = 1;
+let pinchOX = 0, pinchOY = 0;
+
+// ─── Éléments DOM ─────────────────────────────────────────
+const wheel       = document.getElementById('rotation-wheel');
+const wheelGe     = document.getElementById('rotation-wheel-ge');
+const wrapper     = document.getElementById('equerre-wrapper');
+const figZone     = document.getElementById('figure-zone');
+const figSvg      = document.getElementById('figure-svg');
+const sizeSlider  = document.getElementById('equerre-size');
+const sizeSliderGe= document.getElementById('equerre-size-ge');
+const geControls  = document.getElementById('grand-ecran-controls');
+const feedbackEl  = document.getElementById('feedback');
+const btnSuivant  = document.getElementById('btn-suivant');
+const ecranFin    = document.getElementById('ecran-fin');
+const mainEl      = document.querySelectorAll('#main > *:not(#ecran-fin)');
+
+// ═══════════════════════════════════════════════════════════
+//  GÉNÉRATION DE LA SÉRIE
+// ═══════════════════════════════════════════════════════════
+function genererSerie() {
+    exercices = [];
+    const typesDisponibles = [...FIGURES];
+    for (let i = 0; i < NB_EXERCICES; i++) {
+        const type = typesDisponibles[i % typesDisponibles.length];
+        const angle = angleAléatoire();
+        exercices.push({ type, angle });
+    }
+    // Mélanger
+    for (let i = exercices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [exercices[i], exercices[j]] = [exercices[j], exercices[i]];
+    }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  AFFICHAGE EXERCICE
+// ═══════════════════════════════════════════════════════════
+function afficherExercice() {
+    const ex = exercices[indexEx];
+    dejaTente = false;
+
+    // SVG
+    figSvg.innerHTML = ex.type.gen(ex.angle);
+
+    // Variante badge
+    document.getElementById('variante-txt').textContent =
+        ex.type.variante === 'A' ? 'Variante A – Lecture directe' : 'Variante B – Alignement';
+    document.querySelector('#variante-badge .dot').style.background =
+        ex.type.variante === 'A' ? 'var(--accent)' : 'var(--accent2)';
+
+    // Consigne
+    document.getElementById('consigne-txt').innerHTML = ex.type.consigne(ex.angle);
+
+    // Reset UI
+    document.getElementById('angle-input').value = '';
+    feedbackEl.textContent = '';
+    feedbackEl.className   = '';
+    btnSuivant.style.display = 'none';
+
+    // Reset équerre position
+    wrapper.style.left = '50%';
+    wrapper.style.top  = '50%';
+    rotation = 0;
+    applyRotation();
+    resetZoom();
+
+    // Barre de progression
+    document.getElementById('progress-bar').style.width =
+        (indexEx / NB_EXERCICES * 100) + '%';
+
+    // Score
+    document.getElementById('sc-total').textContent = indexEx;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  VALIDATION
+// ═══════════════════════════════════════════════════════════
+function valider() {
+    if (dejaTente) return;
+    const val = parseFloat(document.getElementById('angle-input').value);
+    if (isNaN(val)) {
+        feedbackEl.textContent = 'Entre une valeur numérique.';
+        feedbackEl.className   = 'fb-wrong';
+        return;
+    }
+
+    const cible    = exercices[indexEx].angle;
+    const tolerance = 3;
+    const correct  = Math.abs(val - cible) <= tolerance;
+
+    dejaTente = true;
+    tentatives++;
+    document.getElementById('sc-total').textContent = tentatives;
+
+    if (correct) {
+        bonnes++;
+        document.getElementById('sc-bon').textContent = bonnes;
+        feedbackEl.innerHTML = `✓ Correct ! L'angle mesure bien <strong>${cible}°</strong>.`;
+        feedbackEl.className = 'fb-correct';
+    } else {
+        feedbackEl.innerHTML = `✗ Pas tout à fait. La réponse était <strong>${cible}°</strong>. Continue !`;
+        feedbackEl.className = 'fb-wrong';
+    }
+
+    btnSuivant.style.display = 'block';
+}
+
+function exerciceSuivant() {
+    indexEx++;
+    if (indexEx >= NB_EXERCICES) {
+        afficherFin();
+    } else {
+        afficherExercice();
+    }
+}
+
+function afficherFin() {
+    mainEl.forEach(el => el.style.display = 'none');
+    ecranFin.style.display = 'flex';
+    document.getElementById('progress-bar').style.width = '100%';
+    document.getElementById('score-final').textContent = bonnes + ' / ' + NB_EXERCICES;
+    const pct = Math.round(bonnes / NB_EXERCICES * 100);
+    document.getElementById('score-msg').textContent =
+        pct >= 80 ? '🎉 Excellent travail !' :
+        pct >= 60 ? '👍 Bon travail, continue à t\'entraîner !' :
+                    '💪 Continue à pratiquer, tu vas y arriver !';
+}
+
+function recommencer() {
+    bonnes = 0; tentatives = 0; indexEx = 0;
+    mainEl.forEach(el => el.style.display = '');
+    ecranFin.style.display = 'none';
+    document.getElementById('sc-bon').textContent = 0;
+    genererSerie();
+    afficherExercice();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ÉQUERRE & INTERACTIONS
+// ═══════════════════════════════════════════════════════════
+function getDistance(t1,t2){
+    return Math.sqrt((t1.clientX-t2.clientX)**2+(t1.clientY-t2.clientY)**2);
+}
+
+function updateAngleReadouts() {
+    const deg = Math.round(((rotation%360)+360)%360);
+    document.getElementById('angle-readout').textContent    = deg+'°';
+    document.getElementById('angle-readout-ge').textContent = deg+'°';
+}
+
+function applyRotation() {
+    wrapper.style.transform = `translate(-50%,-50%) rotate(${rotation}deg)`;
+    wheel.style.transform   = `rotate(${rotation}deg)`;
+    wheelGe.style.transform = `rotate(${rotation}deg)`;
+    updateAngleReadouts();
+}
+
+function getCenter(el) {
+    const r = el.getBoundingClientRect();
+    return { x: r.left+r.width/2, y: r.top+r.height/2 };
+}
+
+// Touch volants
+function startWheelTouch(wh, e) {
+    isRotating = true; activeWheel = wh;
+    const t = e.touches[0], c = getCenter(wh);
+    lastAngle = Math.atan2(t.clientY-c.y, t.clientX-c.x);
+    e.preventDefault(); e.stopPropagation();
+}
+wheel.addEventListener('touchstart',   e => startWheelTouch(wheel, e),   {passive:false});
+wheelGe.addEventListener('touchstart', e => startWheelTouch(wheelGe, e), {passive:false});
+
+window.addEventListener('touchmove', e => {
+    if (!isRotating || !activeWheel) return;
+    const t = e.touches[0], c = getCenter(activeWheel);
+    const cur = Math.atan2(t.clientY-c.y, t.clientX-c.x);
+    rotation += (cur - lastAngle) * 180 / Math.PI;
+    lastAngle = cur;
+    applyRotation();
+    e.preventDefault();
+}, {passive:false});
+
+window.addEventListener('touchend', () => { isRotating = false; activeWheel = null; });
+
+// Touch zone figure (déplacement + pinch)
+figZone.addEventListener('touchstart', e => {
+    if (e.touches.length === 2) {
+        initialPinch = getDistance(e.touches[0], e.touches[1]);
+        initialZoom  = zoomLevel;
+        const rect = figZone.getBoundingClientRect();
+        pinchOX = ((e.touches[0].clientX+e.touches[1].clientX)/2 - rect.left) / rect.width  * 100;
+        pinchOY = ((e.touches[0].clientY+e.touches[1].clientY)/2 - rect.top)  / rect.height * 100;
+        e.preventDefault();
+    }
+}, {passive:false});
+
+figZone.addEventListener('touchmove', e => {
+    if (isRotating) return;
+    if (e.touches.length === 2 && initialPinch) {
+        const dist = getDistance(e.touches[0], e.touches[1]);
+        zoomLevel = Math.max(1, Math.min(4, initialZoom * dist / initialPinch));
+        figSvg.style.transformOrigin = `${pinchOX}% ${pinchOY}%`;
+        figSvg.style.transform = `scale(${zoomLevel})`;
+        e.preventDefault();
+    } else if (e.touches.length === 1) {
+        const t = e.touches[0], rect = figZone.getBoundingClientRect();
+        wrapper.style.left = (t.clientX - rect.left) + 'px';
+        wrapper.style.top  = (t.clientY - rect.top)  + 'px';
+        e.preventDefault();
+    }
+}, {passive:false});
+
+figZone.addEventListener('touchend', e => { if (e.touches.length < 2) initialPinch = null; });
+
+// Souris volants
+function startWheelMouse(wh, e) {
+    isDraggingWheel = true; activeWheelMouse = wh;
+    const c = getCenter(wh);
+    lastAngle = Math.atan2(e.clientY-c.y, e.clientX-c.x);
+    e.preventDefault(); e.stopPropagation();
+}
+wheel.addEventListener('mousedown',   e => startWheelMouse(wheel, e));
+wheelGe.addEventListener('mousedown', e => startWheelMouse(wheelGe, e));
+
+window.addEventListener('mousemove', e => {
+    if (isDraggingWheel && activeWheelMouse) {
+        const c = getCenter(activeWheelMouse);
+        const cur = Math.atan2(e.clientY-c.y, e.clientX-c.x);
+        rotation += (cur - lastAngle) * 180 / Math.PI;
+        lastAngle = cur;
+        applyRotation();
+        return;
+    }
+    if (isDraggingEq) {
+        const rect = figZone.getBoundingClientRect();
+        wrapper.style.left = (e.clientX - rect.left) + 'px';
+        wrapper.style.top  = (e.clientY - rect.top)  + 'px';
+    }
+});
+
+window.addEventListener('mouseup', () => {
+    isDraggingWheel = false; activeWheelMouse = null; isDraggingEq = false;
+});
+
+figZone.addEventListener('mousedown', e => {
+    if (wheel.contains(e.target) || wheelGe.contains(e.target) || geControls.contains(e.target)) return;
+    isDraggingEq = true;
+});
+
+// Zoom molette
+figZone.addEventListener('wheel', e => {
+    e.preventDefault();
+    const rect = figZone.getBoundingClientRect();
+    const ox = ((e.clientX-rect.left)/rect.width)*100;
+    const oy = ((e.clientY-rect.top)/rect.height)*100;
+    zoomLevel = Math.max(1, Math.min(4, zoomLevel + (e.deltaY > 0 ? -0.15 : 0.15)));
+    figSvg.style.transformOrigin = `${ox}% ${oy}%`;
+    figSvg.style.transform = `scale(${zoomLevel})`;
+}, {passive:false});
+
+function ajusterZoom(d) {
+    zoomLevel = Math.max(1, Math.min(4, zoomLevel + d));
+    figSvg.style.transformOrigin = 'center center';
+    figSvg.style.transform = `scale(${zoomLevel})`;
+}
+
+function resetZoom() {
+    zoomLevel = 1;
+    figSvg.style.transformOrigin = 'center center';
+    figSvg.style.transform = 'scale(1)';
+}
+
+// Taille équerre
+function setSize(val) {
+    wrapper.style.width = val + 'px';
+    sizeSlider.value    = val;
+    sizeSliderGe.value  = val;
+}
+sizeSlider.addEventListener('input',   () => setSize(sizeSlider.value));
+sizeSliderGe.addEventListener('input', () => setSize(sizeSliderGe.value));
+
+// Grand écran
+function toggleGrandEcran() {
+    grandEcran = !grandEcran;
+    if (grandEcran) {
+        figZone.style.cssText += 'position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;border-radius:0;';
+        geControls.style.display = 'flex';
+        document.querySelectorAll('.tbtn').forEach(b => {
+            if (b.getAttribute('onclick') && b.getAttribute('onclick').includes('toggleGrandEcran'))
+                b.textContent = '✕ Réduire';
+        });
+    } else {
+        figZone.style.position = figZone.style.top = figZone.style.left =
+        figZone.style.width = figZone.style.height = figZone.style.zIndex = figZone.style.borderRadius = '';
+        geControls.style.display = 'none';
+        document.querySelectorAll('.tbtn').forEach(b => {
+            if (b.getAttribute('onclick') && b.getAttribute('onclick').includes('toggleGrandEcran'))
+                b.textContent = '⛶ Agrandir';
+        });
+    }
+}
+
+// Touche Entrée pour valider
+document.getElementById('angle-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') valider();
+});
+
+// ═══════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════
+genererSerie();
+afficherExercice();
+</script>
+</body>
+</html>
