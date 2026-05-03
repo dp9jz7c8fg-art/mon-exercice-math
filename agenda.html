@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Agenda – La Classe de Stef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'DM Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#040804,#061008,#081a0e,#040804);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center}
+        @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .content{width:100%;max-width:560px;padding:20px 16px 60px;display:flex;flex-direction:column;gap:18px}
+        .nav{display:flex;justify-content:flex-start}
+        .nav a{color:rgba(46,204,113,0.5);text-decoration:none;font-size:13px;font-weight:600;transition:color 0.15s}
+        .nav a:hover{color:#2ecc71}
+        h1{font-size:22px;font-weight:800;text-align:center;color:#2ecc71}
+        .week-nav{display:flex;align-items:center;justify-content:center;gap:14px}
+        .week-btn{background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.2);border-radius:8px;padding:8px 14px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:600;color:#2ecc71;cursor:pointer;transition:all 0.15s}
+        .week-btn:hover{background:rgba(46,204,113,0.15)}
+        .week-label{font-family:'JetBrains Mono',monospace;font-size:14px;color:rgba(255,255,255,0.5);min-width:180px;text-align:center}
+        .slots{display:flex;flex-direction:column;gap:10px}
+        .day-group{background:rgba(10,30,16,0.5);border:1px solid rgba(40,100,55,0.2);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px}
+        .day-name{font-size:14px;font-weight:700;color:rgba(46,204,113,0.7);text-transform:capitalize}
+        .slot-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(0,0,0,0.2);border-radius:8px}
+        .slot-time{font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(255,255,255,0.6)}
+        .slot-btn{border:none;border-radius:8px;padding:6px 16px;font-size:12px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;transition:all 0.15s}
+        .slot-available{background:#2ecc71;color:#040804}
+        .slot-available:hover{opacity:0.85}
+        .slot-booked{background:rgba(239,68,68,0.15);color:#ef4444;cursor:default}
+        .slot-mine{background:rgba(52,152,219,0.15);color:#3498db;cursor:default}
+        .my-bookings{background:rgba(10,30,16,0.5);border:1px solid rgba(40,100,55,0.2);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px}
+        .my-title{font-size:14px;font-weight:700;color:rgba(46,204,113,0.7)}
+        .booking-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(0,0,0,0.2);border-radius:8px}
+        .booking-info{font-size:12px;color:rgba(255,255,255,0.6)}
+        .booking-info strong{color:#e8f5e9}
+        .cancel-btn{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:6px;padding:4px 10px;font-size:10px;font-family:'DM Sans',sans-serif;font-weight:600;color:#ef4444;cursor:pointer;transition:all 0.15s}
+        .cancel-btn:hover{background:rgba(239,68,68,0.2)}
+        .no-bookings{font-size:12px;color:rgba(255,255,255,0.25);text-align:center;padding:8px}
+        .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+        .modal-overlay.open{display:flex}
+        .modal-box{background:#081a0e;border:1px solid rgba(40,100,55,0.3);border-radius:18px;padding:28px;width:90%;max-width:380px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
+        .modal-text{font-size:14px;color:rgba(255,255,255,0.6);line-height:1.6}
+        .modal-text strong{color:#2ecc71}
+        .modal-btns{display:flex;gap:10px}
+        .mbtn{border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer}
+        .mbtn-cancel{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5)}
+        .mbtn-confirm{background:#2ecc71;color:#040804}
+        .mbtn:hover{opacity:0.85}
+    </style>
+</head>
+<body>
+<div class="content">
+    <div class="nav"><a href="suivi.html">← Suivi</a></div>
+    <h1>📅 Mon Agenda</h1>
+    <div class="week-nav">
+        <button class="week-btn" onclick="changeWeek(-1)">← Précédente</button>
+        <span class="week-label" id="week-label"></span>
+        <button class="week-btn" onclick="changeWeek(1)">Suivante →</button>
+    </div>
+    <div class="my-bookings">
+        <div class="my-title">📌 Mes réservations</div>
+        <div id="my-bookings-list"></div>
+    </div>
+    <div class="slots" id="slots-container"></div>
+</div>
+
+<div class="modal-overlay" id="confirm-modal">
+    <div class="modal-box">
+        <div style="font-size:36px">📅</div>
+        <div class="modal-text" id="confirm-text"></div>
+        <div class="modal-btns">
+            <button class="mbtn mbtn-cancel" onclick="closeConfirm()">Annuler</button>
+            <button class="mbtn mbtn-confirm" id="btn-confirm" onclick="confirmBooking()">Réserver</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+<script>
+let currentUser = null;
+let currentProfile = null;
+let currentWeekStart = getMonday(new Date());
+let pendingSlot = null;
+
+const DAYS = ['lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+const SLOTS = ['09:00','10:00','11:00','14:00','15:00','16:00','17:00'];
+
+function getMonday(d) {
+    d = new Date(d); const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    d.setDate(diff); d.setHours(0,0,0,0); return d;
+}
+
+function formatDate(d) {
+    return d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+}
+
+function weekKey(d) {
+    return d.toISOString().slice(0,10);
+}
+
+requireAuth((user, profile) => {
+    currentUser = user;
+    currentProfile = profile;
+    renderWeek();
+});
+
+function changeWeek(dir) {
+    currentWeekStart = new Date(currentWeekStart);
+    currentWeekStart.setDate(currentWeekStart.getDate() + dir * 7);
+    renderWeek();
+}
+
+async function renderWeek() {
+    const end = new Date(currentWeekStart);
+    end.setDate(end.getDate() + 6);
+    document.getElementById('week-label').textContent =
+        formatDate(currentWeekStart) + ' — ' + formatDate(end);
+
+    const container = document.getElementById('slots-container');
+    container.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.3);font-size:12px">Chargement…</div>';
+
+    // Charger les réservations de la semaine
+    const wk = weekKey(currentWeekStart);
+    let bookings = {};
+    try {
+        const snap = await db.collection('bookings')
+            .where('weekStart','==',wk).get();
+        snap.forEach(doc => {
+            const d = doc.data();
+            const key = d.day + '_' + d.time;
+            bookings[key] = { ...d, id: doc.id };
+        });
+    } catch(e) { console.error(e); }
+
+    let html = '';
+    for (let i = 0; i < 6; i++) {
+        const date = new Date(currentWeekStart);
+        date.setDate(date.getDate() + i);
+        const dayLabel = DAYS[i] + ' ' + formatDate(date);
+        const isPast = date < new Date(new Date().setHours(0,0,0,0));
+
+        html += `<div class="day-group"><div class="day-name">${dayLabel}</div>`;
+        SLOTS.forEach(time => {
+            const key = DAYS[i] + '_' + time;
+            const booking = bookings[key];
+
+            if (booking) {
+                if (booking.userId === currentUser.uid) {
+                    html += `<div class="slot-row"><span class="slot-time">${time}</span><span class="slot-btn slot-mine">✓ Mon cours</span></div>`;
+                } else {
+                    html += `<div class="slot-row"><span class="slot-time">${time}</span><span class="slot-btn slot-booked">Réservé</span></div>`;
+                }
+            } else if (isPast) {
+                html += `<div class="slot-row"><span class="slot-time">${time}</span><span class="slot-btn slot-booked" style="opacity:0.3">Passé</span></div>`;
+            } else {
+                html += `<div class="slot-row"><span class="slot-time">${time}</span><button class="slot-btn slot-available" onclick="askBook('${DAYS[i]}','${time}','${dayLabel}')">Réserver</button></div>`;
+            }
+        });
+        html += '</div>';
+    }
+    container.innerHTML = html;
+
+    // Mes réservations
+    loadMyBookings();
+}
+
+async function loadMyBookings() {
+    const list = document.getElementById('my-bookings-list');
+    try {
+        const snap = await db.collection('bookings')
+            .where('userId','==',currentUser.uid)
+            .orderBy('createdAt','desc').limit(10).get();
+
+        if (snap.empty) { list.innerHTML = '<div class="no-bookings">Aucune réservation</div>'; return; }
+
+        let html = '';
+        snap.forEach(doc => {
+            const d = doc.data();
+            html += `<div class="booking-item">
+                <div class="booking-info"><strong>${d.day} ${d.time}</strong> — semaine du ${d.weekStart}</div>
+                <button class="cancel-btn" onclick="cancelBooking('${doc.id}')">Annuler</button>
+            </div>`;
+        });
+        list.innerHTML = html;
+    } catch(e) {
+        list.innerHTML = '<div class="no-bookings">Erreur de chargement</div>';
+    }
+}
+
+function askBook(day, time, dayLabel) {
+    pendingSlot = { day, time, dayLabel };
+    document.getElementById('confirm-text').innerHTML =
+        `Réserver un cours le <strong>${dayLabel}</strong> à <strong>${time}</strong> ?`;
+    document.getElementById('confirm-modal').classList.add('open');
+}
+
+function closeConfirm() {
+    document.getElementById('confirm-modal').classList.remove('open');
+    pendingSlot = null;
+}
+
+async function confirmBooking() {
+    if (!pendingSlot) return;
+    const btn = document.getElementById('btn-confirm');
+    btn.textContent = '…'; btn.disabled = true;
+
+    try {
+        await db.collection('bookings').add({
+            userId: currentUser.uid,
+            userName: (currentProfile.name || '') + ' ' + (currentProfile.lastname || ''),
+            day: pendingSlot.day,
+            time: pendingSlot.time,
+            weekStart: weekKey(currentWeekStart),
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        closeConfirm();
+        renderWeek();
+    } catch(e) {
+        alert('Erreur: ' + e.message);
+    }
+    btn.textContent = 'Réserver'; btn.disabled = false;
+}
+
+async function cancelBooking(id) {
+    if (!confirm('Annuler cette réservation ?')) return;
+    try {
+        await db.collection('bookings').doc(id).delete();
+        renderWeek();
+    } catch(e) { alert('Erreur: ' + e.message); }
+}
+</script>
+</body>
+</html>

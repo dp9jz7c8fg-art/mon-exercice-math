@@ -5,212 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mathématiques – La Classe de Stef</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #040804 0%, #061008 25%, #081a0e 50%, #0a2414 75%, #040804 100%);
-            background-size: 400% 400%;
-            animation: grad 20s ease infinite;
-            color: #e8f5e9;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
-        }
-
-        @keyframes grad {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .content {
-            position: relative; z-index: 1; width: 100%; max-width: 680px;
-            padding: 20px 14px 60px; display: flex; flex-direction: column;
-            align-items: center; gap: 24px;
-        }
-
-        .nav {
-            width: 100%; display: flex; justify-content: space-between; align-items: center;
-        }
-
-        .nav a {
-            color: rgba(46,204,113,0.5); text-decoration: none; font-size: 13px;
-            font-weight: 600; transition: color 0.15s;
-        }
-
-        .nav a:hover { color: #2ecc71; }
-
-        .page-header {
-            text-align: center; display: flex; flex-direction: column; gap: 8px; align-items: center;
-        }
-
-        .page-icon { font-size: 48px; }
-
-        .page-title {
-            font-family: 'Playfair Display', serif; font-style: italic;
-            font-size: 30px; font-weight: 700;
-            background: linear-gradient(135deg, #2ecc71, #a8f0c0, #2ecc71);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-
-        .page-subtitle {
-            font-size: 13px; color: rgba(46,204,113,0.45); letter-spacing: 0.1em;
-            text-transform: uppercase; font-weight: 600;
-        }
-
-        /* ── Sections ── */
-        .section-title {
-            font-size: 13px; font-weight: 700; color: rgba(46,204,113,0.4);
-            text-transform: uppercase; letter-spacing: 0.1em;
-            align-self: flex-start; margin-top: 8px;
-        }
-
-        .grid {
-            display: grid; grid-template-columns: repeat(2, 1fr);
-            gap: 14px; width: 100%;
-        }
-
-        .card {
-            background: rgba(10,30,16,0.6);
-            border: 1px solid rgba(40,100,55,0.25);
-            border-radius: 18px; padding: 24px 20px;
-            text-decoration: none; color: #e8f5e9;
-            display: flex; flex-direction: column; gap: 12px;
-            transition: transform 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
-            backdrop-filter: blur(8px); position: relative; overflow: hidden;
-        }
-
-        .card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 30% 30%, rgba(46,204,113,0.03), transparent 60%);
-            pointer-events: none;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            background: rgba(20,50,28,0.7);
-            border-color: rgba(46,204,113,0.4);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-        }
-
-        .card.disabled { opacity: 0.4; pointer-events: none; }
-
-        .card-icon {
-            font-size: 34px; width: 56px; height: 56px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 14px; background: rgba(46,204,113,0.1);
-        }
-
-        .card-title { font-size: 16px; font-weight: 700; }
-
-        .card-desc { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.5; }
-
-        .card-badge {
-            display: inline-flex; align-self: flex-start;
-            padding: 4px 10px; border-radius: 100px;
-            font-size: 10px; font-weight: 700;
-            letter-spacing: 0.08em; text-transform: uppercase;
-        }
-
-        .badge-ready { background: rgba(46,204,113,0.15); color: #2ecc71; }
-        .badge-soon  { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.3); }
-
-        @media (max-width: 480px) {
-            .grid { grid-template-columns: 1fr; }
-            .page-title { font-size: 24px; }
-        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html,body{height:100%;overflow:hidden}
+        body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#040804 0%,#061008 25%,#081a0e 50%,#0a2414 75%,#040804 100%);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;justify-content:center}
+        @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .page{width:100%;max-width:660px;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:24px}
+        .nav{width:100%;display:flex;justify-content:flex-start}
+        .nav a{color:rgba(46,204,113,0.5);text-decoration:none;font-size:13px;font-weight:600;transition:color 0.15s}
+        .nav a:hover{color:#2ecc71}
+        .page-header{text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center}
+        .page-icon{font-size:48px}
+        .page-title{font-family:'Playfair Display',serif;font-style:italic;font-size:30px;font-weight:700;background:linear-gradient(135deg,#2ecc71,#a8f0c0,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .page-sub{font-size:12px;color:rgba(46,204,113,0.4);letter-spacing:0.1em;text-transform:uppercase;font-weight:600}
+        .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;width:100%}
+        .card{background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:22px;padding:36px 20px;text-decoration:none;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;transition:transform 0.2s,background 0.2s,border-color 0.2s,box-shadow 0.2s;backdrop-filter:blur(8px);position:relative;overflow:hidden}
+        .card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 50% 30%,rgba(46,204,113,0.04),transparent 60%);pointer-events:none}
+        .card:hover{transform:translateY(-5px);background:rgba(20,50,28,0.7);border-color:rgba(46,204,113,0.45);box-shadow:0 16px 50px rgba(0,0,0,0.35)}
+        .card-icon{font-size:44px;width:76px;height:76px;display:flex;align-items:center;justify-content:center;border-radius:20px;background:rgba(46,204,113,0.1)}
+        .card-title{font-size:18px;font-weight:700}
+        .card-desc{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5}
+        @media(max-width:520px){.grid-2{grid-template-columns:1fr}.page-title{font-size:24px}}
     </style>
 </head>
 <body>
-
-<div class="content">
-
-    <div class="nav">
-        <a href="index.html">← Accueil</a>
-        <a href="profil.html">Mon profil</a>
-    </div>
-
+<div class="page">
+    <div class="nav"><a href="eleve.html">← Espace élève</a></div>
     <div class="page-header">
         <span class="page-icon">📐</span>
         <h1 class="page-title">Mathématiques</h1>
-        <p class="page-subtitle">Exercices en ligne & suivi</p>
+        <p class="page-sub">Choisis ton parcours</p>
     </div>
-
-    <span class="section-title">📝 Exercices en ligne</span>
-
-    <div class="grid">
-
-        <a href="exercices.html" class="card">
-            <div class="card-icon">📐</div>
-            <div class="card-title">Mesure d'angles</div>
-            <div class="card-desc">Utilise l'équerre Aristo pour mesurer des angles dans des figures géométriques.</div>
-            <span class="card-badge badge-ready">Disponible</span>
+    <div class="grid-2">
+        <a href="suivi.html" class="card">
+            <div class="card-icon">📋</div>
+            <div class="card-title">Suivi en présentiel</div>
+            <div class="card-desc">Agenda, objectifs et questionnements pour tes séances en classe.</div>
         </a>
-
-        <a href="fractions.html" class="card">
-            <div class="card-icon">½</div>
-            <div class="card-title">Fractions</div>
-            <div class="card-desc">Compare, convertis, simplifie et calcule avec des fractions.</div>
-            <span class="card-badge badge-ready">Disponible</span>
+        <a href="exercices-en-ligne.html" class="card">
+            <div class="card-icon">💻</div>
+            <div class="card-title">Exercices en ligne</div>
+            <div class="card-desc">Entraîne-toi sur les chapitres de ton année scolaire.</div>
         </a>
-
-        <a href="algebre.html" class="card">
-            <div class="card-icon">𝑥</div>
-            <div class="card-title">Calcul algébrique</div>
-            <div class="card-desc">Expressions, développement, factorisation, identités remarquables.</div>
-            <span class="card-badge badge-ready">Disponible</span>
-        </a>
-
-        <div class="card disabled">
-            <div class="card-icon">△</div>
-            <div class="card-title">Figures géométriques</div>
-            <div class="card-desc">Périmètres, aires et propriétés des polygones.</div>
-            <span class="card-badge badge-soon">Bientôt</span>
-        </div>
-
-        <div class="card disabled">
-            <div class="card-icon">🧮</div>
-            <div class="card-title">Calcul mental</div>
-            <div class="card-desc">Défis chronométrés sur les quatre opérations.</div>
-            <span class="card-badge badge-soon">Bientôt</span>
-        </div>
-
-        <div class="card disabled">
-            <div class="card-icon">📈</div>
-            <div class="card-title">Fonctions</div>
-            <div class="card-desc">Lecture de graphiques, tableaux de valeurs et représentations.</div>
-            <span class="card-badge badge-soon">Bientôt</span>
-        </div>
-
     </div>
-
-    <span class="section-title">📋 Suivi en présentiel</span>
-
-    <div class="grid">
-        <div class="card disabled" style="grid-column: span 2;">
-            <div class="card-icon">📊</div>
-            <div class="card-title">Mon suivi</div>
-            <div class="card-desc">Suivi personnalisé de ta progression en classe. Cette section sera complétée par Stef lors des séances en présentiel.</div>
-            <span class="card-badge badge-soon">Bientôt</span>
-        </div>
-    </div>
-
 </div>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="auth.js"></script>
-<script>
-    requireAuth((user, profile) => {
-        injectUserBar(user, profile);
-    });
-</script>
-
+<script>requireAuth((u,p)=>{});</script>
 </body>
 </html>
