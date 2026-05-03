@@ -2,72 +2,305 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Exercice Angles - Pro</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Classe de Stef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29 0%, #1a1a4e 25%, #24243e 50%, #302b63 75%, #0f0c29 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+            color: #f0f0f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ── Symboles mathématiques flottants ── */
+        .math-symbols {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .math-sym {
+            position: absolute;
+            font-size: 28px;
+            opacity: 0;
+            color: rgba(255,255,255,0.08);
+            animation: floatSym linear infinite;
+            font-family: 'JetBrains Mono', monospace;
+            user-select: none;
+        }
+
+        @keyframes floatSym {
+            0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10%  { opacity: 0.12; }
+            90%  { opacity: 0.08; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* ── Contenu principal ── */
+        .content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 680px;
+            padding: 40px 20px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 36px;
+        }
+
+        /* ── Logo ── */
+        .logo-wrap {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 24px 40px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+        }
+
+        .logo-wrap img {
+            max-height: 90px;
+            width: auto;
+            display: block;
+        }
+
+        /* ── Titre calligraphie ── */
+        .welcome-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            font-style: italic;
+            text-align: center;
+            line-height: 1.3;
+            background: linear-gradient(135deg, #f8d56e 0%, #f0a0a0 40%, #a8d0f0 70%, #f8d56e 100%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleShimmer 6s ease infinite;
+        }
+
+        @keyframes titleShimmer {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: rgba(255,255,255,0.45);
+            text-align: center;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-top: -16px;
+        }
+
+        /* ── Grille de boutons ── */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            width: 100%;
+        }
+
+        @media (max-width: 480px) {
+            .grid { grid-template-columns: 1fr; }
+            .welcome-title { font-size: 26px; }
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 18px;
+            padding: 28px 22px;
+            text-decoration: none;
+            color: #f0f0f8;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            transition: transform 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+            backdrop-filter: blur(8px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.04), transparent 60%);
+            pointer-events: none;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.09);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        .card-icon {
+            font-size: 36px;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.06);
+        }
+
+        .card-icon.angles  { background: rgba(0,212,170,0.12); }
+        .card-icon.formes  { background: rgba(79,142,247,0.12); }
+        .card-icon.calcul  { background: rgba(247,201,79,0.12); }
+        .card-icon.fractions { background: rgba(247,111,111,0.12); }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.5;
+        }
+
+        .card-badge {
+            display: inline-flex;
+            align-self: flex-start;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .badge-ready {
+            background: rgba(0,212,170,0.15);
+            color: #3ecf8e;
+        }
+
+        .badge-soon {
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.35);
+        }
+
+        .card.disabled {
+            opacity: 0.45;
+            pointer-events: none;
+            cursor: default;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.2);
+            text-align: center;
+            letter-spacing: 0.04em;
+        }
+    </style>
 </head>
 <body>
-    <div id="header-logo">
-        <img src="logo.png" alt="Logo" class="site-logo">
+
+<!-- Symboles mathématiques flottants -->
+<div class="math-symbols" id="math-bg"></div>
+
+<div class="content">
+
+    <div class="logo-wrap">
+        <img src="logo.png" alt="Logo">
     </div>
 
-    <div id="main-content">
-        <header>
-            <div id="score-board">
-                Score : <span id="current-score">0</span> / <span id="total-questions">0</span>
-            </div>
-            <div id="rotation-control">
-                <div id="rotation-wheel"></div>
-                <span id="angle-display">0°</span>
-                <span>Pivoter</span>
-            </div>
-        </header>
+    <h1 class="welcome-title">Bienvenue dans la Classe de Stef</h1>
+    <p class="subtitle">Exercices interactifs de mathématiques</p>
 
-        <div id="toolbar">
-            <button class="zoom-btn" onclick="ajusterZoom(0.2)">🔍 +</button>
-            <button class="zoom-btn" onclick="ajusterZoom(-0.2)">🔍 −</button>
-            <button class="zoom-btn" onclick="resetZoom()">🔄</button>
-            <button class="zoom-btn" onclick="toggleGrandEcran()">⛶ Agrandir</button>
-            <div id="size-control">
-                <span>📐</span>
-                <input type="range" id="equerre-size" min="80" max="320" value="180">
-            </div>
+    <div class="grid">
+
+        <a href="exercices.html" class="card">
+            <div class="card-icon angles">📐</div>
+            <div class="card-title">Mesure d'angles</div>
+            <div class="card-desc">15 exercices avec l'équerre Aristo. Mesure des angles dans des triangles, quadrilatères et figures géométriques.</div>
+            <span class="card-badge badge-ready">Disponible</span>
+        </a>
+
+        <div class="card disabled">
+            <div class="card-icon formes">△</div>
+            <div class="card-title">Figures géométriques</div>
+            <div class="card-desc">Identifie et classe les polygones, calcule périmètres et aires.</div>
+            <span class="card-badge badge-soon">Bientôt</span>
         </div>
 
-        <div id="exercice-container">
-            <img src="IMG_0906.jpg" alt="Fiche" id="fond-exercice">
-            <div id="cursor-wrapper">
-                <img src="equerre-aristo.svg" alt="Équerre" id="custom-cursor">
-            </div>
-
-            <!-- Panneau flottant TOUJOURS dans le container, affiché seulement en grand écran -->
-            <div id="grand-ecran-controls">
-                <div id="rotation-control-ge">
-                    <div id="rotation-wheel-ge"></div>
-                    <span id="angle-display-ge">0°</span>
-                    <span>Pivoter</span>
-                </div>
-                <div id="ge-buttons">
-                    <button class="zoom-btn-ge" onclick="ajusterZoom(0.2)">🔍+</button>
-                    <button class="zoom-btn-ge" onclick="ajusterZoom(-0.2)">🔍−</button>
-                    <button class="zoom-btn-ge" onclick="resetZoom()">🔄</button>
-                    <input type="range" id="equerre-size-ge" min="80" max="320" value="180">
-                    <button class="zoom-btn-ge btn-fermer" onclick="toggleGrandEcran()">✕</button>
-                </div>
-            </div>
+        <div class="card disabled">
+            <div class="card-icon calcul">🧮</div>
+            <div class="card-title">Calcul mental</div>
+            <div class="card-desc">Entraîne-toi aux quatre opérations avec des défis chronométrés.</div>
+            <span class="card-badge badge-soon">Bientôt</span>
         </div>
 
-        <div class="reponses-eleve">
-            <div class="input-group">
-                <input type="number" id="user-answer" placeholder="Entrez les degrés…">
-                <button id="btn-valider" onclick="verifierReponse()">Valider</button>
-            </div>
-            <p id="feedback"></p>
+        <div class="card disabled">
+            <div class="card-icon fractions">½</div>
+            <div class="card-title">Fractions</div>
+            <div class="card-desc">Simplifie, additionne et compare des fractions de manière visuelle.</div>
+            <span class="card-badge badge-soon">Bientôt</span>
         </div>
 
-        <a href="exercices.html" id="btn-exercices">📐 Série d'exercices (15 angles à mesurer) →</a>
     </div>
 
-    <script src="script.js"></script>
+    <div class="footer">© 2026 La Classe de Stef — Fait avec ♥ pour apprendre les maths</div>
+
+</div>
+
+<script>
+// ── Symboles mathématiques flottants ──
+const symbols = ['∑','π','√','∞','∠','△','∫','÷','×','±','≈','≠','≤','≥','∆','Ω','θ','α','β','λ','μ','φ','∂','⊂','∪','∩','⊥','∥','≡','∝','ℝ','ℤ','ℕ'];
+const container = document.getElementById('math-bg');
+
+function createSymbol() {
+    const el = document.createElement('span');
+    el.className = 'math-sym';
+    el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    el.style.left = Math.random() * 100 + '%';
+    el.style.fontSize = (18 + Math.random() * 30) + 'px';
+    el.style.animationDuration = (15 + Math.random() * 25) + 's';
+    el.style.animationDelay = Math.random() * 5 + 's';
+    container.appendChild(el);
+
+    setTimeout(() => el.remove(), 45000);
+}
+
+// Créer des symboles régulièrement
+for (let i = 0; i < 15; i++) {
+    setTimeout(createSymbol, i * 800);
+}
+setInterval(createSymbol, 2500);
+</script>
+
 </body>
 </html>
