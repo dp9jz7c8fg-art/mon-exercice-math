@@ -41,6 +41,24 @@
             <div id="cursor-wrapper">
                 <img src="equerre.png" alt="Équerre" id="custom-cursor">
             </div>
+
+            <!-- Contrôles flottants visibles uniquement en plein écran -->
+            <div id="fullscreen-controls">
+                <div id="rotation-control-fs">
+                    <div id="rotation-wheel-fs"></div>
+                    <span id="angle-display-fs">0°</span>
+                    <span>Pivoter</span>
+                </div>
+                <div id="fs-buttons">
+                    <button class="zoom-btn-fs" onclick="ajusterZoom(0.2)">🔍+</button>
+                    <button class="zoom-btn-fs" onclick="ajusterZoom(-0.2)">🔍−</button>
+                    <button class="zoom-btn-fs" onclick="resetZoom()">🔄</button>
+                </div>
+                <div id="size-control-fs">
+                    <span>📐</span>
+                    <input type="range" id="equerre-size-fs" min="80" max="320" value="180">
+                </div>
+            </div>
         </div>
 
         <div class="reponses-eleve">

@@ -326,6 +326,121 @@ header {
 .feedback-correct { color: var(--success); }
 .feedback-error   { color: var(--danger); }
 
+/* ── Contrôles plein écran (cachés en mode normal) ── */
+#fullscreen-controls {
+    display: none;
+}
+
+#exercice-container:fullscreen #fullscreen-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 100;
+    background: rgba(28, 31, 40, 0.92);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    backdrop-filter: blur(8px);
+    box-shadow: var(--shadow);
+}
+
+#rotation-control-fs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+#rotation-wheel-fs {
+    width: 60px;
+    height: 60px;
+    border: 3px solid var(--accent);
+    border-radius: 50%;
+    background: var(--surface2);
+    touch-action: none;
+    cursor: grab;
+    position: relative;
+    box-shadow: 0 0 0 4px rgba(79,142,247,0.12);
+}
+
+#rotation-wheel-fs::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    width: 3px;
+    height: 14px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+#rotation-wheel-fs:active { cursor: grabbing; border-color: var(--accent2); }
+
+#angle-display-fs {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--accent2);
+    min-width: 38px;
+    text-align: center;
+}
+
+#fs-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.zoom-btn-fs {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    touch-action: manipulation;
+}
+
+.zoom-btn-fs:hover { background: var(--surface); border-color: var(--accent); }
+
+#size-control-fs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+#equerre-size-fs {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 80px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+}
+
+#equerre-size-fs::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+}
+
 /* ── Plein écran ── */
 #exercice-container:fullscreen {
     width: 100vw;

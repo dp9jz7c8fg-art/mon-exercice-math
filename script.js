@@ -93,12 +93,8 @@ window.addEventListener('touchmove', (e) => {
 
     wrapper.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
     wheel.style.transform = `rotate(${rotation}deg)`;
-
-    // Affiche l'angle normalisé (0-360)
-    const displayAngle = ((rotation % 360) + 360) % 360;
-    const angleDisplay = document.getElementById('angle-display');
-    if (angleDisplay) angleDisplay.textContent = Math.round(displayAngle) + '°';
-
+    if (wheelFs) wheelFs.style.transform = `rotate(${rotation}deg)`;
+    updateAngleDisplays();
     e.preventDefault();
 }, { passive: false });
 
@@ -129,10 +125,8 @@ window.addEventListener('mousemove', (e) => {
 
     wrapper.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
     wheel.style.transform = `rotate(${rotation}deg)`;
-
-    const displayAngle = ((rotation % 360) + 360) % 360;
-    const angleDisplay = document.getElementById('angle-display');
-    if (angleDisplay) angleDisplay.textContent = Math.round(displayAngle) + '°';
+    if (wheelFs) wheelFs.style.transform = `rotate(${rotation}deg)`;
+    updateAngleDisplays();
 });
 
 window.addEventListener('mouseup', () => { isDraggingWheel = false; });
@@ -190,6 +184,61 @@ container.addEventListener('wheel', (e) => {
     fond.style.transformOrigin = `${originX}% ${originY}%`;
     fond.style.transform = `scale(${zoomLevel})`;
 }, { passive: false });
+
+// --- VOLANT PLEIN ÉCRAN ---
+const wheelFs = document.getElementById('rotation-wheel-fs');
+
+function updateAngleDisplays() {
+    const displayAngle = ((rotation % 360) + 360) % 360;
+    const a = document.getElementById('angle-display');
+    const aFs = document.getElementById('angle-display-fs');
+    if (a) a.textContent = Math.round(displayAngle) + '°';
+    if (aFs) aFs.textContent = Math.round(displayAngle) + '°';
+}
+
+function applyRotationFromWheel(wheelEl, clientX, clientY, isStart) {
+    const rect = wheelEl.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const angle = Math.atan2(clientY - centerY, clientX - centerX);
+    if (isStart) {
+        lastAngle = angle;
+    } else {
+        rotation += (angle - lastAngle) * (180 / Math.PI);
+        lastAngle = angle;
+        wrapper.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+        wheel.style.transform = `rotate(${rotation}deg)`;
+        if (wheelFs) wheelFs.style.transform = `rotate(${rotation}deg)`;
+        updateAngleDisplays();
+    }
+}
+
+// Touch sur le volant plein écran
+if (wheelFs) {
+    wheelFs.addEventListener('touchstart', (e) => {
+        isRotating = true;
+        const t = e.touches[0];
+        applyRotationFromWheel(wheelFs, t.clientX, t.clientY, true);
+        e.preventDefault();
+    }, { passive: false });
+
+    // Mouse sur le volant plein écran
+    wheelFs.addEventListener('mousedown', (e) => {
+        isDraggingWheel = true;
+        applyRotationFromWheel(wheelFs, e.clientX, e.clientY, true);
+        e.preventDefault();
+    });
+}
+
+// Slider taille équerre plein écran
+const sizeSliderFs = document.getElementById('equerre-size-fs');
+if (sizeSliderFs) {
+    sizeSliderFs.addEventListener('input', () => {
+        const size = sizeSliderFs.value;
+        wrapper.style.width = size + 'px';
+        if (sizeSlider) sizeSlider.value = size;
+    });
+}
 
 // --- PLEIN ÉCRAN ---
 const containerExercice = document.getElementById('exercice-container');
