@@ -82,10 +82,10 @@ function injectUserBar(user, profile) {
     const bar = document.createElement('div');
     bar.id = 'user-bar';
     bar.innerHTML = `
-        <div class="ub-left">
+        <a href="profil.html" class="ub-left" style="text-decoration:none;color:inherit;">
             <span class="ub-avatar">${profile.avatar || '🦊'}</span>
             <span class="ub-name">${profile.name || 'Élève'}</span>
-        </div>
+        </a>
         <div class="ub-right">
             <span class="ub-stats">${profile.totalCorrect || 0} ⭐</span>
             <button class="ub-logout" onclick="logout()">Déconnexion</button>
@@ -107,7 +107,8 @@ function injectUserBar(user, profile) {
             backdrop-filter: blur(10px);
             z-index: 100;
         }
-        .ub-left { display: flex; align-items: center; gap: 10px; }
+        .ub-left { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .ub-left:hover .ub-name { color: #f8d56e; }
         .ub-avatar { font-size: 26px; }
         .ub-name { font-weight: 600; color: #f0f0f8; }
         .ub-right { display: flex; align-items: center; gap: 14px; }

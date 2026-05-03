@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil – La Classe de Stef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29 0%, #1a1a4e 25%, #24243e 50%, #302b63 75%, #0f0c29 100%);
+            background-size: 400% 400%;
+            animation: grad 20s ease infinite;
+            color: #f0f0f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        @keyframes grad {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .content {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px 14px 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Nav */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav a {
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: color 0.15s;
+        }
+
+        .nav a:hover { color: #f0f0f8; }
+
+        .nav-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Carte profil */
+        .profile-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 40% 40%, rgba(248,213,110,0.04), transparent 50%);
+            pointer-events: none;
+        }
+
+        .avatar-big {
+            font-size: 72px;
+            width: 110px;
+            height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            border: 3px solid rgba(248,213,110,0.3);
+            box-shadow: 0 0 30px rgba(248,213,110,0.1);
+        }
+
+        .profile-name {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f8d56e, #f0a0a0, #a8d0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .profile-email {
+            font-size: 13px;
+            color: rgba(255,255,255,0.35);
+        }
+
+        .profile-joined {
+            font-size: 11px;
+            color: rgba(255,255,255,0.25);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        /* Statistiques globales */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            width: 100%;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 18px 12px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: #f8d56e;
+        }
+
+        .stat-value.green { color: #2ecc71; }
+        .stat-value.blue { color: #4f8ef7; }
+
+        .stat-label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+        }
+
+        /* Section titre */
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.7);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+        }
+
+        /* Barres de progression par objectif */
+        .progress-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .progress-item {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #f0f0f8;
+        }
+
+        .progress-score {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .progress-score strong {
+            color: #2ecc71;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.6s ease;
+            min-width: 0;
+        }
+
+        .fill-green  { background: linear-gradient(90deg, #2ecc71, #27ae60); }
+        .fill-blue   { background: linear-gradient(90deg, #4f8ef7, #3b7ddd); }
+        .fill-orange { background: linear-gradient(90deg, #f39c12, #e67e22); }
+
+        /* Bouton changer avatar */
+        .btn-avatar {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            padding: 10px 20px;
+            color: rgba(255,255,255,0.5);
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-avatar:hover { border-color: #f8d56e; color: #f8d56e; }
+
+        /* Modal avatar */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(6px);
+        }
+
+        .modal-overlay.open { display: flex; }
+
+        .modal-box {
+            background: #1a1a3e;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 28px;
+            width: 90%;
+            max-width: 360px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #f0f0f8;
+        }
+
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .av-opt {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.1);
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .av-opt:hover { border-color: rgba(255,255,255,0.3); transform: scale(1.1); }
+
+        .av-opt.sel {
+            border-color: #f8d56e;
+            background: rgba(248,213,110,0.15);
+            transform: scale(1.1);
+            box-shadow: 0 0 14px rgba(248,213,110,0.2);
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .modal-btns button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.15s;
+            border: none;
+        }
+
+        .btn-cancel {
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.5);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #f8d56e, #f0a0a0);
+            color: #1a1a2e;
+        }
+
+        .btn-save:hover, .btn-cancel:hover { opacity: 0.8; }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .stats-row { grid-template-columns: 1fr 1fr; }
+            .avatar-big { font-size: 56px; width: 90px; height: 90px; }
+            .profile-name { font-size: 22px; }
+            .av-opt { font-size: 22px; }
+        }
+
+        /* Loading */
+        #loading-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            font-size: 14px;
+            color: rgba(255,255,255,0.4);
+            gap: 10px;
+        }
+
+        .spinner {
+            width: 20px; height: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top-color: #f8d56e;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="content">
+
+    <div class="nav">
+        <a href="index.html">← Accueil</a>
+        <span class="nav-title">Mon Profil</span>
+        <a href="#" onclick="logout(); return false;">Déconnexion</a>
+    </div>
+
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <span>Chargement du profil…</span>
+    </div>
+
+    <div id="profile-content" style="display:none;">
+
+        <div class="profile-card">
+            <div class="avatar-big" id="avatar-display">🦊</div>
+            <div class="profile-name" id="profile-name">Élève</div>
+            <div class="profile-email" id="profile-email"></div>
+            <div class="profile-joined" id="profile-joined"></div>
+            <button class="btn-avatar" onclick="openAvatarModal()">Changer d'avatar</button>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-value" id="stat-total">0</div>
+                <div class="stat-label">Exercices</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value green" id="stat-correct">0</div>
+                <div class="stat-label">Corrects</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value blue" id="stat-pct">0%</div>
+                <div class="stat-label">Réussite</div>
+            </div>
+        </div>
+
+        <div class="section-title">📐 Mesure d'angles</div>
+        <div class="progress-list" id="angles-progress"></div>
+
+        <div class="section-title">½ Fractions</div>
+        <div class="progress-list" id="fractions-progress"></div>
+
+    </div>
+
+</div>
+
+<!-- Modal avatar -->
+<div class="modal-overlay" id="avatar-modal">
+    <div class="modal-box">
+        <div class="modal-title">Choisis ton avatar</div>
+        <div class="avatar-grid" id="avatar-grid-modal"></div>
+        <div class="modal-btns">
+            <button class="btn-cancel" onclick="closeAvatarModal()">Annuler</button>
+            <button class="btn-save" onclick="saveAvatar()">Enregistrer</button>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+
+<script>
+const AVATARS = ['🦊','🐱','🐶','🐼','🦁','🐸','🦉','🐙','🦋','🐢','🐬','🦄','🐧','🐰','🐝'];
+const FRAC_LABELS = {
+    'comparer':   '⚖️ Comparer',
+    'convertir':  '🔄 Convertir',
+    'arrondir':   '🎯 Arrondir',
+    'simplifier': '✂️ Simplifier',
+    'add-sub':    '➕ Add / Soustr',
+    'multiplier': '✖️ Multiplier',
+    'diviser':    '➗ Diviser',
+};
+
+let currentProfile = null;
+let currentUser = null;
+let newAvatar = null;
+
+requireAuth((user, profile) => {
+    currentUser = user;
+    currentProfile = profile;
+
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('profile-content').style.display = 'flex';
+    document.getElementById('profile-content').style.flexDirection = 'column';
+    document.getElementById('profile-content').style.gap = '20px';
+
+    renderProfile(profile);
+});
+
+function renderProfile(p) {
+    document.getElementById('avatar-display').textContent = p.avatar || '🦊';
+    document.getElementById('profile-name').textContent = p.name || 'Élève';
+    document.getElementById('profile-email').textContent = p.email || '';
+
+    if (p.createdAt) {
+        const d = p.createdAt.toDate ? p.createdAt.toDate() : new Date(p.createdAt);
+        document.getElementById('profile-joined').textContent = 'Membre depuis ' + d.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    }
+
+    const totalEx = p.totalExercises || 0;
+    const totalCo = p.totalCorrect || 0;
+    const pct = totalEx > 0 ? Math.round(totalCo / totalEx * 100) : 0;
+
+    document.getElementById('stat-total').textContent = totalEx;
+    document.getElementById('stat-correct').textContent = totalCo;
+    document.getElementById('stat-pct').textContent = pct + '%';
+
+    // Angles
+    const anglesEl = document.getElementById('angles-progress');
+    const angles = p.scores?.angles || { done: 0, correct: 0 };
+    anglesEl.innerHTML = buildProgressItem('📐 Mesure d\'angles', angles.done, angles.correct, 'fill-blue');
+
+    // Fractions
+    const fracEl = document.getElementById('fractions-progress');
+    const fracScores = p.scores?.fractions || {};
+    let fracHTML = '';
+    for (const [key, label] of Object.entries(FRAC_LABELS)) {
+        const s = fracScores[key] || { done: 0, correct: 0 };
+        fracHTML += buildProgressItem(label, s.done, s.correct, 'fill-green');
+    }
+    fracEl.innerHTML = fracHTML;
+}
+
+function buildProgressItem(name, done, correct, fillClass) {
+    const pct = done > 0 ? Math.round(correct / done * 100) : 0;
+    return `
+        <div class="progress-item">
+            <div class="progress-top">
+                <span class="progress-name">${name}</span>
+                <span class="progress-score"><strong>${correct}</strong> / ${done} (${pct}%)</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill ${fillClass}" style="width: ${pct}%"></div>
+            </div>
+        </div>`;
+}
+
+// ── Avatar Modal ──
+function openAvatarModal() {
+    newAvatar = currentProfile.avatar || '🦊';
+    const grid = document.getElementById('avatar-grid-modal');
+    grid.innerHTML = '';
+    AVATARS.forEach(av => {
+        const btn = document.createElement('div');
+        btn.className = 'av-opt' + (av === newAvatar ? ' sel' : '');
+        btn.textContent = av;
+        btn.onclick = () => {
+            grid.querySelectorAll('.av-opt').forEach(b => b.classList.remove('sel'));
+            btn.classList.add('sel');
+            newAvatar = av;
+        };
+        grid.appendChild(btn);
+    });
+    document.getElementById('avatar-modal').classList.add('open');
+}
+
+function closeAvatarModal() {
+    document.getElementById('avatar-modal').classList.remove('open');
+}
+
+async function saveAvatar() {
+    if (!currentUser || !newAvatar) return;
+    try {
+        await db.collection('users').doc(currentUser.uid).update({ avatar: newAvatar });
+        currentProfile.avatar = newAvatar;
+        document.getElementById('avatar-display').textContent = newAvatar;
+        closeAvatarModal();
+    } catch (e) {
+        console.error('Erreur avatar:', e);
+        alert('Erreur lors de la sauvegarde.');
+    }
+}
+</script>
+
+</body>
+</html>
