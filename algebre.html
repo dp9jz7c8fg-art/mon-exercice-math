@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcul algébrique – La Classe de Stef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg1: #0a0a18;
+            --bg2: #10102a;
+            --bg3: #18183a;
+            --card: rgba(20,20,50,0.85);
+            --surface: rgba(30,30,65,0.7);
+            --border: rgba(80,70,180,0.3);
+            --accent: #8b5cf6;
+            --accent2: #a78bfa;
+            --accent-dim: rgba(139,92,246,0.15);
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --green: #10b981;
+            --blue: #3b82f6;
+            --text: #e8e4f0;
+            --muted: #7a72a0;
+            --radius: 14px;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Syne', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(160deg, var(--bg1) 0%, var(--bg2) 40%, var(--bg3) 70%, var(--bg1) 100%);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        #app-header {
+            width: 100%; background: var(--card); border-bottom: 1px solid var(--border);
+            padding: 14px 20px; display: flex; align-items: center; justify-content: space-between;
+            gap: 16px; backdrop-filter: blur(10px);
+        }
+        #app-title { font-size: 15px; font-weight: 800; color: var(--accent); letter-spacing: 0.04em; }
+        .back-link { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 600; transition: color 0.15s; }
+        .back-link:hover { color: var(--accent); }
+        #score-display { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted); }
+        #score-display strong { color: var(--accent); font-size: 18px; }
+        #main { width: 100%; max-width: 620px; padding: 20px 14px 60px; display: flex; flex-direction: column; gap: 16px; }
+        #tabs-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        #tabs-wrap::-webkit-scrollbar { display: none; }
+        #tabs { display: flex; gap: 6px; min-width: max-content; padding: 4px 0; }
+        .tab {
+            padding: 8px 14px; border-radius: 100px; font-size: 11px; font-weight: 700;
+            letter-spacing: 0.03em; border: 1px solid var(--border); background: var(--surface);
+            color: var(--muted); cursor: pointer; white-space: nowrap; transition: all 0.2s;
+            font-family: 'Syne', sans-serif;
+        }
+        .tab:hover { border-color: var(--accent); color: var(--text); }
+        .tab.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+        #exercice-box {
+            background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 24px 20px; backdrop-filter: blur(8px); display: flex; flex-direction: column;
+            gap: 20px; min-height: 200px;
+        }
+        #consigne { font-size: 14px; line-height: 1.6; color: var(--text); }
+        #consigne strong { color: var(--orange); }
+        .expr-display {
+            display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+            font-family: 'JetBrains Mono', monospace; font-size: 22px; color: var(--text);
+            padding: 16px; min-height: 60px; background: rgba(0,0,0,0.2); border-radius: 10px;
+            gap: 6px; letter-spacing: 0.02em; line-height: 1.6;
+        }
+        .expr-display .hl { color: var(--accent2); font-weight: 700; }
+        .expr-display .op { color: var(--accent); }
+        .expr-display .ans { color: var(--orange); font-weight: 700; }
+        #reponse-zone { display: flex; flex-direction: column; gap: 12px; }
+        .answer-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .ans-input {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+            padding: 12px 16px; font-size: 18px; font-family: 'JetBrains Mono', monospace;
+            color: var(--text); outline: none; transition: border-color 0.2s;
+            width: 240px; text-align: center;
+        }
+        .ans-input::placeholder { color: var(--muted); font-size: 14px; }
+        .ans-input:focus { border-color: var(--accent); }
+        .qcm-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .qcm-btn {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+            padding: 14px; font-size: 15px; font-family: 'JetBrains Mono', monospace;
+            color: var(--text); cursor: pointer; transition: all 0.15s; text-align: center;
+        }
+        .qcm-btn:hover { border-color: var(--accent); background: var(--accent-dim); }
+        .qcm-btn.correct { border-color: var(--green); background: rgba(16,185,129,0.15); color: var(--green); }
+        .qcm-btn.wrong { border-color: var(--red); background: rgba(239,68,68,0.12); color: var(--red); }
+        .qcm-btn.selected { border-color: var(--accent); background: var(--accent-dim); }
+        #btn-valider {
+            background: var(--accent); color: white; border: none; border-radius: 10px;
+            padding: 14px 28px; font-size: 15px; font-family: 'Syne', sans-serif;
+            font-weight: 700; cursor: pointer; align-self: center;
+            transition: opacity 0.15s, transform 0.1s;
+        }
+        #btn-valider:hover { opacity: 0.85; }
+        #btn-valider:active { transform: scale(0.97); }
+        #feedback-box {
+            display: none; background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 18px; flex-direction: column; gap: 10px;
+        }
+        #feedback-result { font-size: 16px; font-weight: 700; }
+        .fb-ok { color: var(--green); }
+        .fb-ko { color: var(--red); }
+        #feedback-steps {
+            font-size: 13px; line-height: 1.8; color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        #feedback-steps strong { color: var(--text); }
+        #btn-suivant {
+            display: none; width: 100%; background: var(--surface); border: 1px solid var(--accent);
+            border-radius: var(--radius); padding: 14px; font-size: 15px;
+            font-family: 'Syne', sans-serif; font-weight: 700; color: var(--accent);
+            cursor: pointer; text-align: center; transition: background 0.15s;
+        }
+        #btn-suivant:hover { background: var(--accent-dim); }
+        @media (max-width: 480px) {
+            .expr-display { font-size: 17px; }
+            .qcm-grid { grid-template-columns: 1fr; }
+            .ans-input { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-header">
+    <a href="index.html" class="back-link">← Accueil</a>
+    <span id="app-title">𝑥 ALGÈBRE</span>
+    <div id="score-display"><strong id="sc-bon">0</strong> / <span id="sc-total">0</span></div>
+</div>
+
+<div id="main">
+    <div id="tabs-wrap"><div id="tabs"></div></div>
+    <div id="exercice-box">
+        <div id="consigne"></div>
+        <div id="enonce" class="expr-display"></div>
+        <div id="reponse-zone"></div>
+        <button id="btn-valider" onclick="valider()">Valider</button>
+    </div>
+    <div id="feedback-box">
+        <div id="feedback-result"></div>
+        <div id="feedback-steps"></div>
+    </div>
+    <button id="btn-suivant" onclick="suivant()">Exercice suivant →</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  OBJECTIFS
+// ═══════════════════════════════════════════════════════════
+const OBJECTIFS = [
+    { id: 'comprendre',   label: 'Comprendre',     icon: '📖' },
+    { id: 'evaluer',      label: 'Évaluer',        icon: '🔢' },
+    { id: 'simplifier',   label: 'Simplifier',     icon: '✂️' },
+    { id: 'parentheses',  label: 'Parenthèses',    icon: '🔓' },
+    { id: 'developper',   label: 'Développer',     icon: '📐' },
+    { id: 'factoriser',   label: 'Factoriser',     icon: '🧩' },
+    { id: 'identites',    label: 'Identités',      icon: '💡' },
+    { id: 'polynomes',    label: 'Polynômes',      icon: '📊' },
+    { id: 'problemes',    label: 'Problèmes',      icon: '🧠' },
+];
+
+let objectifActif = 'comprendre';
+let bonnes = 0, total = 0;
+let currentExo = null;
+let answered = false;
+
+// ── Utilitaires ──
+function ri(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function signStr(n) { return n >= 0 ? '+ ' + n : '− ' + Math.abs(n); }
+function termStr(coef, v) {
+    if (coef === 0) return '';
+    if (coef === 1) return v;
+    if (coef === -1) return '−' + v;
+    return coef + v;
+}
+function polyStr(a, b, c, v) {
+    // ax² + bx + c
+    let parts = [];
+    if (a !== 0) parts.push(termStr(a, v + '²'));
+    if (b !== 0) {
+        const s = b > 0 && parts.length > 0 ? '+ ' + termStr(b, v) : termStr(b, v);
+        parts.push(s);
+    }
+    if (c !== 0) {
+        const s = c > 0 && parts.length > 0 ? '+ ' + c : '' + c;
+        parts.push(s);
+    }
+    return parts.join(' ') || '0';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  GÉNÉRATEURS
+// ═══════════════════════════════════════════════════════════
+
+function genComprendre() {
+    const vars = ['x','y','a','n','t'];
+    const v = pick(vars);
+    const type = ri(1, 3);
+
+    if (type === 1) {
+        // Identifier variable/constante
+        const coef = ri(2, 9);
+        const cst = ri(1, 20);
+        const expr = `${coef}${v} + ${cst}`;
+        const options = [
+            `Variable: ${v}, Constante: ${cst}`,
+            `Variable: ${coef}, Constante: ${v}`,
+            `Variable: ${cst}, Constante: ${v}`,
+            `Variable: ${coef}${v}, Constante: ${cst}`,
+        ];
+        return {
+            type: 'qcm', consigne: `Dans l'expression <strong>${expr}</strong>, identifie la variable et la constante :`,
+            enonce: expr, options, correct: options[0],
+            steps: `<strong>${v}</strong> est la variable (elle peut changer de valeur)<br><strong>${cst}</strong> est la constante (valeur fixe)<br><strong>${coef}</strong> est le coefficient de ${v}`
+        };
+    } else if (type === 2) {
+        // Reconnaître coefficient
+        const coef = ri(2, 12);
+        const b = ri(1, 15);
+        const expr = `${coef}${v} + ${b}`;
+        return {
+            type: 'input', consigne: `Quel est le coefficient de <strong>${v}</strong> dans l'expression <strong>${expr}</strong> ?`,
+            enonce: expr, correct: coef.toString(),
+            steps: `Dans ${coef}${v}, le nombre devant ${v} est <strong>${coef}</strong>, c'est le coefficient.`
+        };
+    } else {
+        // Nombre de termes
+        const a = ri(2, 8), b = ri(1, 7), c = ri(1, 10);
+        const expr = `${a}${v}² + ${b}${v} + ${c}`;
+        return {
+            type: 'input', consigne: `Combien de termes comporte l'expression <strong>${expr}</strong> ?`,
+            enonce: expr, correct: '3',
+            steps: `Les termes sont séparés par + ou −.<br>Terme 1 : <strong>${a}${v}²</strong><br>Terme 2 : <strong>${b}${v}</strong><br>Terme 3 : <strong>${c}</strong><br>Il y a <strong>3 termes</strong>.`
+        };
+    }
+}
+
+function genEvaluer() {
+    const v = 'x';
+    const val = ri(-5, 8);
+    const type = ri(1, 3);
+
+    if (type === 1) {
+        const a = ri(2, 7), b = ri(-10, 10);
+        const result = a * val + b;
+        return {
+            type: 'input', consigne: `Calcule la valeur de l'expression pour <strong>${v} = ${val}</strong> :`,
+            enonce: `${a}${v} ${signStr(b)}`, correct: result.toString(),
+            steps: `${a} × ${val} ${signStr(b)}<br>= ${a * val} ${signStr(b)}<br>= <strong>${result}</strong>`
+        };
+    } else if (type === 2) {
+        const a = ri(1, 5), b = ri(-6, 6), c = ri(-8, 8);
+        const result = a * val * val + b * val + c;
+        return {
+            type: 'input', consigne: `Calcule pour <strong>${v} = ${val}</strong> :`,
+            enonce: `${a}${v}² ${signStr(b)}${v} ${signStr(c)}`,
+            correct: result.toString(),
+            steps: `${a}×(${val})² ${signStr(b)}×(${val}) ${signStr(c)}<br>= ${a}×${val*val} ${signStr(b*val)} ${signStr(c)}<br>= ${a*val*val} ${signStr(b*val)} ${signStr(c)}<br>= <strong>${result}</strong>`
+        };
+    } else {
+        const a = ri(2, 6), b = ri(1, 5);
+        const result = a * val - b;
+        return {
+            type: 'input', consigne: `Vérifie : si <strong>${v} = ${val}</strong>, que vaut <strong>${a}${v} − ${b}</strong> ?`,
+            enonce: `${a}${v} − ${b}`, correct: result.toString(),
+            steps: `${a} × ${val} − ${b} = ${a*val} − ${b} = <strong>${result}</strong>`
+        };
+    }
+}
+
+function genSimplifier() {
+    const v = pick(['x','y','a']);
+    const type = ri(1, 3);
+
+    if (type === 1) {
+        // 2 termes semblables
+        const a = ri(2, 9), b = ri(1, 8);
+        const sum = a + b;
+        return {
+            type: 'input', consigne: `Simplifie en regroupant les termes semblables :`,
+            enonce: `${a}${v} + ${b}${v}`,
+            correct: `${sum}${v}`,
+            steps: `${a}${v} et ${b}${v} sont des termes semblables (même variable ${v})<br>${a} + ${b} = ${sum}<br>= <strong>${sum}${v}</strong>`
+        };
+    } else if (type === 2) {
+        const a = ri(2, 8), b = ri(1, 6), c = ri(1, 9), d = ri(1, 5);
+        const sv = a + c, sc = b + d;
+        return {
+            type: 'input', consigne: `Simplifie :`,
+            enonce: `${a}${v} + ${b} + ${c}${v} + ${d}`,
+            correct: `${sv}${v} + ${sc}`,
+            steps: `Termes en ${v} : ${a}${v} + ${c}${v} = ${sv}${v}<br>Constantes : ${b} + ${d} = ${sc}<br>= <strong>${sv}${v} + ${sc}</strong>`
+        };
+    } else {
+        const a = ri(3, 10), b = ri(1, a-1);
+        const diff = a - b;
+        return {
+            type: 'input', consigne: `Simplifie :`,
+            enonce: `${a}${v} − ${b}${v}`,
+            correct: `${diff}${v}`,
+            steps: `${a}${v} − ${b}${v} = (${a} − ${b})${v} = <strong>${diff}${v}</strong>`
+        };
+    }
+}
+
+function genParentheses() {
+    const v = pick(['x','y','a']);
+    const type = ri(1, 3);
+
+    if (type === 1) {
+        // +(a + b)
+        const a = ri(2, 7), b = ri(1, 6), c = ri(1, 8);
+        const r1 = a + c, r2 = b;
+        return {
+            type: 'input', consigne: `Supprime les parenthèses et simplifie :`,
+            enonce: `${a}${v} + (${c}${v} + ${b})`,
+            correct: `${r1}${v} + ${r2}`,
+            steps: `Le signe + devant la parenthèse ne change rien :<br>${a}${v} + ${c}${v} + ${b}<br>= <strong>${r1}${v} + ${r2}</strong>`
+        };
+    } else if (type === 2) {
+        // −(a + b)
+        const a = ri(3, 9), b = ri(1, 5), c = ri(1, 6);
+        const r1 = a - c, r2 = -b;
+        const res = r1 > 0 ? `${r1}${v} ${signStr(r2)}` : `${r1}${v} ${signStr(r2)}`;
+        return {
+            type: 'input', consigne: `Supprime les parenthèses et simplifie :`,
+            enonce: `${a}${v} − (${c}${v} + ${b})`,
+            correct: `${r1}${v} − ${b}`,
+            steps: `Le signe − change les signes dans la parenthèse :<br>${a}${v} − ${c}${v} − ${b}<br>= (${a}−${c})${v} − ${b}<br>= <strong>${r1}${v} − ${b}</strong>`
+        };
+    } else {
+        // Double parenthèses
+        const a = ri(2, 6), b = ri(1, 4), c = ri(1, 5), d = ri(1, 3);
+        const rV = a + c, rC = b - d;
+        const resC = rC >= 0 ? `+ ${rC}` : `− ${Math.abs(rC)}`;
+        return {
+            type: 'input', consigne: `Supprime les parenthèses et simplifie :`,
+            enonce: `(${a}${v} + ${b}) + (${c}${v} − ${d})`,
+            correct: `${rV}${v} ${resC}`,
+            steps: `${a}${v} + ${b} + ${c}${v} − ${d}<br>= (${a}+${c})${v} + (${b}−${d})<br>= <strong>${rV}${v} ${resC}</strong>`
+        };
+    }
+}
+
+function genDevelopper() {
+    const v = pick(['x','y','a']);
+    const type = ri(1, 3);
+
+    if (type === 1) {
+        // k(a + b)
+        const k = ri(2, 6), a = ri(1, 7), b = ri(1, 5);
+        const ra = k * a, rb = k * b;
+        return {
+            type: 'input', consigne: `Développe :`,
+            enonce: `${k}(${a}${v} + ${b})`,
+            correct: `${ra}${v} + ${rb}`,
+            steps: `${k} × ${a}${v} + ${k} × ${b}<br>= <strong>${ra}${v} + ${rb}</strong>`
+        };
+    } else if (type === 2) {
+        // k(a - b)
+        const k = ri(2, 5), a = ri(1, 6), b = ri(1, 8);
+        const ra = k * a, rb = k * b;
+        return {
+            type: 'input', consigne: `Développe :`,
+            enonce: `${k}(${a}${v} − ${b})`,
+            correct: `${ra}${v} − ${rb}`,
+            steps: `${k} × ${a}${v} − ${k} × ${b}<br>= <strong>${ra}${v} − ${rb}</strong>`
+        };
+    } else {
+        // (a+b)(c+d)
+        const a = ri(1, 4), b = ri(1, 5), c = ri(1, 4), d = ri(1, 5);
+        const r1 = a * c, r2 = a * d + b * c, r3 = b * d;
+        return {
+            type: 'input', consigne: `Développe et réduis :`,
+            enonce: `(${a}${v} + ${b})(${c}${v} + ${d})`,
+            correct: `${r1}${v}² + ${r2}${v} + ${r3}`,
+            steps: `= ${a}${v}×${c}${v} + ${a}${v}×${d} + ${b}×${c}${v} + ${b}×${d}<br>= ${r1}${v}² + ${a*d}${v} + ${b*c}${v} + ${r3}<br>= <strong>${r1}${v}² + ${r2}${v} + ${r3}</strong>`
+        };
+    }
+}
+
+function genFactoriser() {
+    const v = pick(['x','y','a']);
+    const type = ri(1, 3);
+
+    if (type === 1) {
+        const k = ri(2, 7), a = ri(1, 6);
+        return {
+            type: 'input', consigne: `Factorise :`,
+            enonce: `${k*a}${v} + ${k*ri(1,5)}`,
+            correct: (() => { const b = ri(1,5); const expr = `${k*a}${v} + ${k*b}`; return `${k}(${a}${v} + ${b})`; })(),
+            steps: (() => { const b = ri(1,5); return `Facteur commun : ${k}<br>${k*a}${v} = ${k} × ${a}${v}<br>${k*b} = ${k} × ${b}<br>= <strong>${k}(${a}${v} + ${b})</strong>`; })()
+        };
+    }
+    // Re-generate properly
+    const k = ri(2, 6), a = ri(1, 5), b = ri(1, 7);
+    const ka = k * a, kb = k * b;
+    return {
+        type: 'input', consigne: `Factorise en trouvant le facteur commun :`,
+        enonce: `${ka}${v} + ${kb}`,
+        correct: `${k}(${a}${v} + ${b})`,
+        steps: `PGCD(${ka}, ${kb}) = ${k}<br>${ka}${v} = ${k} × ${a}${v}<br>${kb} = ${k} × ${b}<br>= <strong>${k}(${a}${v} + ${b})</strong>`
+    };
+}
+
+function genIdentites() {
+    const v = pick(['x','y','a']);
+    const type = ri(1, 3);
+
+    if (type === 1) {
+        // (a+b)²
+        const a = ri(1, 5), b = ri(1, 6);
+        const r1 = a*a, r2 = 2*a*b, r3 = b*b;
+        return {
+            type: 'input', consigne: `Développe en utilisant l'identité remarquable <strong>(a+b)² = a²+2ab+b²</strong> :`,
+            enonce: `(${a}${v} + ${b})²`,
+            correct: `${r1}${v}² + ${r2}${v} + ${r3}`,
+            steps: `a = ${a}${v}, b = ${b}<br>a² = ${r1}${v}²<br>2ab = 2×${a}${v}×${b} = ${r2}${v}<br>b² = ${r3}<br>= <strong>${r1}${v}² + ${r2}${v} + ${r3}</strong>`
+        };
+    } else if (type === 2) {
+        // (a-b)²
+        const a = ri(1, 5), b = ri(1, 6);
+        const r1 = a*a, r2 = 2*a*b, r3 = b*b;
+        return {
+            type: 'input', consigne: `Développe avec <strong>(a−b)² = a²−2ab+b²</strong> :`,
+            enonce: `(${a}${v} − ${b})²`,
+            correct: `${r1}${v}² − ${r2}${v} + ${r3}`,
+            steps: `a = ${a}${v}, b = ${b}<br>a² = ${r1}${v}²<br>2ab = ${r2}${v}<br>b² = ${r3}<br>= <strong>${r1}${v}² − ${r2}${v} + ${r3}</strong>`
+        };
+    } else {
+        // (a+b)(a-b)
+        const a = ri(1, 5), b = ri(1, 6);
+        const r1 = a*a, r2 = b*b;
+        return {
+            type: 'input', consigne: `Développe avec <strong>(a+b)(a−b) = a²−b²</strong> :`,
+            enonce: `(${a}${v} + ${b})(${a}${v} − ${b})`,
+            correct: `${r1}${v}² − ${r2}`,
+            steps: `a = ${a}${v}, b = ${b}<br>a² = ${r1}${v}²<br>b² = ${r2}<br>= <strong>${r1}${v}² − ${r2}</strong>`
+        };
+    }
+}
+
+function genPolynomes() {
+    const v = 'x';
+    const type = ri(1, 3);
+    const a1 = ri(1,5), b1 = ri(-6,6), c1 = ri(-5,5);
+    const a2 = ri(1,4), b2 = ri(-5,5), c2 = ri(-4,4);
+
+    if (type === 1) {
+        // Addition
+        const ra = a1+a2, rb = b1+b2, rc = c1+c2;
+        return {
+            type: 'input', consigne: `Additionne ces deux polynômes :`,
+            enonce: `(${polyStr(a1,b1,c1,v)}) + (${polyStr(a2,b2,c2,v)})`,
+            correct: polyStr(ra,rb,rc,v),
+            steps: `${v}² : ${a1} + ${a2} = ${ra}<br>${v} : ${b1} ${signStr(b2)} = ${rb}<br>Cst : ${c1} ${signStr(c2)} = ${rc}<br>= <strong>${polyStr(ra,rb,rc,v)}</strong>`
+        };
+    } else if (type === 2) {
+        // Soustraction
+        const ra = a1-a2, rb = b1-b2, rc = c1-c2;
+        return {
+            type: 'input', consigne: `Soustrais le second polynôme du premier :`,
+            enonce: `(${polyStr(a1,b1,c1,v)}) − (${polyStr(a2,b2,c2,v)})`,
+            correct: polyStr(ra,rb,rc,v),
+            steps: `On change les signes du 2e polynôme :<br>${v}² : ${a1} − ${a2} = ${ra}<br>${v} : ${b1} − (${b2}) = ${rb}<br>Cst : ${c1} − (${c2}) = ${rc}<br>= <strong>${polyStr(ra,rb,rc,v)}</strong>`
+        };
+    } else {
+        // Multiplication simple (ax+b)(cx+d)
+        const a = ri(1,3), b = ri(1,5), c = ri(1,3), d = ri(-4,4);
+        const r1 = a*c, r2 = a*d+b*c, r3 = b*d;
+        return {
+            type: 'input', consigne: `Multiplie ces deux binômes :`,
+            enonce: `(${termStr(a,v)} + ${b})(${termStr(c,v)} ${signStr(d)})`,
+            correct: polyStr(r1,r2,r3,v),
+            steps: `= ${a*c}${v}² ${signStr(a*d)}${v} + ${b*c}${v} ${signStr(b*d)}<br>= ${r1}${v}² ${signStr(r2)}${v} ${signStr(r3)}<br>= <strong>${polyStr(r1,r2,r3,v)}</strong>`
+        };
+    }
+}
+
+function genProblemes() {
+    const type = ri(1, 3);
+
+    if (type === 1) {
+        const age = ri(8, 14);
+        const diff = ri(2, 5);
+        const total = 2 * age + diff;
+        return {
+            type: 'input', consigne: `Traduis et résous : <strong>La somme des âges de deux frères est ${total}. L'aîné a ${diff} ans de plus que le cadet.</strong> Quel est l'âge du cadet ?`,
+            enonce: `x + (x + ${diff}) = ${total}`,
+            correct: age.toString(),
+            steps: `Soit x l'âge du cadet.<br>L'aîné : x + ${diff}<br>x + (x + ${diff}) = ${total}<br>2x + ${diff} = ${total}<br>2x = ${total - diff}<br>x = ${(total - diff)/2}<br>Le cadet a <strong>${age} ans</strong>.`
+        };
+    } else if (type === 2) {
+        const prix = ri(5, 20);
+        const nb = ri(3, 8);
+        const total = prix * nb;
+        return {
+            type: 'input', consigne: `<strong>${nb} cahiers identiques coûtent ${total}€.</strong> Quel est le prix d'un cahier ?`,
+            enonce: `${nb}x = ${total}`,
+            correct: prix.toString(),
+            steps: `${nb}x = ${total}<br>x = ${total} ÷ ${nb}<br>x = <strong>${prix}€</strong>`
+        };
+    } else {
+        const l = ri(3, 10);
+        const add = ri(2, 6);
+        const perim = 2 * (l + l + add);
+        return {
+            type: 'input', consigne: `<strong>Un rectangle a un périmètre de ${perim} cm. Sa longueur dépasse sa largeur de ${add} cm.</strong> Quelle est la largeur ?`,
+            enonce: `2(x + x + ${add}) = ${perim}`,
+            correct: l.toString(),
+            steps: `Soit x la largeur, la longueur = x + ${add}<br>Périmètre = 2(x + x + ${add}) = ${perim}<br>2(2x + ${add}) = ${perim}<br>4x + ${2*add} = ${perim}<br>4x = ${perim - 2*add}<br>x = ${l}<br>La largeur est <strong>${l} cm</strong>.`
+        };
+    }
+}
+
+const GENERATORS = {
+    'comprendre':  genComprendre,
+    'evaluer':     genEvaluer,
+    'simplifier':  genSimplifier,
+    'parentheses': genParentheses,
+    'developper':  genDevelopper,
+    'factoriser':  genFactoriser,
+    'identites':   genIdentites,
+    'polynomes':   genPolynomes,
+    'problemes':   genProblemes,
+};
+
+// ═══════════════════════════════════════════════════════════
+//  UI
+// ═══════════════════════════════════════════════════════════
+function buildTabs() {
+    const el = document.getElementById('tabs');
+    el.innerHTML = '';
+    OBJECTIFS.forEach(o => {
+        const btn = document.createElement('button');
+        btn.className = 'tab' + (o.id === objectifActif ? ' active' : '');
+        btn.textContent = o.icon + ' ' + o.label;
+        btn.onclick = () => { objectifActif = o.id; buildTabs(); genExo(); };
+        el.appendChild(btn);
+    });
+}
+
+function genExo() {
+    answered = false;
+    currentExo = GENERATORS[objectifActif]();
+    renderExo();
+}
+
+function renderExo() {
+    const exo = currentExo;
+    document.getElementById('consigne').innerHTML = exo.consigne;
+    document.getElementById('enonce').innerHTML = exo.enonce;
+    document.getElementById('feedback-box').style.display = 'none';
+    document.getElementById('btn-suivant').style.display = 'none';
+    document.getElementById('btn-valider').style.display = 'block';
+
+    const zone = document.getElementById('reponse-zone');
+    zone.innerHTML = '';
+
+    if (exo.type === 'qcm') {
+        const grid = document.createElement('div');
+        grid.className = 'qcm-grid';
+        exo.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'qcm-btn';
+            btn.textContent = opt;
+            btn.onclick = () => {
+                if (answered) return;
+                grid.querySelectorAll('.qcm-btn').forEach(b => { b.classList.remove('selected'); b.style.borderColor = ''; b.style.background = ''; });
+                btn.classList.add('selected');
+            };
+            grid.appendChild(btn);
+        });
+        zone.appendChild(grid);
+    } else {
+        zone.innerHTML = `<div class="answer-row"><input type="text" class="ans-input" id="ans-val" placeholder="Ta réponse…" autocomplete="off"></div>`;
+        setTimeout(() => {
+            const inp = document.getElementById('ans-val');
+            inp.addEventListener('keydown', e => { if (e.key === 'Enter') valider(); });
+            inp.focus();
+        }, 50);
+    }
+}
+
+function normalize(s) {
+    return s.replace(/\s+/g, ' ').replace(/\s*([+\-×÷=²])\s*/g, ' $1 ').trim().toLowerCase()
+            .replace(/\*/g, '×').replace(/\^2/g, '²');
+}
+
+function valider() {
+    if (answered) return;
+    const exo = currentExo;
+    let isCorrect = false;
+    let userAnswer = '';
+
+    if (exo.type === 'qcm') {
+        const sel = document.querySelector('.qcm-btn.selected');
+        if (!sel) return;
+        userAnswer = sel.textContent;
+        isCorrect = userAnswer === exo.correct;
+        document.querySelectorAll('.qcm-btn').forEach(b => {
+            if (b.textContent === exo.correct) b.classList.add('correct');
+            else if (b === sel && !isCorrect) b.classList.add('wrong');
+        });
+    } else {
+        const inp = document.getElementById('ans-val');
+        if (!inp.value.trim()) return;
+        userAnswer = inp.value.trim();
+        isCorrect = normalize(userAnswer) === normalize(exo.correct);
+    }
+
+    answered = true;
+    total++;
+    if (isCorrect) bonnes++;
+    document.getElementById('sc-bon').textContent = bonnes;
+    document.getElementById('sc-total').textContent = total;
+
+    // Sauvegarder dans Firebase
+    if (typeof saveScore === 'function') {
+        saveScore('algebre', objectifActif, isCorrect).then(() => {
+            if (typeof checkBadges === 'function') checkBadges();
+        });
+    }
+
+    const fbBox = document.getElementById('feedback-box');
+    const fbResult = document.getElementById('feedback-result');
+    const fbSteps = document.getElementById('feedback-steps');
+
+    fbBox.style.display = 'flex';
+    if (isCorrect) {
+        fbResult.innerHTML = '✓ Correct !';
+        fbResult.className = 'fb-ok';
+    } else {
+        fbResult.innerHTML = `✗ La bonne réponse était : <strong>${exo.correct}</strong>`;
+        fbResult.className = 'fb-ko';
+    }
+    fbSteps.innerHTML = exo.steps;
+
+    document.getElementById('btn-valider').style.display = 'none';
+    document.getElementById('btn-suivant').style.display = 'block';
+    fbBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function suivant() {
+    genExo();
+    document.getElementById('exercice-box').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+buildTabs();
+genExo();
+</script>
+
+<!-- Firebase + Auth -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+<script src="badges-system.js"></script>
+<script>
+    requireAuth((user, profile) => {
+        injectUserBar(user, profile);
+    });
+</script>
+
+</body>
+</html>

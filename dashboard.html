@@ -558,6 +558,12 @@ let sortField = 'name';
 let sortDir = 1;
 
 const FRAC_KEYS = ['comparer','convertir','arrondir','simplifier','add-sub','multiplier','diviser'];
+const ALG_KEYS = ['comprendre','evaluer','simplifier','parentheses','developper','factoriser','identites','polynomes','problemes'];
+const ALG_LABELS_D = {
+    'comprendre':'Comprendre','evaluer':'Évaluer','simplifier':'Simplifier (alg)',
+    'parentheses':'Parenthèses','developper':'Développer','factoriser':'Factoriser',
+    'identites':'Identités','polynomes':'Polynômes','problemes':'Problèmes'
+};
 const FRAC_LABELS = {
     'comparer':'Comparer', 'convertir':'Convertir', 'arrondir':'Arrondir',
     'simplifier':'Simplifier', 'add-sub':'Add/Soustr', 'multiplier':'Multiplier', 'diviser':'Diviser'
@@ -628,6 +634,13 @@ function renderCharts() {
         objData['Angles'] += st.scores?.angles?.done || 0;
         FRAC_KEYS.forEach(k => {
             objData[FRAC_LABELS[k]] += st.scores?.fractions?.[k]?.done || 0;
+        });
+    });
+
+    ALG_KEYS.forEach(k => objData[ALG_LABELS_D[k] || k] = 0);
+    allStudents.forEach(st => {
+        ALG_KEYS.forEach(k => {
+            objData[ALG_LABELS_D[k] || k] += st.scores?.algebre?.[k]?.done || 0;
         });
     });
 
@@ -743,6 +756,14 @@ function showStudent(id) {
         progressHTML += mpRow(FRAC_LABELS[k], d, c, p);
     });
 
+    // Algèbre
+    ALG_KEYS.forEach(k => {
+        const d = st.scores?.algebre?.[k]?.done || 0;
+        const c = st.scores?.algebre?.[k]?.correct || 0;
+        const p = d > 0 ? Math.round(c / d * 100) : 0;
+        progressHTML += mpRow(ALG_LABELS_D[k] || k, d, c, p);
+    });
+
     // Badges
     const userBadges = st.badges || [];
     let badgesHTML = '';
@@ -803,7 +824,16 @@ function exportCSV() {
                      'Simplifier fait','Simplifier correct',
                      'Add/Soustr fait','Add/Soustr correct',
                      'Multiplier fait','Multiplier correct',
-                     'Diviser fait','Diviser correct'];
+                     'Diviser fait','Diviser correct',
+                     'Alg Comprendre f','Alg Comprendre c',
+                     'Alg Évaluer f','Alg Évaluer c',
+                     'Alg Simplifier f','Alg Simplifier c',
+                     'Alg Parenthèses f','Alg Parenthèses c',
+                     'Alg Développer f','Alg Développer c',
+                     'Alg Factoriser f','Alg Factoriser c',
+                     'Alg Identités f','Alg Identités c',
+                     'Alg Polynômes f','Alg Polynômes c',
+                     'Alg Problèmes f','Alg Problèmes c'];
 
     let csv = headers.join(';') + '\n';
 
@@ -823,6 +853,11 @@ function exportCSV() {
         FRAC_KEYS.forEach(k => {
             row.push(st.scores?.fractions?.[k]?.done || 0);
             row.push(st.scores?.fractions?.[k]?.correct || 0);
+        });
+
+        ALG_KEYS.forEach(k => {
+            row.push(st.scores?.algebre?.[k]?.done || 0);
+            row.push(st.scores?.algebre?.[k]?.correct || 0);
         });
 
         csv += row.join(';') + '\n';

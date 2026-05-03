@@ -233,7 +233,7 @@
 
         .fill-green  { background: linear-gradient(90deg, #2ecc71, #27ae60); }
         .fill-blue   { background: linear-gradient(90deg, #4f8ef7, #3b7ddd); }
-        .fill-orange { background: linear-gradient(90deg, #f39c12, #e67e22); }
+        .fill-orange { background: linear-gradient(90deg, #8b5cf6, #7c3aed); }
 
         /* Bouton changer avatar */
         .btn-avatar {
@@ -420,6 +420,9 @@
         <div class="section-title">½ Fractions</div>
         <div class="progress-list" id="fractions-progress"></div>
 
+        <div class="section-title">𝑥 Calcul algébrique</div>
+        <div class="progress-list" id="algebre-progress"></div>
+
         <div class="section-title">🏆 Succès</div>
         <div id="badges-summary" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
         <a href="badges.html" style="color:rgba(248,213,110,0.7);font-size:13px;font-weight:600;text-decoration:none;text-align:center;margin-top:4px;">Voir tous les succès →</a>
@@ -449,6 +452,11 @@
 
 <script>
 const AVATARS = ['🦊','🐱','🐶','🐼','🦁','🐸','🦉','🐙','🦋','🐢','🐬','🦄','🐧','🐰','🐝'];
+const ALG_LABELS = {
+    'comprendre':'📖 Comprendre', 'evaluer':'🔢 Évaluer', 'simplifier':'✂️ Simplifier',
+    'parentheses':'🔓 Parenthèses', 'developper':'📐 Développer', 'factoriser':'🧩 Factoriser',
+    'identites':'💡 Identités', 'polynomes':'📊 Polynômes', 'problemes':'🧠 Problèmes',
+};
 const FRAC_LABELS = {
     'comparer':   '⚖️ Comparer',
     'convertir':  '🔄 Convertir',
@@ -473,6 +481,7 @@ requireAuth((user, profile) => {
     document.getElementById('profile-content').style.gap = '20px';
 
     renderProfile(profile);
+    renderAlgebreProgress(profile);
     renderBadgesSummary(profile);
 });
 
@@ -558,6 +567,17 @@ async function saveAvatar() {
         console.error('Erreur avatar:', e);
         alert('Erreur lors de la sauvegarde.');
     }
+}
+
+function renderAlgebreProgress(p) {
+    const el = document.getElementById('algebre-progress');
+    const algScores = p.scores?.algebre || {};
+    let html = '';
+    for (const [key, label] of Object.entries(ALG_LABELS)) {
+        const s = algScores[key] || { done: 0, correct: 0 };
+        html += buildProgressItem(label, s.done, s.correct, 'fill-orange');
+    }
+    el.innerHTML = html;
 }
 
 function renderBadgesSummary(p) {
