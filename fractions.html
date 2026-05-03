@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fractions – La Classe de Stef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg1: #080f0a;
+            --bg2: #0a1a10;
+            --bg3: #0d2818;
+            --card: rgba(16,32,22,0.85);
+            --surface: rgba(20,45,30,0.7);
+            --border: rgba(50,120,70,0.3);
+            --accent: #2ecc71;
+            --accent2: #27ae60;
+            --accent-dim: rgba(46,204,113,0.15);
+            --orange: #f39c12;
+            --red: #e74c3c;
+            --blue: #3498db;
+            --text: #e8f5e9;
+            --muted: #6a9a7a;
+            --radius: 14px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Syne', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(160deg, var(--bg1) 0%, var(--bg2) 40%, var(--bg3) 70%, var(--bg1) 100%);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* ── HEADER ── */
+        #app-header {
+            width: 100%;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(10px);
+        }
+
+        #app-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--accent);
+            letter-spacing: 0.04em;
+        }
+
+        .back-link {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: color 0.15s;
+        }
+        .back-link:hover { color: var(--accent); }
+
+        #score-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--muted);
+        }
+        #score-display strong { color: var(--accent); font-size: 18px; }
+
+        /* ── MAIN ── */
+        #main {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px 14px 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* ── ONGLETS ── */
+        #tabs-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        #tabs-wrap::-webkit-scrollbar { display: none; }
+
+        #tabs {
+            display: flex;
+            gap: 6px;
+            min-width: max-content;
+            padding: 4px 0;
+        }
+
+        .tab {
+            padding: 8px 14px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--muted);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            font-family: 'Syne', sans-serif;
+        }
+
+        .tab:hover { border-color: var(--accent); color: var(--text); }
+
+        .tab.active {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ── ZONE EXERCICE ── */
+        #exercice-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 20px;
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-height: 200px;
+        }
+
+        #consigne {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text);
+        }
+
+        /* Affichage fraction */
+        .frac-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 22px;
+            color: var(--text);
+            padding: 16px;
+            min-height: 80px;
+        }
+
+        .frac {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            position: relative;
+        }
+
+        .frac-num, .frac-den {
+            text-align: center;
+            min-width: 30px;
+            padding: 2px 6px;
+        }
+
+        .frac-bar {
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+            min-width: 30px;
+        }
+
+        .op-sign {
+            font-size: 26px;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .eq-sign {
+            font-size: 26px;
+            color: var(--muted);
+        }
+
+        /* ── ZONE RÉPONSE ── */
+        #reponse-zone {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Réponse fraction (numérateur / dénominateur) */
+        .answer-frac {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .answer-frac-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .answer-frac-stack input {
+            width: 80px;
+            text-align: center;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s;
+            -moz-appearance: textfield;
+        }
+
+        .answer-frac-stack input::-webkit-inner-spin-button,
+        .answer-frac-stack input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+        .answer-frac-stack input:focus { border-color: var(--accent); }
+
+        .answer-frac-bar {
+            width: 80px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        /* Réponse simple (décimal, comparaison) */
+        .answer-simple {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .answer-simple input, .answer-simple select {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 18px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s;
+            -moz-appearance: textfield;
+        }
+
+        .answer-simple input:focus, .answer-simple select:focus { border-color: var(--accent); }
+
+        .answer-simple select {
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            padding-right: 30px;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232ecc71'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+        }
+
+        /* QCM */
+        .qcm-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .qcm-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+        }
+
+        .qcm-btn:hover { border-color: var(--accent); background: var(--accent-dim); }
+
+        .qcm-btn.correct {
+            border-color: var(--accent);
+            background: rgba(46,204,113,0.2);
+            color: var(--accent);
+        }
+
+        .qcm-btn.wrong {
+            border-color: var(--red);
+            background: rgba(231,76,60,0.15);
+            color: var(--red);
+        }
+
+        /* Bouton valider */
+        #btn-valider {
+            background: var(--accent);
+            color: #080f0a;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 28px;
+            font-size: 15px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.15s, transform 0.1s;
+            align-self: center;
+        }
+
+        #btn-valider:hover { opacity: 0.85; }
+        #btn-valider:active { transform: scale(0.97); }
+
+        /* ── FEEDBACK ── */
+        #feedback-box {
+            display: none;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #feedback-result {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .fb-ok { color: var(--accent); }
+        .fb-ko { color: var(--red); }
+
+        #feedback-steps {
+            font-size: 13px;
+            line-height: 1.8;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        #feedback-steps strong { color: var(--text); }
+
+        #btn-suivant {
+            display: none;
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 14px;
+            font-size: 15px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            color: var(--accent);
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.15s;
+        }
+
+        #btn-suivant:hover { background: var(--accent-dim); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 480px) {
+            .frac-display { font-size: 18px; gap: 10px; }
+            .qcm-grid { grid-template-columns: 1fr; }
+            .answer-frac-stack input { width: 65px; font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-header">
+    <a href="index.html" class="back-link">← Accueil</a>
+    <span id="app-title">½ FRACTIONS</span>
+    <div id="score-display">
+        <strong id="sc-bon">0</strong> / <span id="sc-total">0</span>
+    </div>
+</div>
+
+<div id="main">
+
+    <div id="tabs-wrap">
+        <div id="tabs"></div>
+    </div>
+
+    <div id="exercice-box">
+        <div id="consigne"></div>
+        <div id="enonce" class="frac-display"></div>
+        <div id="reponse-zone"></div>
+        <button id="btn-valider" onclick="valider()">Valider</button>
+    </div>
+
+    <div id="feedback-box">
+        <div id="feedback-result"></div>
+        <div id="feedback-steps"></div>
+    </div>
+
+    <button id="btn-suivant" onclick="suivant()">Exercice suivant →</button>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  OBJECTIFS & GÉNÉRATEURS
+// ═══════════════════════════════════════════════════════════
+
+const OBJECTIFS = [
+    { id: 'comparer',    label: 'Comparer',         icon: '⚖️' },
+    { id: 'convertir',   label: 'Convertir',        icon: '🔄' },
+    { id: 'arrondir',    label: 'Arrondir',         icon: '🎯' },
+    { id: 'simplifier',  label: 'Simplifier',       icon: '✂️' },
+    { id: 'add-sub',     label: 'Add / Soustr',     icon: '➕' },
+    { id: 'multiplier',  label: 'Multiplier',       icon: '✖️' },
+    { id: 'diviser',     label: 'Diviser',          icon: '➗' },
+];
+
+let objectifActif = 'comparer';
+let bonnes = 0, total = 0;
+let currentExo = null;
+let answered = false;
+
+// ── Utilitaires maths ──
+function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+function pgcd(a, b) {
+    a = Math.abs(a); b = Math.abs(b);
+    while (b) { [a, b] = [b, a % b]; }
+    return a;
+}
+
+function ppcm(a, b) { return Math.abs(a * b) / pgcd(a, b); }
+
+function simplify(n, d) {
+    if (d < 0) { n = -n; d = -d; }
+    const g = pgcd(Math.abs(n), d);
+    return [n / g, d / g];
+}
+
+function fracStr(n, d) {
+    return `<span class="frac"><span class="frac-num">${n}</span><span class="frac-bar"></span><span class="frac-den">${d}</span></span>`;
+}
+
+// ── Générateurs par objectif ──
+
+function genComparer() {
+    const d1 = randInt(2, 12), n1 = randInt(1, d1 * 2 - 1);
+    let d2 = randInt(2, 12), n2 = randInt(1, d2 * 2 - 1);
+    while (n1/d1 === n2/d2) { n2 = randInt(1, d2 * 2 - 1); }
+
+    const val1 = n1/d1, val2 = n2/d2;
+    const correctSign = val1 < val2 ? '<' : val1 > val2 ? '>' : '=';
+
+    const dComm = ppcm(d1, d2);
+    const nc1 = n1 * (dComm / d1), nc2 = n2 * (dComm / d2);
+
+    return {
+        type: 'qcm-3',
+        consigne: 'Compare ces deux fractions :',
+        enonce: `${fracStr(n1,d1)} <span class="op-sign">?</span> ${fracStr(n2,d2)}`,
+        options: ['<', '=', '>'],
+        correct: correctSign,
+        steps: `On met au même dénominateur : ${dComm}<br>` +
+               `${fracStr(n1,d1)} = ${fracStr(nc1,dComm)} &nbsp;et&nbsp; ${fracStr(n2,d2)} = ${fracStr(nc2,dComm)}<br>` +
+               `<strong>${nc1} ${correctSign} ${nc2}</strong>, donc ${fracStr(n1,d1)} <strong>${correctSign}</strong> ${fracStr(n2,d2)}`
+    };
+}
+
+function genConvertir() {
+    if (Math.random() < 0.5) {
+        // Fraction → décimal
+        const d = [2,4,5,8,10,20,25,50,100][randInt(0,8)];
+        const n = randInt(1, d * 3);
+        const dec = (n / d);
+        const decStr = Number.isInteger(dec) ? dec.toString() : dec.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
+        return {
+            type: 'input-decimal',
+            consigne: 'Convertis cette fraction en nombre décimal :',
+            enonce: fracStr(n, d) + ` <span class="eq-sign">=</span> <span class="op-sign">?</span>`,
+            correct: dec,
+            steps: `${n} ÷ ${d} = <strong>${decStr}</strong>`
+        };
+    } else {
+        // Décimal → fraction
+        const denoms = [2,4,5,10,20,25,50,100];
+        const d = denoms[randInt(0, denoms.length-1)];
+        const n = randInt(1, d * 2);
+        const dec = n / d;
+        const [sn, sd] = simplify(n, d);
+        const decStr = Number.isInteger(dec) ? dec.toString() : dec.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
+        return {
+            type: 'input-frac',
+            consigne: `Convertis ce nombre décimal en fraction simplifiée :`,
+            enonce: `<span class="op-sign">${decStr}</span> <span class="eq-sign">=</span> <span class="op-sign">?</span>`,
+            correct: [sn, sd],
+            steps: `${decStr} = ${fracStr(n,d)}` + (pgcd(n,d) > 1 ? ` = ${fracStr(sn,sd)} (simplifié par ${pgcd(n,d)})` : '') +
+                   `<br><strong>Réponse : ${fracStr(sn,sd)}</strong>`
+        };
+    }
+}
+
+function genArrondir() {
+    const d = [3,6,7,9,11,13,17][randInt(0,6)];
+    const n = randInt(1, d * 3);
+    const val = n / d;
+    const places = randInt(1, 3);
+    const labels = {1: 'au dixième', 2: 'au centième', 3: 'au millième'};
+    const rounded = parseFloat(val.toFixed(places));
+
+    return {
+        type: 'input-decimal',
+        consigne: `Arrondis ${fracStr(n,d)} <strong>${labels[places]}</strong> :`,
+        enonce: `${fracStr(n,d)} ≈ <span class="op-sign">?</span>`,
+        correct: rounded,
+        steps: `${n} ÷ ${d} = ${val.toFixed(places + 2)}…<br>` +
+               `Arrondi ${labels[places]} : <strong>${rounded}</strong>`
+    };
+}
+
+function genSimplifier() {
+    const k = randInt(2, 8);
+    const n0 = randInt(1, 12);
+    let d0 = randInt(2, 12);
+    while (pgcd(n0, d0) > 1) { d0 = randInt(2, 12); }
+    const n = n0 * k, d = d0 * k;
+
+    return {
+        type: 'input-frac',
+        consigne: 'Simplifie cette fraction :',
+        enonce: fracStr(n, d) + ` <span class="eq-sign">=</span> <span class="op-sign">?</span>`,
+        correct: [n0, d0],
+        steps: `PGCD(${n}, ${d}) = ${k}<br>` +
+               `${fracStr(n,d)} = ${fracStr(n+' ÷ '+k, d+' ÷ '+k)} = <strong>${fracStr(n0,d0)}</strong>`
+    };
+}
+
+function genAddSub() {
+    const op = Math.random() < 0.5 ? '+' : '−';
+    const d1 = randInt(2, 10), n1 = randInt(1, d1 * 2);
+    const d2 = randInt(2, 10), n2 = randInt(1, d2 * 2);
+
+    const dComm = ppcm(d1, d2);
+    const nc1 = n1 * (dComm / d1), nc2 = n2 * (dComm / d2);
+    const nResult = op === '+' ? nc1 + nc2 : nc1 - nc2;
+
+    const [sn, sd] = simplify(nResult, dComm);
+
+    return {
+        type: 'input-frac',
+        consigne: `Calcule cette ${op === '+' ? 'addition' : 'soustraction'} de fractions :`,
+        enonce: `${fracStr(n1,d1)} <span class="op-sign">${op}</span> ${fracStr(n2,d2)} <span class="eq-sign">=</span> <span class="op-sign">?</span>`,
+        correct: [sn, sd],
+        steps: `Dénominateur commun : ${dComm}<br>` +
+               `${fracStr(nc1,dComm)} ${op} ${fracStr(nc2,dComm)} = ${fracStr(nResult,dComm)}` +
+               (pgcd(Math.abs(nResult),dComm) > 1 ? ` = <strong>${fracStr(sn,sd)}</strong>` : `<br><strong>= ${fracStr(sn,sd)}</strong>`)
+    };
+}
+
+function genMultiplier() {
+    const n1 = randInt(1, 10), d1 = randInt(2, 10);
+    const n2 = randInt(1, 10), d2 = randInt(2, 10);
+
+    const nR = n1 * n2, dR = d1 * d2;
+    const [sn, sd] = simplify(nR, dR);
+
+    return {
+        type: 'input-frac',
+        consigne: 'Calcule cette multiplication de fractions :',
+        enonce: `${fracStr(n1,d1)} <span class="op-sign">×</span> ${fracStr(n2,d2)} <span class="eq-sign">=</span> <span class="op-sign">?</span>`,
+        correct: [sn, sd],
+        steps: `${fracStr(n1,d1)} × ${fracStr(n2,d2)} = ${fracStr(n1+'×'+n2, d1+'×'+d2)} = ${fracStr(nR,dR)}` +
+               (pgcd(nR,dR) > 1 ? ` = <strong>${fracStr(sn,sd)}</strong>` : '')
+    };
+}
+
+function genDiviser() {
+    const n1 = randInt(1, 10), d1 = randInt(2, 10);
+    const n2 = randInt(1, 10), d2 = randInt(2, 10);
+
+    const nR = n1 * d2, dR = d1 * n2;
+    const [sn, sd] = simplify(nR, dR);
+
+    return {
+        type: 'input-frac',
+        consigne: 'Calcule cette division de fractions :',
+        enonce: `${fracStr(n1,d1)} <span class="op-sign">÷</span> ${fracStr(n2,d2)} <span class="eq-sign">=</span> <span class="op-sign">?</span>`,
+        correct: [sn, sd],
+        steps: `Diviser = multiplier par l'inverse :<br>` +
+               `${fracStr(n1,d1)} × ${fracStr(d2,n2)} = ${fracStr(nR,dR)}` +
+               (pgcd(Math.abs(nR),Math.abs(dR)) > 1 ? ` = <strong>${fracStr(sn,sd)}</strong>` : '')
+    };
+}
+
+const GENERATORS = {
+    'comparer':   genComparer,
+    'convertir':  genConvertir,
+    'arrondir':   genArrondir,
+    'simplifier': genSimplifier,
+    'add-sub':    genAddSub,
+    'multiplier': genMultiplier,
+    'diviser':    genDiviser,
+};
+
+// ═══════════════════════════════════════════════════════════
+//  UI
+// ═══════════════════════════════════════════════════════════
+
+function buildTabs() {
+    const tabsEl = document.getElementById('tabs');
+    tabsEl.innerHTML = '';
+    OBJECTIFS.forEach(obj => {
+        const btn = document.createElement('button');
+        btn.className = 'tab' + (obj.id === objectifActif ? ' active' : '');
+        btn.textContent = obj.icon + ' ' + obj.label;
+        btn.onclick = () => { objectifActif = obj.id; buildTabs(); genExo(); };
+        tabsEl.appendChild(btn);
+    });
+}
+
+function genExo() {
+    answered = false;
+    currentExo = GENERATORS[objectifActif]();
+    renderExo();
+}
+
+function renderExo() {
+    const exo = currentExo;
+    document.getElementById('consigne').innerHTML = exo.consigne;
+    document.getElementById('enonce').innerHTML = exo.enonce;
+    document.getElementById('feedback-box').style.display = 'none';
+    document.getElementById('btn-suivant').style.display = 'none';
+    document.getElementById('btn-valider').style.display = 'block';
+
+    const zone = document.getElementById('reponse-zone');
+    zone.innerHTML = '';
+
+    if (exo.type === 'qcm-3') {
+        const grid = document.createElement('div');
+        grid.className = 'qcm-grid';
+        exo.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'qcm-btn';
+            btn.textContent = opt;
+            btn.onclick = () => {
+                if (answered) return;
+                document.querySelectorAll('.qcm-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                btn.style.borderColor = 'var(--accent)';
+                btn.style.background = 'var(--accent-dim)';
+            };
+            grid.appendChild(btn);
+        });
+        zone.appendChild(grid);
+        // Cache le bouton valider pour QCM — on valide au clic
+        document.getElementById('btn-valider').style.display = 'block';
+
+    } else if (exo.type === 'input-frac') {
+        zone.innerHTML = `
+            <div class="answer-frac">
+                <div class="answer-frac-stack">
+                    <input type="number" id="ans-num" placeholder="num" autocomplete="off">
+                    <div class="answer-frac-bar"></div>
+                    <input type="number" id="ans-den" placeholder="dén" autocomplete="off">
+                </div>
+            </div>`;
+        // Entrée valide
+        setTimeout(() => {
+            const numInput = document.getElementById('ans-num');
+            const denInput = document.getElementById('ans-den');
+            numInput.addEventListener('keydown', e => { if (e.key === 'Enter') denInput.focus(); });
+            denInput.addEventListener('keydown', e => { if (e.key === 'Enter') valider(); });
+            numInput.focus();
+        }, 50);
+
+    } else if (exo.type === 'input-decimal') {
+        zone.innerHTML = `
+            <div class="answer-simple">
+                <input type="text" id="ans-dec" placeholder="Réponse" autocomplete="off" inputmode="decimal">
+            </div>`;
+        setTimeout(() => {
+            const inp = document.getElementById('ans-dec');
+            inp.addEventListener('keydown', e => { if (e.key === 'Enter') valider(); });
+            inp.focus();
+        }, 50);
+    }
+}
+
+function valider() {
+    if (answered) return;
+    const exo = currentExo;
+    let isCorrect = false;
+    let userAnswer = '';
+
+    if (exo.type === 'qcm-3') {
+        const sel = document.querySelector('.qcm-btn.selected');
+        if (!sel) return;
+        userAnswer = sel.textContent;
+        isCorrect = userAnswer === exo.correct;
+
+        // Colorer les boutons
+        document.querySelectorAll('.qcm-btn').forEach(b => {
+            b.style.borderColor = '';
+            b.style.background = '';
+            if (b.textContent === exo.correct) b.classList.add('correct');
+            else if (b === sel && !isCorrect) b.classList.add('wrong');
+        });
+
+    } else if (exo.type === 'input-frac') {
+        const numEl = document.getElementById('ans-num');
+        const denEl = document.getElementById('ans-den');
+        if (!numEl.value || !denEl.value) return;
+        const uNum = parseInt(numEl.value);
+        const uDen = parseInt(denEl.value);
+        if (isNaN(uNum) || isNaN(uDen) || uDen === 0) return;
+
+        const [sn, sd] = simplify(uNum, uDen);
+        const [cn, cd] = exo.correct;
+        isCorrect = (sn === cn && sd === cd);
+        userAnswer = `${uNum}/${uDen}`;
+
+    } else if (exo.type === 'input-decimal') {
+        const inp = document.getElementById('ans-dec');
+        if (!inp.value) return;
+        const uVal = parseFloat(inp.value.replace(',', '.'));
+        if (isNaN(uVal)) return;
+        isCorrect = Math.abs(uVal - exo.correct) < 0.0001;
+        userAnswer = inp.value;
+    }
+
+    answered = true;
+    total++;
+    if (isCorrect) bonnes++;
+    document.getElementById('sc-bon').textContent = bonnes;
+    document.getElementById('sc-total').textContent = total;
+
+    // Feedback
+    const fbBox = document.getElementById('feedback-box');
+    const fbResult = document.getElementById('feedback-result');
+    const fbSteps = document.getElementById('feedback-steps');
+
+    fbBox.style.display = 'flex';
+    fbResult.innerHTML = isCorrect ? '✓ Correct !' : '✗ Pas tout à fait…';
+    fbResult.className = isCorrect ? 'fb-ok' : 'fb-ko';
+    fbSteps.innerHTML = exo.steps;
+
+    document.getElementById('btn-valider').style.display = 'none';
+    document.getElementById('btn-suivant').style.display = 'block';
+
+    // Scroll vers le feedback
+    fbBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function suivant() {
+    genExo();
+    document.getElementById('exercice-box').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════
+buildTabs();
+genExo();
+</script>
+
+</body>
+</html>
