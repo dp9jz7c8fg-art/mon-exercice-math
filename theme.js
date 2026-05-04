@@ -357,6 +357,80 @@ function applyTheme(themeName) {
         el.onmouseleave = () => { el.style.borderColor = `rgba(${t.accentRGB},0.2)`; el.style.color = t.muted; };
     });
 
+    // "Commence à collecter des succès" et badges mini hover
+    document.querySelectorAll('#badges-mini a,.ep-badges a').forEach(el => {
+        el.style.color = t.accent;
+        el.style.borderColor = `rgba(${t.accentRGB},0.18)`;
+        el.style.background = `rgba(${t.accentRGB},0.08)`;
+        el.onmouseenter = () => { el.style.background = `rgba(${t.accentRGB},0.2)`; el.style.borderColor = t.accent; el.style.color = t.accent; };
+        el.onmouseleave = () => { el.style.background = `rgba(${t.accentRGB},0.08)`; el.style.borderColor = `rgba(${t.accentRGB},0.18)`; };
+    });
+
+    // Bouton "Laisser un avis" dans espace élève
+    document.querySelectorAll('.btn-avis').forEach(el => {
+        el.style.borderColor = `rgba(${t.accentRGB},0.15)`;
+        el.style.color = `rgba(${t.accentRGB},0.5)`;
+        el.style.background = `rgba(${t.accentRGB},0.04)`;
+        el.onmouseenter = () => { el.style.background = `rgba(${t.accentRGB},0.1)`; el.style.borderColor = `rgba(${t.accentRGB},0.3)`; el.style.color = t.accent; };
+        el.onmouseleave = () => { el.style.background = `rgba(${t.accentRGB},0.04)`; el.style.borderColor = `rgba(${t.accentRGB},0.15)`; el.style.color = `rgba(${t.accentRGB},0.5)`; };
+    });
+
+    // Espace partenaires encadrés
+    document.querySelectorAll('.id-box,.role-grid,.partner-header,.modal-box,.note-card,.avis-card').forEach(el => {
+        el.style.borderColor = t.border;
+        el.style.background = t.card;
+    });
+
+    // Rôle buttons dans partenaires
+    document.querySelectorAll('.role-btn').forEach(el => {
+        el.style.borderColor = t.border;
+        el.style.background = t.card;
+        el.onmouseenter = () => { el.style.borderColor = `rgba(${t.accentRGB},0.4)`; };
+        el.onmouseleave = () => { if (!el.classList.contains('selected')) el.style.borderColor = t.border; };
+    });
+    document.querySelectorAll('.role-btn.selected').forEach(el => {
+        el.style.borderColor = t.accent;
+        el.style.background = t.accentDim;
+    });
+
+    // Partenaire cards hover
+    document.querySelectorAll('.p-card:not(.disabled)').forEach(el => {
+        el.onmouseenter = () => { el.style.borderColor = `rgba(${t.accentRGB},0.45)`; el.style.background = t.surface; };
+        el.onmouseleave = () => { el.style.borderColor = t.border; el.style.background = t.card; };
+    });
+
+    // ID buttons in partenaires
+    document.querySelectorAll('.id-btn,.mbtn-confirm').forEach(el => {
+        el.style.background = t.accent;
+    });
+
+    // Parent info strong
+    document.querySelectorAll('.parent-info strong,#child-display,#display-child').forEach(el => {
+        el.style.color = t.accent;
+    });
+
+    // Partner header role
+    document.querySelectorAll('#display-role,.ph-role').forEach(el => {
+        el.style.color = `rgba(${t.accentRGB},0.6)`;
+    });
+
+    // Keep Stef modal always green
+    const stefModal = document.getElementById('stef-modal');
+    if (stefModal) {
+        stefModal.querySelectorAll('.modal-name').forEach(el => {
+            el.style.background = 'none';
+            el.style.webkitTextFillColor = '#2ecc71';
+            el.style.color = '#2ecc71';
+        });
+        stefModal.querySelectorAll('.modal-section-title').forEach(el => {
+            el.style.color = 'rgba(46,204,113,0.5)';
+        });
+        stefModal.querySelectorAll('.modal-box').forEach(el => {
+            el.style.background = '#081a0e';
+            el.style.borderColor = 'rgba(40,100,55,0.3)';
+        });
+    }
+
     // Store locally for instant load
     try { localStorage.setItem('stef-theme', themeName); } catch(e) {}
 }
