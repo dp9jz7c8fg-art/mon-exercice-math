@@ -146,12 +146,118 @@ function applyTheme(themeName) {
             el.style.background = t.accentDim;
             el.style.borderColor = t.accent;
             el.style.color = t.accent;
+        } else {
+            el.style.color = `rgba(${t.accentRGB},0.5)`;
         }
     });
 
     // Rotation wheel
     document.querySelectorAll('#rotation-wheel,#rotation-wheel-ge,.obj-status-btn.completed').forEach(el => {
         el.style.borderColor = t.accent;
+    });
+
+    // ALL text that uses accent color
+    document.querySelectorAll('#app-title,.section-title .dot,.ep-name,.chart-title,.section-title,.opt-title,.day-name,.my-title,.modal-name,.page-sub,.prog-title').forEach(el => {
+        el.style.color = t.accent;
+    });
+
+    // Muted text
+    document.querySelectorAll('.subtitle,.nav a,.back-link,.avis-author,.obj-meta,.q-date,.note-role,.prog-bar-name,.bar-label,.ph-role').forEach(el => {
+        el.style.color = t.muted;
+    });
+
+    // Score display
+    document.querySelectorAll('#sc-bon,#score-display strong,.stat-value,.ep-badges a').forEach(el => {
+        el.style.color = t.accent;
+    });
+
+    // All links with accent
+    document.querySelectorAll('.nav a,.back-link').forEach(el => {
+        el.style.color = t.muted;
+    });
+
+    // Inputs focus color via CSS variable
+    document.querySelectorAll('input,textarea,select,.ans-input,.add-input,.note-textarea,.id-input,.form-row input,.form-row textarea').forEach(el => {
+        el.style.borderColor = t.border;
+    });
+
+    // Feedback correct
+    document.querySelectorAll('.fb-ok,.fb-correct,.feedback-correct,.af-ok,.pct-high').forEach(el => {
+        el.style.color = t.accent;
+    });
+
+    // Dashed sections
+    document.querySelectorAll('.section-dashed').forEach(el => {
+        el.style.borderColor = `rgba(${t.accentRGB},0.45)`;
+        el.style.background = t.card;
+    });
+
+    // Agenda button
+    document.querySelectorAll('.agenda-btn,.agenda-float').forEach(el => {
+        el.style.background = `linear-gradient(135deg,${t.accent},${t.accent2})`;
+    });
+
+    // Avatar border
+    document.querySelectorAll('.avatar-big,.ep-avatar').forEach(el => {
+        el.style.borderColor = `rgba(${t.accentRGB},0.3)`;
+    });
+
+    // Angle readout
+    document.querySelectorAll('#angle-readout,#angle-readout-ge,#angle-display,#angle-display-ge').forEach(el => {
+        el.style.color = t.accent;
+    });
+
+    // Consigne strong
+    document.querySelectorAll('#consigne strong,.consigne strong').forEach(el => {
+        el.style.color = t.accent;
+    });
+
+    // Question mark in SVG exercises
+    document.querySelectorAll('.op-sign,.eq-sign').forEach(el => {
+        el.style.color = t.accent;
+    });
+
+    // Btn valider
+    document.querySelectorAll('#btn-valider,.btn-submit,.add-btn,.note-submit,.id-btn,.btn-avis-submit,.btn-save,.mbtn-confirm,.btn-submit-avis,.zoom-btn-ge,.tbtn-ge').forEach(el => {
+        el.style.background = t.accent;
+    });
+
+    // Btn suivant border
+    document.querySelectorAll('#btn-suivant').forEach(el => {
+        el.style.borderColor = t.accent;
+        el.style.color = t.accent;
+    });
+
+    // Zoom buttons
+    document.querySelectorAll('.zoom-btn,.tbtn').forEach(el => {
+        el.style.borderColor = t.border;
+    });
+
+    // Exercice container
+    document.querySelectorAll('#exercice-container,#figure-zone,.exercice-box,#exercice-box').forEach(el => {
+        el.style.borderColor = t.border;
+        el.style.background = t.card;
+    });
+
+    // Answer inputs
+    document.querySelectorAll('#user-answer,#angle-input,.ans-input,.answer-frac-stack input').forEach(el => {
+        el.style.borderColor = t.border;
+    });
+
+    // Frac bar
+    document.querySelectorAll('.frac-bar,.answer-frac-bar').forEach(el => {
+        el.style.background = t.accent;
+    });
+
+    // Header bar
+    document.querySelectorAll('#app-header,.dash-header').forEach(el => {
+        el.style.borderColor = t.border;
+        el.style.background = t.card;
+    });
+
+    // Variante badge dot
+    document.querySelectorAll('.dot').forEach(el => {
+        el.style.background = t.accent;
     });
 
     // Store locally for instant load
