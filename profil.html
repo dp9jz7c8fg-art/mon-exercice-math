@@ -396,7 +396,7 @@
             <div class="profile-name" id="profile-name">Élève</div>
             <div class="profile-email" id="profile-email"></div>
             <div class="profile-joined" id="profile-joined"></div>
-            <button class="btn-avatar" onclick="openAvatarModal()">Changer d'avatar</button>
+            <button class="btn-avatar" onclick="window.location.href='avatar-creator.html'">🎨 Personnaliser mon avatar</button>
         </div>
 
         <div class="stats-row">
@@ -422,6 +422,12 @@
 
         <div class="section-title">𝑥 Calcul algébrique</div>
         <div class="progress-list" id="algebre-progress"></div>
+
+        <div class="section-title">🎯 Mes objectifs</div>
+        <div class="progress-list" id="objectifs-list" style="font-size:13px;color:rgba(255,255,255,0.4);">Chargement…</div>
+
+        <div class="section-title">📅 Prochains rendez-vous</div>
+        <div class="progress-list" id="rdv-list" style="font-size:13px;color:rgba(255,255,255,0.4);">Chargement…</div>
 
         <div class="section-title">🏆 Succès</div>
         <div id="badges-summary" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
@@ -490,10 +496,21 @@ requireAuth((user, profile) => {
     renderAlgebreProgress(profile);
     renderBadgesSummary(profile);
     renderLearningProfile(profile);
+    renderObjectifs();
+    renderRDV();
 });
 
 function renderProfile(p) {
-    document.getElementById('avatar-display').textContent = p.avatar || '🦊';
+    // Avatar SVG ou emoji
+    const avatarEl = document.getElementById('avatar-display');
+    if (p.avatarSVG) {
+        avatarEl.innerHTML = p.avatarSVG;
+        avatarEl.style.fontSize = '0';
+        avatarEl.querySelector('svg').style.width = '100%';
+        avatarEl.querySelector('svg').style.height = '100%';
+    } else {
+        avatarEl.textContent = p.avatar || '🦊';
+    }
     document.getElementById('profile-name').textContent = p.name || 'Élève';
     document.getElementById('profile-email').textContent = p.email || '';
 
@@ -612,50 +629,105 @@ function renderLearningProfile(p) {
     }
 
     const anneeLabels = {'1':'1ère','2':'2ème','3':'3ème','4':'4ème','5':'5ème','6':'6ème'};
-    const methodoLabels = {'planifie':'Planifié','dernier-moment':'Dernier moment','regulier':'Régulier','aide':'Besoin d\'aide','autre':'Autre'};
+
+    function chipList(items, color) {
+        if (!items || items.length === 0) return '<span style="color:rgba(255,255,255,0.2);">—</span>';
+        return items.map(i => `<span style="display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;background:rgba(${color},0.1);color:rgba(${color},0.8);border:1px solid rgba(${color},0.15);margin:2px;">${i}</span>`).join('');
+    }
 
     let html = '';
-    html += `<div style="display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:12px;color:rgba(255,255,255,0.35);">Année</span>
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <span style="font-size:12px;color:rgba(255,255,255,0.35);">📅 Année</span>
         <span style="font-size:14px;font-weight:600;color:#2ecc71;">${anneeLabels[lp.annee] || lp.annee} année</span>
     </div>`;
 
-    if (lp.easySubjects && lp.easySubjects.length > 0) {
-        html += `<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;">
-            <span style="font-size:12px;color:rgba(255,255,255,0.35);">Points forts</span>
-            <span style="font-size:13px;color:#e8f5e9;">${lp.easySubjects.join(', ')}</span>
+    if (lp.troubles && lp.troubles.length > 0) {
+        html += `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+            <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:6px;">⚠️ Troubles</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">${chipList(lp.troubles, '243,156,18')}</div>
         </div>`;
     }
 
-    if (lp.hardSubjects && lp.hardSubjects.length > 0) {
-        html += `<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;">
-            <span style="font-size:12px;color:rgba(255,255,255,0.35);">Difficultés</span>
-            <span style="font-size:13px;color:#f39c12;">${lp.hardSubjects.join(', ')}</span>
-        </div>`;
-    }
+    html += `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:6px;">💪 Points forts</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;">${chipList(lp.pointsForts, '46,204,113')}</div>
+        ${lp.pointsFortsCoursDetail ? '<div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;">Cours : '+lp.pointsFortsCoursDetail+'</div>' : ''}
+    </div>`;
 
-    if (lp.methodo) {
-        html += `<div style="display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:12px;color:rgba(255,255,255,0.35);">Méthodologie</span>
-            <span style="font-size:13px;color:#e8f5e9;">${methodoLabels[lp.methodo] || lp.methodo}</span>
-        </div>`;
-    }
+    html += `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:6px;">🔧 À travailler</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;">${chipList(lp.pointsFaibles, '231,76,60')}</div>
+        ${lp.pointsFaiblesCoursDetail ? '<div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;">Cours : '+lp.pointsFaiblesCoursDetail+'</div>' : ''}
+    </div>`;
 
     if (lp.suivisExt && lp.suivisExt.length > 0 && !lp.suivisExt.includes('Aucun')) {
-        html += `<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;">
-            <span style="font-size:12px;color:rgba(255,255,255,0.35);">Suivis extérieurs</span>
-            <span style="font-size:13px;color:#e8f5e9;">${lp.suivisExt.join(', ')}</span>
+        html += `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+            <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:6px;">🩺 Suivis extérieurs</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">${chipList(lp.suivisExt, '52,152,219')}</div>
+        </div>`;
+    }
+
+    if (lp.aides) {
+        html += `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+            <span style="font-size:12px;color:rgba(255,255,255,0.35);">✅ Aides qui fonctionnent</span>
+            <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;">${lp.aides}</div>
         </div>`;
     }
 
     if (lp.notes) {
-        html += `<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
-            <span style="font-size:12px;color:rgba(255,255,255,0.35);flex-shrink:0;">Notes</span>
-            <span style="font-size:12px;color:rgba(255,255,255,0.5);text-align:right;">${lp.notes}</span>
+        html += `<div style="padding:6px 0;">
+            <span style="font-size:12px;color:rgba(255,255,255,0.35);">📝 Notes</span>
+            <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;">${lp.notes}</div>
         </div>`;
     }
 
     container.innerHTML = html;
+}
+
+async function renderObjectifs() {
+    const list = document.getElementById('objectifs-list');
+    if (!currentUser) return;
+    try {
+        const snap = await db.collection('objectifs').where('userId','==',currentUser.uid).orderBy('createdAt','desc').get();
+        if (snap.empty) { list.innerHTML = '<div style="font-size:12px;color:rgba(255,255,255,0.2);text-align:center;">Aucun objectif</div>'; return; }
+
+        const statusColors = {'not-started':'rgba(255,255,255,0.25)','in-progress':'#f39c12','completed':'#2ecc71'};
+        const statusIcons = {'not-started':'○','in-progress':'◐','completed':'✓'};
+
+        let html = '';
+        snap.forEach(doc => {
+            const o = doc.data();
+            const st = o.status || 'not-started';
+            const opacity = st === 'completed' ? '0.35' : '1';
+            const textDeco = st === 'completed' ? 'line-through' : 'none';
+            html += `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(0,0,0,0.15);border-radius:8px;opacity:${opacity};">
+                <span style="color:${statusColors[st]};font-size:14px;font-weight:700;">${statusIcons[st]}</span>
+                <span style="font-size:13px;color:#e8f5e9;text-decoration:${textDeco};flex:1;">${o.text}</span>
+                <span style="font-size:14px;">🎯</span>
+            </div>`;
+        });
+        list.innerHTML = html;
+    } catch(e) { list.innerHTML = '<div style="font-size:12px;color:rgba(255,255,255,0.2);">Erreur</div>'; }
+}
+
+async function renderRDV() {
+    const list = document.getElementById('rdv-list');
+    if (!currentUser) return;
+    try {
+        const snap = await db.collection('bookings').where('userId','==',currentUser.uid).orderBy('createdAt','desc').limit(5).get();
+        if (snap.empty) { list.innerHTML = '<div style="font-size:12px;color:rgba(255,255,255,0.2);text-align:center;">Aucun rendez-vous</div>'; return; }
+
+        let html = '';
+        snap.forEach(doc => {
+            const b = doc.data();
+            html += `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(0,0,0,0.15);border-radius:8px;">
+                <span style="font-size:16px;">📅</span>
+                <span style="font-size:13px;color:#e8f5e9;font-weight:600;">${b.day} ${b.time}</span>
+                <span style="font-size:11px;color:rgba(255,255,255,0.25);margin-left:auto;">Semaine du ${b.weekStart}</span>
+            </div>`;
+        });
+        list.innerHTML = html;
+    } catch(e) { list.innerHTML = '<div style="font-size:12px;color:rgba(255,255,255,0.2);">Erreur</div>'; }
 }
 </script>
 </body>

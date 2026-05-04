@@ -210,6 +210,21 @@
 
         .btn-back:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); }
 
+        .form-input-small {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            color: #f0f0f8;
+            outline: none;
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+        .form-input-small::placeholder { color: rgba(255,255,255,0.2); }
+        .form-input-small:focus { border-color: rgba(46,204,113,0.5); }
+
         #register-fields {
             display: none;
             width: 100%;
@@ -403,25 +418,20 @@
             </div>
 
             <div class="form-group">
-                <label>Matière(s) la plus facile pour toi</label>
-                <div class="chip-grid" id="easy-subjects"></div>
+                <label>Trouble(s) d'apprentissage (optionnel)</label>
+                <div class="chip-grid" id="troubles"></div>
             </div>
 
             <div class="form-group">
-                <label>Matière(s) la plus difficile pour toi</label>
-                <div class="chip-grid" id="hard-subjects"></div>
+                <label>Mes points forts</label>
+                <div class="chip-grid" id="points-forts"></div>
+                <input type="text" id="pf-cours" placeholder="Précise tes cours forts (optionnel)" style="margin-top:6px;" class="form-input-small">
             </div>
 
             <div class="form-group">
-                <label>Comment tu t'organises pour étudier ?</label>
-                <select id="reg-methodo" class="form-select">
-                    <option value="">— Choisis —</option>
-                    <option value="planifie">Je planifie et suis un planning</option>
-                    <option value="dernier-moment">J'étudie au dernier moment</option>
-                    <option value="regulier">J'étudie un peu chaque jour</option>
-                    <option value="aide">J'ai besoin d'aide pour m'organiser</option>
-                    <option value="autre">Autre</option>
-                </select>
+                <label>Points à soutenir / à travailler</label>
+                <div class="chip-grid" id="points-faibles"></div>
+                <input type="text" id="pf-cours-faibles" placeholder="Précise les cours à travailler (optionnel)" style="margin-top:6px;" class="form-input-small">
             </div>
 
             <div class="form-group">
@@ -430,8 +440,13 @@
             </div>
 
             <div class="form-group">
+                <label>Aides — ce qui fonctionne quand je travaille</label>
+                <input type="text" id="reg-aides" placeholder="Ex: travailler avec de la musique, faire des pauses…">
+            </div>
+
+            <div class="form-group">
                 <label>Quelque chose à ajouter ? (optionnel)</label>
-                <input type="text" id="reg-notes" placeholder="Ex: je suis dyslexique, j'ai un PIA…">
+                <input type="text" id="reg-notes" placeholder="Ex: j'ai un PIA, un aménagement…">
             </div>
 
             <button class="btn-submit" onclick="doRegister()">S'inscrire ✓</button>
@@ -536,12 +551,14 @@ async function doLogin() {
     }
 }
 
-// ── Chips (matières + suivis) ──
-const MATIERES = ['Math','Français','Sciences','Histoire/Géo','Langues'];
+// ── Chips ──
+const TROUBLES = ['Dyslexie','Dyscalculie','Dysorthographie','TDA/H','HPI','Autre'];
+const COMPETENCES = ['Organisation','Planification','Synthèse','Mémorisation','Consignes','Place de l\'erreur','Attention et concentration','Gestion des émotions','Cours'];
 const SUIVIS = ['Logopède','Neuropsychologue','Coach scolaire','Psychologue','Aucun'];
 
-let easySubjects = [];
-let hardSubjects = [];
+let troublesSel = [];
+let pointsForts = [];
+let pointsFaibles = [];
 let suivisExt = [];
 
 function buildChips(containerId, items, selectedArray) {
@@ -560,8 +577,9 @@ function buildChips(containerId, items, selectedArray) {
     });
 }
 
-buildChips('easy-subjects', MATIERES, easySubjects);
-buildChips('hard-subjects', MATIERES, hardSubjects);
+buildChips('troubles', TROUBLES, troublesSel);
+buildChips('points-forts', COMPETENCES, pointsForts);
+buildChips('points-faibles', COMPETENCES, pointsFaibles);
 buildChips('suivis-ext', SUIVIS, suivisExt);
 
 // ── Step navigation ──
@@ -593,7 +611,6 @@ async function doRegister() {
     const email = document.getElementById('reg-email').value.trim();
     const pass  = document.getElementById('reg-password').value;
     const annee = document.getElementById('reg-annee').value;
-    const methodo = document.getElementById('reg-methodo').value;
     const notes = document.getElementById('reg-notes').value.trim();
     const errEl = document.getElementById('error-msg');
     const sucEl = document.getElementById('success-msg');
@@ -616,10 +633,13 @@ async function doRegister() {
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             learningProfile: {
                 annee: annee,
-                easySubjects: easySubjects,
-                hardSubjects: hardSubjects,
-                methodo: methodo,
+                troubles: troublesSel,
+                pointsForts: pointsForts,
+                pointsFortsCoursDetail: document.getElementById('pf-cours').value.trim(),
+                pointsFaibles: pointsFaibles,
+                pointsFaiblesCoursDetail: document.getElementById('pf-cours-faibles').value.trim(),
                 suivisExt: suivisExt,
+                aides: document.getElementById('reg-aides').value.trim(),
                 notes: notes,
             },
             scores: {
