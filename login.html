@@ -843,6 +843,7 @@ function closeThemePicker() { document.getElementById('theme-modal').classList.r
 function selectTheme(theme) {
     selectedTheme = theme;
     document.querySelectorAll('.theme-opt').forEach(t => t.classList.toggle('selected', t.dataset.theme === theme));
+    if (typeof applyTheme === 'function') applyTheme(theme);
 }
 
 async function resetPassword() {
