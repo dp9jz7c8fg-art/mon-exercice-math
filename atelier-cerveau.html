@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le cerveau – La Classe de Stef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'DM Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#040804,#061008,#081a0e,#0a2414,#040804);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center}
+        @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .content{width:100%;max-width:600px;padding:20px 16px 60px;display:flex;flex-direction:column;gap:18px}
+        h1{font-family:'Playfair Display',serif;font-style:italic;font-size:24px;font-weight:700;text-align:center;background:linear-gradient(135deg,#2ecc71,#a8f0c0,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .section{background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:16px;padding:20px 18px;display:flex;flex-direction:column;gap:12px;backdrop-filter:blur(8px)}
+        .section-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+        .section p{font-size:13px;color:rgba(255,255,255,0.6);line-height:1.7}
+        .section p strong{color:#2ecc71}
+        .section ul{list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:rgba(255,255,255,0.55)}
+        .section ul li{padding-left:20px;position:relative}
+        .section ul li::before{content:'✓';position:absolute;left:0;color:#2ecc71;font-weight:700}
+        .illustration{text-align:center;font-size:64px;padding:12px 0}
+
+        /* Quiz */
+        .quiz-question{font-size:14px;font-weight:600;color:#e8f5e9;margin-bottom:8px}
+        .quiz-options{display:flex;flex-direction:column;gap:8px}
+        .quiz-opt{background:rgba(0,0,0,0.2);border:1px solid rgba(40,100,55,0.2);border-radius:10px;padding:12px 16px;font-size:13px;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif;text-align:left;width:100%}
+        .quiz-opt:hover{border-color:rgba(46,204,113,0.3);background:rgba(46,204,113,0.05)}
+        .quiz-opt.correct{border-color:#2ecc71;background:rgba(46,204,113,0.12);color:#2ecc71;font-weight:600}
+        .quiz-opt.wrong{border-color:#e74c3c;background:rgba(231,76,60,0.08);color:#e74c3c}
+        .quiz-opt.disabled{pointer-events:none;opacity:0.6}
+        .quiz-explanation{display:none;font-size:12px;color:rgba(46,204,113,0.6);background:rgba(46,204,113,0.05);border-radius:8px;padding:10px 14px;margin-top:8px;line-height:1.6}
+
+        /* Activité */
+        .activity-box{background:rgba(52,152,219,0.06);border:2px dashed rgba(52,152,219,0.2);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px}
+        .activity-title{font-size:14px;font-weight:700;color:#3498db;display:flex;align-items:center;gap:6px}
+        .activity-text{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6}
+        .activity-textarea{background:rgba(0,0,0,0.2);border:1px solid rgba(40,100,55,0.2);border-radius:8px;padding:12px;font-size:13px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none;resize:vertical;min-height:80px;width:100%}
+        .activity-textarea::placeholder{color:rgba(255,255,255,0.2)}
+        .activity-textarea:focus{border-color:rgba(46,204,113,0.4)}
+        .btn-save-activity{background:#2ecc71;color:#040804;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;align-self:flex-end}
+        .btn-save-activity:hover{opacity:0.85}
+        .activity-fb{font-size:11px;text-align:right;min-height:14px;color:#2ecc71}
+
+        /* Vidéo embed placeholder */
+        .video-placeholder{background:rgba(0,0,0,0.3);border-radius:12px;padding:40px 20px;text-align:center;color:rgba(255,255,255,0.25);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:8px}
+        .video-placeholder span{font-size:36px}
+
+        .btn-next{display:block;width:100%;background:rgba(46,204,113,0.06);border:1px solid rgba(46,204,113,0.2);border-radius:12px;padding:14px;text-align:center;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;color:rgba(46,204,113,0.6);cursor:pointer;text-decoration:none;transition:all 0.15s}
+        .btn-next:hover{background:rgba(46,204,113,0.12);border-color:rgba(46,204,113,0.4);color:#2ecc71}
+    </style>
+</head>
+<body>
+<div class="content">
+
+    <div class="illustration">🧠</div>
+    <h1>Le fonctionnement du cerveau</h1>
+
+    <!-- INTRO -->
+    <div class="section">
+        <div class="section-title">📖 Introduction</div>
+        <p>Ton cerveau est l'organe le plus puissant de ton corps. Il contient environ <strong>86 milliards de neurones</strong> qui communiquent entre eux pour te permettre de penser, apprendre, bouger et ressentir.</p>
+        <p>Quand tu apprends quelque chose de nouveau, ton cerveau crée de <strong>nouvelles connexions</strong> entre les neurones. Plus tu répètes, plus ces connexions deviennent fortes — c'est ce qu'on appelle la <strong>plasticité cérébrale</strong>.</p>
+    </div>
+
+    <!-- VIDÉO -->
+    <div class="section">
+        <div class="section-title">🎬 Vidéo</div>
+        <div class="video-placeholder">
+            <span>▶️</span>
+            <p>Vidéo : Comment ton cerveau apprend ?</p>
+            <p style="font-size:11px;">Sera ajoutée prochainement</p>
+        </div>
+    </div>
+
+    <!-- SAVAIS-TU -->
+    <div class="section">
+        <div class="section-title">💡 Le savais-tu ?</div>
+        <ul>
+            <li>Le cerveau consomme 20% de l'énergie du corps, alors qu'il ne pèse que 2%</li>
+            <li>Dormir permet au cerveau de consolider ce que tu as appris dans la journée</li>
+            <li>Le stress bloque l'apprentissage — ton cerveau passe en mode "survie"</li>
+            <li>Faire des erreurs active plus de zones du cerveau que réussir du premier coup</li>
+            <li>Le cerveau apprend mieux par petites sessions régulières que par longues sessions rares</li>
+        </ul>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="section">
+        <div class="section-title">🧩 Quiz — Teste tes connaissances</div>
+
+        <div class="quiz-block" data-correct="2">
+            <div class="quiz-question">1. Combien de neurones contient le cerveau humain ?</div>
+            <div class="quiz-options">
+                <button class="quiz-opt" data-idx="0">1 million</button>
+                <button class="quiz-opt" data-idx="1">1 milliard</button>
+                <button class="quiz-opt" data-idx="2">86 milliards</button>
+                <button class="quiz-opt" data-idx="3">1 000 milliards</button>
+            </div>
+            <div class="quiz-explanation">Le cerveau contient environ 86 milliards de neurones, chacun connecté à des milliers d'autres !</div>
+        </div>
+
+        <div class="quiz-block" data-correct="1">
+            <div class="quiz-question">2. Qu'est-ce que la plasticité cérébrale ?</div>
+            <div class="quiz-options">
+                <button class="quiz-opt" data-idx="0">Le cerveau est mou comme du plastique</button>
+                <button class="quiz-opt" data-idx="1">Le cerveau peut créer de nouvelles connexions tout au long de la vie</button>
+                <button class="quiz-opt" data-idx="2">Le cerveau ne change jamais après 18 ans</button>
+            </div>
+            <div class="quiz-explanation">La plasticité cérébrale, c'est la capacité du cerveau à se réorganiser en créant de nouvelles connexions. Bonne nouvelle : ça dure toute la vie !</div>
+        </div>
+
+        <div class="quiz-block" data-correct="0">
+            <div class="quiz-question">3. Quel est le meilleur moment pour mémoriser ?</div>
+            <div class="quiz-options">
+                <button class="quiz-opt" data-idx="0">Juste avant de dormir et le lendemain matin</button>
+                <button class="quiz-opt" data-idx="1">Uniquement le matin très tôt</button>
+                <button class="quiz-opt" data-idx="2">Pendant qu'on mange</button>
+            </div>
+            <div class="quiz-explanation">Le sommeil consolide la mémoire. Réviser avant de dormir puis revoir le matin est très efficace !</div>
+        </div>
+
+        <div class="quiz-block" data-correct="2">
+            <div class="quiz-question">4. Que se passe-t-il dans le cerveau quand tu fais une erreur ?</div>
+            <div class="quiz-options">
+                <button class="quiz-opt" data-idx="0">Rien de spécial</button>
+                <button class="quiz-opt" data-idx="1">Des neurones sont détruits</button>
+                <button class="quiz-opt" data-idx="2">Le cerveau s'active davantage et apprend plus</button>
+            </div>
+            <div class="quiz-explanation">Faire une erreur déclenche une activité cérébrale intense qui renforce l'apprentissage. L'erreur est un super-pouvoir !</div>
+        </div>
+    </div>
+
+    <!-- ACTIVITÉ -->
+    <div class="activity-box">
+        <div class="activity-title">✍️ Activité — Mon cerveau et moi</div>
+        <p class="activity-text">Réfléchis à tes habitudes d'apprentissage. Écris 3 choses que tu fais déjà bien pour ton cerveau, et 2 choses que tu pourrais améliorer.</p>
+        <textarea class="activity-textarea" id="activity-text" placeholder="Ce que je fais bien : &#10;1. &#10;2. &#10;3. &#10;&#10;Ce que je pourrais améliorer : &#10;1. &#10;2."></textarea>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span class="activity-fb" id="activity-fb"></span>
+            <button class="btn-save-activity" onclick="saveActivity()">Sauvegarder</button>
+        </div>
+    </div>
+
+    <!-- CONSEILS -->
+    <div class="section">
+        <div class="section-title">🎯 Conseils pratiques</div>
+        <ul>
+            <li><strong>Dors suffisamment</strong> — 8 à 10h pour un ado, c'est essentiel pour la mémoire</li>
+            <li><strong>Fais des pauses</strong> — 25 min de travail, 5 min de pause (technique Pomodoro)</li>
+            <li><strong>Bouge</strong> — L'exercice physique augmente l'oxygénation du cerveau</li>
+            <li><strong>Bois de l'eau</strong> — La déshydratation réduit la concentration</li>
+            <li><strong>Varie les méthodes</strong> — Lire, écrire, dessiner, expliquer à quelqu'un</li>
+        </ul>
+    </div>
+
+    <a href="atelier-organisation.html" class="btn-next">Atelier suivant → Organisation 📋</a>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+<script src="theme.js"></script>
+<script src="breadcrumb.js"></script>
+<script>
+let currentUser = null;
+
+requireAuth((user, profile) => {
+    currentUser = user;
+    loadActivity();
+});
+
+// Quiz
+document.querySelectorAll('.quiz-block').forEach(block => {
+    const correct = parseInt(block.dataset.correct);
+    const explanation = block.querySelector('.quiz-explanation');
+    const opts = block.querySelectorAll('.quiz-opt');
+
+    opts.forEach(opt => {
+        opt.onclick = () => {
+            if (opt.classList.contains('disabled')) return;
+            const idx = parseInt(opt.dataset.idx);
+            opts.forEach(o => {
+                o.classList.add('disabled');
+                if (parseInt(o.dataset.idx) === correct) o.classList.add('correct');
+                else if (o === opt && idx !== correct) o.classList.add('wrong');
+            });
+            explanation.style.display = 'block';
+        };
+    });
+});
+
+// Activité
+async function saveActivity() {
+    const text = document.getElementById('activity-text').value.trim();
+    const fb = document.getElementById('activity-fb');
+    if (!text) { fb.textContent = 'Écris quelque chose !'; fb.style.color = '#e74c3c'; return; }
+
+    try {
+        await db.collection('activities').doc(currentUser.uid + '_cerveau').set({
+            userId: currentUser.uid,
+            atelier: 'cerveau',
+            text: text,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        fb.textContent = '✓ Sauvegardé !';
+        fb.style.color = '#2ecc71';
+    } catch(e) {
+        fb.textContent = 'Erreur';
+        fb.style.color = '#e74c3c';
+    }
+}
+
+async function loadActivity() {
+    try {
+        const doc = await db.collection('activities').doc(currentUser.uid + '_cerveau').get();
+        if (doc.exists) {
+            document.getElementById('activity-text').value = doc.data().text || '';
+        }
+    } catch(e) {}
+}
+</script>
+</body>
+</html>

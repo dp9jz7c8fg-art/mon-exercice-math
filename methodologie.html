@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Méthodologie – La Classe de Stef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'DM Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#040804,#061008,#081a0e,#0a2414,#040804);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center}
+        @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .content{width:100%;max-width:680px;padding:20px 16px 60px;display:flex;flex-direction:column;gap:20px;align-items:center}
+        .page-header{text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center}
+        .page-icon{font-size:48px}
+        .page-title{font-family:'Playfair Display',serif;font-style:italic;font-size:28px;font-weight:700;background:linear-gradient(135deg,#2ecc71,#a8f0c0,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .page-sub{font-size:12px;color:rgba(46,204,113,0.4);letter-spacing:0.1em;text-transform:uppercase;font-weight:600}
+        .page-intro{font-size:13px;color:rgba(255,255,255,0.5);text-align:center;line-height:1.6;max-width:500px}
+        .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;width:100%}
+        .card{background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:20px;padding:24px 16px;text-decoration:none;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;transition:transform 0.2s,background 0.2s,border-color 0.2s,box-shadow 0.2s;backdrop-filter:blur(8px);position:relative;overflow:hidden}
+        .card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 50% 30%,rgba(46,204,113,0.03),transparent 60%);pointer-events:none}
+        .card:hover{transform:translateY(-4px);background:rgba(20,50,28,0.7);border-color:rgba(46,204,113,0.4);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+        .card-icon{font-size:36px;width:60px;height:60px;display:flex;align-items:center;justify-content:center;border-radius:16px;background:rgba(52,152,219,0.1)}
+        .card-title{font-size:15px;font-weight:700}
+        .card-desc{font-size:11px;color:rgba(255,255,255,0.4);line-height:1.4}
+        .card-tags{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}
+        .tag{font-size:8px;font-weight:600;padding:3px 7px;border-radius:100px;background:rgba(52,152,219,0.08);color:rgba(52,152,219,0.6);border:1px solid rgba(52,152,219,0.1)}
+        .badge{display:inline-flex;padding:3px 8px;border-radius:100px;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase}
+        .badge-ready{background:rgba(46,204,113,0.15);color:#2ecc71}
+        .badge-soon{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.3)}
+        @media(max-width:520px){.grid{grid-template-columns:1fr}.page-title{font-size:22px}}
+    </style>
+</head>
+<body>
+<div class="content">
+    <div class="page-header">
+        <span class="page-icon">🧠</span>
+        <h1 class="page-title">Méthodologie</h1>
+        <p class="page-sub">Apprendre à apprendre</p>
+    </div>
+    <p class="page-intro">Découvre comment fonctionne ton cerveau et développe des stratégies efficaces pour mieux apprendre, t'organiser et réussir.</p>
+
+    <div class="grid">
+        <a href="atelier-cerveau.html" class="card">
+            <div class="card-icon">🧠</div>
+            <div class="card-title">Le cerveau</div>
+            <div class="card-desc">Comment fonctionne ton cerveau quand tu apprends ?</div>
+            <div class="card-tags"><span class="tag">Neurosciences</span><span class="tag">Mémoire</span></div>
+            <span class="badge badge-ready">Disponible</span>
+        </a>
+
+        <a href="atelier-organisation.html" class="card">
+            <div class="card-icon">📋</div>
+            <div class="card-title">Organisation</div>
+            <div class="card-desc">Apprends à structurer ton espace et ton temps de travail.</div>
+            <div class="card-tags"><span class="tag">Rangement</span><span class="tag">Outils</span></div>
+            <span class="badge badge-ready">Disponible</span>
+        </a>
+
+        <a href="atelier-planification.html" class="card">
+            <div class="card-icon">📅</div>
+            <div class="card-title">Planification</div>
+            <div class="card-desc">Crée ton planning d'étude et apprends à gérer ton temps.</div>
+            <div class="card-tags"><span class="tag">Planning</span><span class="tag">Priorités</span></div>
+            <span class="badge badge-ready">Disponible</span>
+        </a>
+
+        <a href="atelier-synthese.html" class="card">
+            <div class="card-icon">📝</div>
+            <div class="card-title">Synthèse</div>
+            <div class="card-desc">Apprends à résumer et à créer des fiches efficaces.</div>
+            <div class="card-tags"><span class="tag">Résumé</span><span class="tag">Fiches</span></div>
+            <span class="badge badge-ready">Disponible</span>
+        </a>
+
+        <a href="atelier-memorisation.html" class="card">
+            <div class="card-icon">🔄</div>
+            <div class="card-title">Mémorisation</div>
+            <div class="card-desc">Découvre des techniques pour retenir plus et mieux.</div>
+            <div class="card-tags"><span class="tag">Répétition</span><span class="tag">Flash cards</span></div>
+            <span class="badge badge-ready">Disponible</span>
+        </a>
+
+        <a href="atelier-consignes.html" class="card">
+            <div class="card-icon">📖</div>
+            <div class="card-title">Consignes</div>
+            <div class="card-desc">Comprendre ce qu'on te demande, c'est la moitié du travail !</div>
+            <div class="card-tags"><span class="tag">Lecture</span><span class="tag">Mots-clés</span></div>
+            <span class="badge badge-ready">Disponible</span>
+        </a>
+
+        <div class="card" style="grid-column:span 2;">
+            <div class="card-icon" style="background:rgba(243,156,18,0.1);">💡</div>
+            <div class="card-title">La place de l'erreur</div>
+            <div class="card-desc">L'erreur n'est pas un échec — c'est un outil d'apprentissage. Découvre comment en tirer parti.</div>
+            <div class="card-tags"><span class="tag" style="background:rgba(243,156,18,0.08);color:rgba(243,156,18,0.6);border-color:rgba(243,156,18,0.1);">Mindset</span><span class="tag" style="background:rgba(243,156,18,0.08);color:rgba(243,156,18,0.6);border-color:rgba(243,156,18,0.1);">Confiance</span></div>
+            <span class="badge badge-ready">Disponible</span>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+<script src="theme.js"></script>
+<script src="breadcrumb.js"></script>
+<script>requireAuth((u,p)=>{});</script>
+</body>
+</html>
