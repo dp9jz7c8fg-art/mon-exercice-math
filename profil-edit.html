@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier mon profil – La Classe de Stef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'DM Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#040804,#061008,#081a0e,#0a2414,#040804);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center}
+        @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .content{width:100%;max-width:520px;padding:20px 16px 60px;display:flex;flex-direction:column;gap:20px;align-items:center}
+        h1{font-size:22px;font-weight:800;text-align:center;color:#2ecc71}
+
+        .section{width:100%;background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:16px;padding:20px 18px;display:flex;flex-direction:column;gap:14px;backdrop-filter:blur(8px)}
+        .section-title{font-size:14px;font-weight:700;color:rgba(46,204,113,0.6);display:flex;align-items:center;gap:8px}
+
+        .form-group{display:flex;flex-direction:column;gap:6px;width:100%}
+        .form-group label{font-size:12px;font-weight:600;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.06em}
+
+        .form-select{background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:10px;padding:14px 16px;font-size:14px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none;width:100%;cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232ecc71'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right 12px center;background-size:16px;transition:border-color 0.2s}
+        .form-select:focus{border-color:rgba(46,204,113,0.4)}
+        .form-select option{background:#081a0e;color:#e8f5e9}
+
+        .form-input{background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:10px;padding:14px 16px;font-size:14px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none;width:100%;transition:border-color 0.2s}
+        .form-input::placeholder{color:rgba(255,255,255,0.2)}
+        .form-input:focus{border-color:rgba(46,204,113,0.4)}
+
+        .chip-grid{display:flex;flex-wrap:wrap;gap:8px}
+        .chip{padding:9px 14px;border-radius:100px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.45);cursor:pointer;transition:all 0.15s;user-select:none}
+        .chip:hover{border-color:rgba(46,204,113,0.3);color:rgba(255,255,255,0.65)}
+        .chip.selected{border-color:#2ecc71;background:rgba(46,204,113,0.15);color:#2ecc71;font-weight:600}
+
+        .btn-save{width:100%;background:#2ecc71;color:#040804;border:none;border-radius:12px;padding:16px;font-size:16px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;transition:opacity 0.15s}
+        .btn-save:hover{opacity:0.85}
+        .btn-save:disabled{opacity:0.4}
+
+        #save-fb{font-size:13px;text-align:center;min-height:18px}
+        .fb-ok{color:#2ecc71}.fb-err{color:#e74c3c}
+
+        #loading-screen{display:flex;align-items:center;justify-content:center;min-height:40vh;font-size:14px;color:rgba(255,255,255,0.35);gap:10px}
+        .spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.1);border-top-color:#2ecc71;border-radius:50%;animation:spin 0.7s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+    </style>
+</head>
+<body>
+
+<div class="content">
+
+    <div id="loading-screen"><div class="spinner"></div><span>Chargement…</span></div>
+
+    <div id="edit-content" style="display:none;flex-direction:column;gap:20px;width:100%;">
+
+        <h1>✏️ Modifier mon profil</h1>
+
+        <div class="section">
+            <div class="section-title">📅 Année scolaire</div>
+            <div class="form-group">
+                <select id="ed-annee" class="form-select">
+                    <option value="">— Choisis ton année —</option>
+                    <option value="1">1ère année</option>
+                    <option value="2">2ème année</option>
+                    <option value="3">3ème année</option>
+                    <option value="4">4ème année</option>
+                    <option value="5">5ème année</option>
+                    <option value="6">6ème année</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">⚠️ Troubles d'apprentissage</div>
+            <div class="chip-grid" id="ed-troubles"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">💪 Mes points forts</div>
+            <div class="chip-grid" id="ed-forts"></div>
+            <div class="form-group">
+                <label>Précise tes cours forts (optionnel)</label>
+                <input type="text" class="form-input" id="ed-forts-cours" placeholder="Ex: math, sciences…">
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🔧 Points à soutenir / à travailler</div>
+            <div class="chip-grid" id="ed-faibles"></div>
+            <div class="form-group">
+                <label>Précise les cours à travailler (optionnel)</label>
+                <input type="text" class="form-input" id="ed-faibles-cours" placeholder="Ex: français, langues…">
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🩺 Suivis extérieurs</div>
+            <div class="chip-grid" id="ed-suivis"></div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">✅ Aides — ce qui fonctionne quand je travaille</div>
+            <div class="form-group">
+                <input type="text" class="form-input" id="ed-aides" placeholder="Ex: travailler avec de la musique, faire des pauses…">
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">📝 Notes</div>
+            <div class="form-group">
+                <input type="text" class="form-input" id="ed-notes" placeholder="Ex: j'ai un PIA, un aménagement…">
+            </div>
+        </div>
+
+        <button class="btn-save" onclick="saveProfile()">Enregistrer les modifications</button>
+        <div id="save-fb"></div>
+
+    </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+<script src="theme.js"></script>
+<script src="breadcrumb.js"></script>
+
+<script>
+const TROUBLES = ['Dyslexie','Dyscalculie','Dysorthographie','TDA/H','HPI','Autre'];
+const COMPETENCES = ['Organisation','Planification','Synthèse','Mémorisation','Consignes','Place de l\'erreur','Attention et concentration','Gestion des émotions','Cours'];
+const SUIVIS = ['Logopède','Neuropsychologue','Coach scolaire','Psychologue','Aucun'];
+
+let troublesSel = [];
+let fortsSel = [];
+let faiblesSel = [];
+let suivisSel = [];
+let currentUser = null;
+
+function buildChips(containerId, items, selectedArray) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    items.forEach(item => {
+        const chip = document.createElement('span');
+        chip.className = 'chip' + (selectedArray.includes(item) ? ' selected' : '');
+        chip.textContent = item;
+        chip.onclick = () => {
+            const idx = selectedArray.indexOf(item);
+            if (idx >= 0) { selectedArray.splice(idx, 1); chip.classList.remove('selected'); }
+            else { selectedArray.push(item); chip.classList.add('selected'); }
+        };
+        container.appendChild(chip);
+    });
+}
+
+requireAuth(async (user, profile) => {
+    currentUser = user;
+
+    document.getElementById('loading-screen').style.display = 'none';
+    const content = document.getElementById('edit-content');
+    content.style.display = 'flex';
+
+    // Pré-remplir avec les valeurs existantes
+    const lp = profile.learningProfile || {};
+
+    document.getElementById('ed-annee').value = lp.annee || '';
+    document.getElementById('ed-forts-cours').value = lp.pointsFortsCoursDetail || '';
+    document.getElementById('ed-faibles-cours').value = lp.pointsFaiblesCoursDetail || '';
+    document.getElementById('ed-aides').value = lp.aides || '';
+    document.getElementById('ed-notes').value = lp.notes || '';
+
+    // Pré-sélectionner les chips
+    troublesSel = [...(lp.troubles || [])];
+    fortsSel = [...(lp.pointsForts || lp.easySubjects || [])];
+    faiblesSel = [...(lp.pointsFaibles || lp.hardSubjects || [])];
+    suivisSel = [...(lp.suivisExt || [])];
+
+    buildChips('ed-troubles', TROUBLES, troublesSel);
+    buildChips('ed-forts', COMPETENCES, fortsSel);
+    buildChips('ed-faibles', COMPETENCES, faiblesSel);
+    buildChips('ed-suivis', SUIVIS, suivisSel);
+});
+
+async function saveProfile() {
+    const fb = document.getElementById('save-fb');
+    const btn = document.querySelector('.btn-save');
+    fb.textContent = '';
+
+    const annee = document.getElementById('ed-annee').value;
+    if (!annee) { fb.textContent = 'Choisis ton année scolaire.'; fb.className = 'fb-err'; return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Enregistrement…';
+
+    try {
+        await db.collection('users').doc(currentUser.uid).update({
+            'learningProfile': {
+                annee: annee,
+                troubles: troublesSel,
+                pointsForts: fortsSel,
+                pointsFortsCoursDetail: document.getElementById('ed-forts-cours').value.trim(),
+                pointsFaibles: faiblesSel,
+                pointsFaiblesCoursDetail: document.getElementById('ed-faibles-cours').value.trim(),
+                suivisExt: suivisSel,
+                aides: document.getElementById('ed-aides').value.trim(),
+                notes: document.getElementById('ed-notes').value.trim(),
+            }
+        });
+
+        fb.textContent = '✓ Profil mis à jour !';
+        fb.className = 'fb-ok';
+        setTimeout(() => { window.location.href = 'profil.html'; }, 1200);
+    } catch(e) {
+        fb.textContent = 'Erreur : ' + e.message;
+        fb.className = 'fb-err';
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Enregistrer les modifications';
+}
+</script>
+
+</body>
+</html>
