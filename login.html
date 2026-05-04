@@ -143,6 +143,73 @@
         .form-group input::placeholder { color: rgba(255,255,255,0.25); }
         .form-group input:focus { border-color: rgba(46,204,113,0.5); }
 
+        .form-select {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            color: #f0f0f8;
+            outline: none;
+            width: 100%;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232ecc71'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            transition: border-color 0.2s;
+        }
+        .form-select:focus { border-color: rgba(46,204,113,0.5); }
+        .form-select option { background: #1a1a2e; color: #f0f0f8; }
+
+        .chip-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chip {
+            padding: 8px 14px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+
+        .chip:hover { border-color: rgba(46,204,113,0.3); color: rgba(255,255,255,0.7); }
+
+        .chip.selected {
+            border-color: #2ecc71;
+            background: rgba(46,204,113,0.15);
+            color: #2ecc71;
+            font-weight: 600;
+        }
+
+        .btn-back {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            background: none;
+            color: rgba(255,255,255,0.4);
+            transition: all 0.15s;
+        }
+
+        .btn-back:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); }
+
         #register-fields {
             display: none;
             width: 100%;
@@ -295,25 +362,81 @@
 
     <!-- INSCRIPTION -->
     <div id="register-fields">
-        <div class="form-group">
-            <label>Nom de famille</label>
-            <input type="text" id="reg-lastname" placeholder="Ton nom de famille" autocomplete="family-name">
+        <!-- Étape 1 : infos de base -->
+        <div id="reg-step1">
+            <div class="form-group">
+                <label>Nom de famille</label>
+                <input type="text" id="reg-lastname" placeholder="Ton nom de famille" autocomplete="family-name">
+            </div>
+            <div class="form-group">
+                <label>Prénom</label>
+                <input type="text" id="reg-name" placeholder="Ton prénom" autocomplete="given-name">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="reg-email" placeholder="ton.email@exemple.com" autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label>Mot de passe (6 caractères minimum)</label>
+                <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password">
+            </div>
+            <div class="separator">Choisis ton avatar</div>
+            <div class="avatar-grid" id="avatar-grid"></div>
+            <button class="btn-submit" onclick="goToStep2()">Continuer →</button>
         </div>
-        <div class="form-group">
-            <label>Prénom</label>
-            <input type="text" id="reg-name" placeholder="Ton prénom" autocomplete="given-name">
+
+        <!-- Étape 2 : profil d'apprentissage -->
+        <div id="reg-step2" style="display:none;width:100%;flex-direction:column;gap:16px;">
+            <div class="separator">📚 Ton profil d'apprentissage</div>
+
+            <div class="form-group">
+                <label>Année scolaire</label>
+                <select id="reg-annee" class="form-select">
+                    <option value="">— Choisis ton année —</option>
+                    <option value="1">1ère année</option>
+                    <option value="2">2ème année</option>
+                    <option value="3">3ème année</option>
+                    <option value="4">4ème année</option>
+                    <option value="5">5ème année</option>
+                    <option value="6">6ème année</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Matière(s) la plus facile pour toi</label>
+                <div class="chip-grid" id="easy-subjects"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Matière(s) la plus difficile pour toi</label>
+                <div class="chip-grid" id="hard-subjects"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Comment tu t'organises pour étudier ?</label>
+                <select id="reg-methodo" class="form-select">
+                    <option value="">— Choisis —</option>
+                    <option value="planifie">Je planifie et suis un planning</option>
+                    <option value="dernier-moment">J'étudie au dernier moment</option>
+                    <option value="regulier">J'étudie un peu chaque jour</option>
+                    <option value="aide">J'ai besoin d'aide pour m'organiser</option>
+                    <option value="autre">Autre</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Suivis extérieurs (optionnel)</label>
+                <div class="chip-grid" id="suivis-ext"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Quelque chose à ajouter ? (optionnel)</label>
+                <input type="text" id="reg-notes" placeholder="Ex: je suis dyslexique, j'ai un PIA…">
+            </div>
+
+            <button class="btn-submit" onclick="doRegister()">S'inscrire ✓</button>
+            <button class="btn-back" onclick="backToStep1()">← Retour</button>
         </div>
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="reg-email" placeholder="ton.email@exemple.com" autocomplete="email">
-        </div>
-        <div class="form-group">
-            <label>Mot de passe (6 caractères minimum)</label>
-            <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password">
-        </div>
-        <div class="separator">Choisis ton avatar</div>
-        <div class="avatar-grid" id="avatar-grid"></div>
-        <button class="btn-submit" onclick="doRegister()">S'inscrire</button>
     </div>
 
     <div id="error-msg"></div>
@@ -413,33 +536,92 @@ async function doLogin() {
     }
 }
 
+// ── Chips (matières + suivis) ──
+const MATIERES = ['Math','Français','Sciences','Histoire/Géo','Langues'];
+const SUIVIS = ['Logopède','Neuropsychologue','Coach scolaire','Psychologue','Aucun'];
+
+let easySubjects = [];
+let hardSubjects = [];
+let suivisExt = [];
+
+function buildChips(containerId, items, selectedArray) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    items.forEach(item => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.textContent = item;
+        chip.onclick = () => {
+            const idx = selectedArray.indexOf(item);
+            if (idx >= 0) { selectedArray.splice(idx, 1); chip.classList.remove('selected'); }
+            else { selectedArray.push(item); chip.classList.add('selected'); }
+        };
+        container.appendChild(chip);
+    });
+}
+
+buildChips('easy-subjects', MATIERES, easySubjects);
+buildChips('hard-subjects', MATIERES, hardSubjects);
+buildChips('suivis-ext', SUIVIS, suivisExt);
+
+// ── Step navigation ──
+function goToStep2() {
+    const lastname = document.getElementById('reg-lastname').value.trim();
+    const name = document.getElementById('reg-name').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const pass = document.getElementById('reg-password').value;
+    const errEl = document.getElementById('error-msg');
+    errEl.textContent = '';
+
+    if (!lastname || !name || !email || !pass) { errEl.textContent = 'Remplis tous les champs.'; return; }
+    if (pass.length < 6) { errEl.textContent = 'Le mot de passe doit avoir au moins 6 caractères.'; return; }
+
+    document.getElementById('reg-step1').style.display = 'none';
+    document.getElementById('reg-step2').style.display = 'flex';
+    errEl.textContent = '';
+}
+
+function backToStep1() {
+    document.getElementById('reg-step2').style.display = 'none';
+    document.getElementById('reg-step1').style.display = 'block';
+}
+
 // ── Inscription ──
 async function doRegister() {
     const lastname = document.getElementById('reg-lastname').value.trim();
     const name  = document.getElementById('reg-name').value.trim();
     const email = document.getElementById('reg-email').value.trim();
     const pass  = document.getElementById('reg-password').value;
+    const annee = document.getElementById('reg-annee').value;
+    const methodo = document.getElementById('reg-methodo').value;
+    const notes = document.getElementById('reg-notes').value.trim();
     const errEl = document.getElementById('error-msg');
     const sucEl = document.getElementById('success-msg');
     errEl.textContent = '';
     sucEl.textContent = '';
 
-    if (!lastname || !name || !email || !pass) { errEl.textContent = 'Remplis tous les champs.'; return; }
-    if (pass.length < 6) { errEl.textContent = 'Le mot de passe doit avoir au moins 6 caractères.'; return; }
+    if (!annee) { errEl.textContent = 'Choisis ton année scolaire.'; return; }
 
     showLoading(true);
-    isRegistering = true; // Empêche la redirection automatique
+    isRegistering = true;
     try {
         const cred = await auth.createUserWithEmailAndPassword(email, pass);
         const user = cred.user;
 
-        // Sauver le profil dans Firestore
         await db.collection('users').doc(user.uid).set({
             name: name,
             lastname: lastname,
             email: email,
             avatar: selectedAvatar,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            learningProfile: {
+                annee: annee,
+                easySubjects: easySubjects,
+                hardSubjects: hardSubjects,
+                methodo: methodo,
+                suivisExt: suivisExt,
+                notes: notes,
+            },
             scores: {
                 angles: { done: 0, correct: 0 },
                 fractions: {
@@ -468,14 +650,13 @@ async function doRegister() {
             totalCorrect: 0,
         });
 
-        // Mettre le nom dans le profil Auth
         await user.updateProfile({ displayName: name + ' ' + lastname });
 
-        // Tout est sauvé, on peut rediriger maintenant
         isRegistering = false;
         window.location.href = 'eleve.html';
     } catch (e) {
         showLoading(false);
+        isRegistering = false;
         if (e.code === 'auth/email-already-in-use')
             errEl.textContent = 'Cet email est déjà utilisé.';
         else if (e.code === 'auth/invalid-email')
