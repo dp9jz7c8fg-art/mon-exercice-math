@@ -431,6 +431,27 @@ function applyTheme(themeName) {
         });
     }
 
+    // Breadcrumb theme
+    if (typeof applyBreadcrumbTheme === 'function') applyBreadcrumbTheme(t);
+
+    // Breadcrumb
+    const bc = document.getElementById('breadcrumb');
+    if (bc) {
+        bc.style.borderColor = `rgba(${t.accentRGB},0.06)`;
+        bc.style.background = `rgba(4,8,4,0.85)`;
+        bc.querySelectorAll('a').forEach(el => {
+            el.style.color = `rgba(${t.accentRGB},0.4)`;
+            el.onmouseenter = () => { el.style.color = t.accent; };
+            el.onmouseleave = () => { el.style.color = `rgba(${t.accentRGB},0.4)`; };
+        });
+        bc.querySelectorAll('.bc-current').forEach(el => {
+            el.style.color = t.accent;
+        });
+        bc.querySelectorAll('.bc-sep').forEach(el => {
+            el.style.color = `rgba(${t.accentRGB},0.2)`;
+        });
+    }
+
     // Store locally for instant load
     try { localStorage.setItem('stef-theme', themeName); } catch(e) {}
 }
