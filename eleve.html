@@ -94,11 +94,20 @@
     <div class="eleve-profile">
         <div class="ep-avatar" id="ep-avatar" onclick="window.location.href='profil.html'" title="Mon profil">🦊</div>
         <div class="ep-info">
-            <div class="ep-name" id="ep-name">Chargement…</div>
+            <a href="profil.html" class="ep-name" id="ep-name" style="text-decoration:none;color:#e8f5e9;cursor:pointer;">Chargement…</a>
             <div class="ep-badges" id="ep-badges"></div>
         </div>
         <div class="ep-right">
             <button class="ep-logout" onclick="logout()">Déconnexion</button>
+        </div>
+    </div>
+
+    <!-- Prochain RDV -->
+    <div id="next-rdv" style="width:100%;background:rgba(46,204,113,0.06);border:1px solid rgba(46,204,113,0.15);border-radius:12px;padding:10px 14px;display:none;align-items:center;gap:10px;">
+        <span style="font-size:18px;">📅</span>
+        <div style="flex:1;">
+            <div style="font-size:11px;color:rgba(46,204,113,0.5);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">Prochain rendez-vous</div>
+            <div id="rdv-text" style="font-size:14px;font-weight:700;color:#2ecc71;"></div>
         </div>
     </div>
 
@@ -168,6 +177,8 @@ requireAuth((user, profile) => {
     document.getElementById('ep-avatar').textContent = profile.avatar || '🦊';
     document.getElementById('ep-name').textContent = profile.name || 'Élève';
 
+    loadNextRDV();
+
     // Badges mini
     const badges = profile.badges || [];
     const container = document.getElementById('ep-badges');
@@ -181,6 +192,19 @@ requireAuth((user, profile) => {
         container.innerHTML = `<a href="badges.html">🏆 0 succès</a>`;
     }
 });
+
+async function loadNextRDV() {
+    try {
+        const snap = await db.collection('bookings')
+            .where('userId','==',currentUserData.user.uid)
+            .orderBy('createdAt','desc').limit(1).get();
+        if (!snap.empty) {
+            const b = snap.docs[0].data();
+            document.getElementById('rdv-text').textContent = b.day + ' ' + b.time + ' — semaine du ' + b.weekStart;
+            document.getElementById('next-rdv').style.display = 'flex';
+        }
+    } catch(e) {}
+}
 
 // Avis modal
 let selectedStars = 5;

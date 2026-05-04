@@ -9,34 +9,31 @@
     <style>
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
         html,body{height:100%;overflow:hidden}
-        body{
-            font-family:'DM Sans',sans-serif;
-            background:linear-gradient(135deg,#040804 0%,#061008 25%,#081a0e 50%,#0a2414 75%,#040804 100%);
-            background-size:400% 400%;animation:grad 20s ease infinite;
-            color:#e8f5e9;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;
-        }
+        body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#040804 0%,#061008 25%,#081a0e 50%,#0a2414 75%,#040804 100%);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
         @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
         .math-symbols{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
         .math-sym{position:absolute;font-size:24px;opacity:0;color:rgba(46,204,113,0.06);animation:floatSym linear infinite;font-family:'JetBrains Mono',monospace;user-select:none}
         @keyframes floatSym{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:0.08}90%{opacity:0.04}100%{transform:translateY(-80px) rotate(360deg);opacity:0}}
-
-        .page{position:relative;z-index:1;width:100%;max-width:660px;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 20px;gap:18px}
+        .page{position:relative;z-index:1;width:100%;max-width:660px;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 20px;gap:16px}
         .logo-wrap{background:rgba(10,30,16,0.5);border:1px solid rgba(40,100,55,0.2);border-radius:20px;padding:14px 32px;backdrop-filter:blur(12px)}
         .logo-wrap img{max-height:60px;width:auto;display:block}
-        .welcome-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;font-style:italic;text-align:center;line-height:1.2;background:linear-gradient(135deg,#2ecc71 0%,#a8f0c0 40%,#2ecc71 70%,#a8f0c0 100%);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 6s ease infinite}
+        .welcome-line{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+        .welcome-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;font-style:italic;text-align:center;line-height:1.2;background:linear-gradient(135deg,#2ecc71 0%,#a8f0c0 40%,#2ecc71 70%,#a8f0c0 100%);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 6s ease infinite}
         @keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .stef-inline{width:38px;height:38px;border-radius:50%;background:rgba(46,204,113,0.15);border:2px solid rgba(46,204,113,0.3);display:inline-flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;transition:all 0.2s;text-decoration:none;vertical-align:middle;flex-shrink:0}
+        .stef-inline:hover{background:rgba(46,204,113,0.25);border-color:rgba(46,204,113,0.5);transform:scale(1.1)}
         .subtitle{font-size:13px;color:rgba(46,204,113,0.45);text-align:center;letter-spacing:0.12em;text-transform:uppercase;font-weight:600}
-
+        #badges-mini{display:none;align-items:center;gap:6px}
+        #badges-mini a{display:flex;align-items:center;gap:6px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.18);border-radius:100px;padding:5px 12px;text-decoration:none;color:#2ecc71;font-size:11px;font-weight:700;transition:all 0.2s}
+        #badges-mini a:hover{background:rgba(46,204,113,0.15);border-color:rgba(46,204,113,0.4)}
         .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;width:100%}
         .space-card{background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:22px;padding:32px 20px;text-decoration:none;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;transition:transform 0.2s,background 0.2s,border-color 0.2s,box-shadow 0.2s;backdrop-filter:blur(8px);position:relative;overflow:hidden}
         .space-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 50% 30%,rgba(46,204,113,0.04),transparent 60%);pointer-events:none}
         .space-card:hover{transform:translateY(-5px);background:rgba(20,50,28,0.7);border-color:rgba(46,204,113,0.45);box-shadow:0 16px 50px rgba(0,0,0,0.35)}
         .space-icon{font-size:48px;width:80px;height:80px;display:flex;align-items:center;justify-content:center;border-radius:20px}
-        .si-eleve{background:rgba(46,204,113,0.1)}
-        .si-parent{background:rgba(52,152,219,0.1)}
+        .si-eleve{background:rgba(46,204,113,0.1)}.si-parent{background:rgba(52,152,219,0.1)}
         .space-title{font-size:20px;font-weight:700}
         .space-desc{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5}
-
         .avis-wrap{width:100%;background:rgba(10,30,16,0.4);border:1px solid rgba(40,100,55,0.15);border-radius:14px;padding:12px 16px;overflow:hidden;position:relative;height:52px}
         .avis-track{display:flex;flex-direction:column;animation:scrollAvis 20s linear infinite;gap:14px}
         @keyframes scrollAvis{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
@@ -44,12 +41,12 @@
         .avis-stars{color:#f39c12;font-size:12px;letter-spacing:1px}
         .avis-text{font-size:12px;color:rgba(255,255,255,0.55);font-style:italic}
         .avis-author{font-size:11px;color:rgba(46,204,113,0.5);font-weight:600}
-
-        .stef-btn{position:fixed;bottom:50px;right:24px;z-index:10;width:50px;height:50px;border-radius:50%;background:rgba(46,204,113,0.15);border:2px solid rgba(46,204,113,0.3);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;transition:all 0.2s;text-decoration:none;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
-        .stef-btn:hover{background:rgba(46,204,113,0.25);border-color:rgba(46,204,113,0.5);transform:scale(1.1)}
-
+        .social-row{display:flex;align-items:center;justify-content:center;gap:16px}
+        .social-link{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all 0.2s}
+        .social-link:hover{background:rgba(46,204,113,0.1);border-color:rgba(46,204,113,0.3);transform:scale(1.1)}
+        .social-link svg{width:18px;height:18px;fill:rgba(255,255,255,0.4)}
+        .social-link:hover svg{fill:#2ecc71}
         .footer{font-size:9px;color:rgba(46,204,113,0.18);text-align:center;letter-spacing:0.03em;line-height:1.4}
-
         .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
         .modal-overlay.open{display:flex}
         .modal-box{background:#081a0e;border:1px solid rgba(40,100,55,0.3);border-radius:22px;padding:32px 28px;width:90%;max-width:440px;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;max-height:85vh;overflow-y:auto}
@@ -63,17 +60,20 @@
         .modal-contact{display:flex;flex-direction:column;gap:8px;width:100%}
         .contact-row{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,0.55)}
         .contact-row span:first-child{font-size:18px}
-
-        @media(max-width:520px){.welcome-title{font-size:22px}.grid-2{grid-template-columns:1fr}.stef-btn{bottom:20px;right:16px;width:44px;height:44px;font-size:20px}}
+        @media(max-width:520px){.welcome-title{font-size:20px}.grid-2{grid-template-columns:1fr}}
     </style>
 </head>
 <body>
 <div class="math-symbols" id="math-bg"></div>
-
 <div class="page">
     <div class="logo-wrap"><img src="logo.png" alt="Logo"></div>
-    <h1 class="welcome-title">Bienvenue dans la Classe de Stef</h1>
+
+    <div class="welcome-line">
+        <h1 class="welcome-title">Bienvenue dans la Classe de</h1>
+        <div class="stef-inline" onclick="openStef()" title="Qui est Stef ?">👩‍🏫</div>
+    </div>
     <p class="subtitle">Assistant scolaire interactif</p>
+    <div id="badges-mini"></div>
 
     <div class="grid-2">
         <a href="eleve.html" class="space-card">
@@ -90,32 +90,29 @@
 
     <div class="avis-wrap"><div class="avis-track" id="avis-track"></div></div>
 
+    <div class="social-row">
+        <a href="https://www.facebook.com/people/Cours-de-maths-et-coaching-scolaire/100075848662147/" target="_blank" class="social-link" title="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@stefanigans" target="_blank" class="social-link" title="YouTube">
+            <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/" target="_blank" class="social-link" title="Instagram" style="opacity:0.3;pointer-events:none;">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </a>
+    </div>
+
     <div class="footer">© 2026 Laclassedestef. Tous droits réservés | site créé par N.Scotte et S.Gans</div>
 </div>
-
-<div class="stef-btn" onclick="openStef()">👩‍🏫</div>
 
 <div class="modal-overlay" id="stef-modal">
     <div class="modal-box">
         <button class="modal-close" onclick="closeStef()">✕</button>
         <div class="modal-avatar-big">👩‍🏫</div>
         <div class="modal-name">Stef</div>
-        <div class="modal-section">
-            <div class="modal-section-title">🙋‍♀️ Qui suis-je ?</div>
-            <p>Enseignante passionnée, je crois que chaque élève a le potentiel de réussir. Mon approche mêle bienveillance, méthodologie et outils concrets.</p>
-        </div>
-        <div class="modal-section">
-            <div class="modal-section-title">📚 Mon parcours</div>
-            <p>Diplômée en sciences de l'éducation, j'accompagne des élèves du secondaire depuis plusieurs années. Spécialisée en remédiation et méthodologie.</p>
-        </div>
-        <div class="modal-section">
-            <div class="modal-section-title">📬 Me contacter</div>
-            <div class="modal-contact">
-                <div class="contact-row"><span>📧</span> contact@laclassedestef.be</div>
-                <div class="contact-row"><span>📱</span> Sur rendez-vous</div>
-                <div class="contact-row"><span>📍</span> Belgique</div>
-            </div>
-        </div>
+        <div class="modal-section"><div class="modal-section-title">🙋‍♀️ Qui suis-je ?</div><p>Enseignante passionnée, je crois que chaque élève a le potentiel de réussir. Mon approche mêle bienveillance, méthodologie et outils concrets.</p></div>
+        <div class="modal-section"><div class="modal-section-title">📚 Mon parcours</div><p>Diplômée en sciences de l'éducation, j'accompagne des élèves du secondaire depuis plusieurs années. Spécialisée en remédiation et méthodologie.</p></div>
+        <div class="modal-section"><div class="modal-section-title">📬 Me contacter</div><div class="modal-contact"><div class="contact-row"><span>📧</span> contact@laclassedestef.be</div><div class="contact-row"><span>📱</span> Sur rendez-vous</div><div class="contact-row"><span>📍</span> Belgique</div></div></div>
     </div>
 </div>
 
@@ -123,20 +120,36 @@
 function openStef(){document.getElementById('stef-modal').classList.add('open')}
 function closeStef(){document.getElementById('stef-modal').classList.remove('open')}
 document.getElementById('stef-modal').addEventListener('click',e=>{if(e.target===document.getElementById('stef-modal'))closeStef()});
-
 const symbols=['∑','π','√','∞','∠','△','÷','×','±','≈','½','𝑥','θ'];
 const mathBg=document.getElementById('math-bg');
 function createSym(){const el=document.createElement('span');el.className='math-sym';el.textContent=symbols[Math.floor(Math.random()*symbols.length)];el.style.left=Math.random()*100+'%';el.style.fontSize=(16+Math.random()*24)+'px';el.style.animationDuration=(18+Math.random()*25)+'s';el.style.animationDelay=Math.random()*4+'s';mathBg.appendChild(el);setTimeout(()=>el.remove(),45000)}
 for(let i=0;i<10;i++)setTimeout(createSym,i*700);setInterval(createSym,3000);
 </script>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+<script src="badges-system.js"></script>
 <script>
-const firebaseConfig={apiKey:"AIzaSyB0djV_ZDOsYngnUeceNiTUt60IEKP_Qvg",authDomain:"classe-de-stef.firebaseapp.com",projectId:"classe-de-stef",storageBucket:"classe-de-stef.firebasestorage.app",messagingSenderId:"16372668790",appId:"1:16372668790:web:b1bfed825bfb36111b0257"};
-firebase.initializeApp(firebaseConfig);
-const db=firebase.firestore();
-
+// Check if logged in for badges mini
+auth.onAuthStateChanged(async user => {
+    if (!user) return;
+    try {
+        const doc = await db.collection('users').doc(user.uid).get();
+        if (!doc.exists) return;
+        const profile = doc.data();
+        const userBadges = profile.badges || [];
+        const mini = document.getElementById('badges-mini');
+        if (userBadges.length > 0) {
+            const emojis = userBadges.slice(0,6).map(id=>{const b=ALL_BADGES.find(x=>x.id===id);return b?b.emoji:''}).join('');
+            mini.innerHTML = `<a href="badges.html"><span style="font-size:14px;letter-spacing:1px;">${emojis}</span> 🏆 ${userBadges.length}/${ALL_BADGES.length}</a>`;
+        } else {
+            mini.innerHTML = `<a href="badges.html">🏆 Commence à collecter des succès !</a>`;
+        }
+        mini.style.display = 'flex';
+    } catch(e) {}
+});
+// Avis
 async function loadAvis(){
     const track=document.getElementById('avis-track');
     try{
@@ -146,7 +159,7 @@ async function loadAvis(){
         const all=[...avis,...avis];
         track.innerHTML=all.map(a=>`<div class="avis-item"><span class="avis-stars">${'★'.repeat(a.stars||5)}</span><span class="avis-text">"${a.text}"</span><span class="avis-author">— ${a.author||'Anonyme'}</span></div>`).join('');
         track.style.animationDuration=(avis.length*4)+'s';
-    }catch(e){track.innerHTML='<div class="avis-item"><span class="avis-text">Chargement des avis…</span></div>'}
+    }catch(e){}
 }
 loadAvis();
 </script>

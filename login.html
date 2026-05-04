@@ -210,6 +210,45 @@
 
         .btn-back:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); }
 
+        .btn-forgot {
+            width: 100%;
+            background: none;
+            border: none;
+            font-size: 12px;
+            font-family: 'DM Sans', sans-serif;
+            color: rgba(46,204,113,0.5);
+            cursor: pointer;
+            padding: 8px;
+            transition: color 0.15s;
+        }
+        .btn-forgot:hover { color: #2ecc71; }
+
+        .btn-theme {
+            width: 100%;
+            padding: 12px;
+            border: 1px dashed rgba(46,204,113,0.25);
+            border-radius: 12px;
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            background: none;
+            color: rgba(46,204,113,0.5);
+            transition: all 0.15s;
+        }
+        .btn-theme:hover { border-color: rgba(46,204,113,0.5); color: #2ecc71; }
+
+        .theme-modal { display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:2000;align-items:center;justify-content:center }
+        .theme-modal.open { display:flex }
+        .theme-box { background:#081a0e;border:1px solid rgba(40,100,55,0.3);border-radius:20px;padding:28px;width:90%;max-width:380px;display:flex;flex-direction:column;align-items:center;gap:16px }
+        .theme-title { font-size:16px;font-weight:700 }
+        .theme-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:12px;width:100% }
+        .theme-opt { aspect-ratio:1;border-radius:16px;cursor:pointer;border:3px solid transparent;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px }
+        .theme-opt:hover { transform:scale(1.05) }
+        .theme-opt.selected { border-color:#fff;box-shadow:0 0 20px rgba(255,255,255,0.15) }
+        .theme-opt-name { font-size:10px;font-weight:600;color:rgba(255,255,255,0.6) }
+        .theme-close { background:#2ecc71;color:#040804;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer }
+
         .form-input-small {
             background: rgba(255,255,255,0.06);
             border: 1px solid rgba(255,255,255,0.12);
@@ -373,19 +412,22 @@
             <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
         </div>
         <button class="btn-submit" onclick="doLogin()">Se connecter</button>
+        <button class="btn-forgot" onclick="resetPassword()">Mot de passe oublié ?</button>
     </div>
 
     <!-- INSCRIPTION -->
     <div id="register-fields">
         <!-- Étape 1 : infos de base -->
         <div id="reg-step1">
-            <div class="form-group">
-                <label>Nom de famille</label>
-                <input type="text" id="reg-lastname" placeholder="Ton nom de famille" autocomplete="family-name">
-            </div>
-            <div class="form-group">
-                <label>Prénom</label>
-                <input type="text" id="reg-name" placeholder="Ton prénom" autocomplete="given-name">
+            <div style="display:flex;gap:10px;width:100%;">
+                <div class="form-group" style="flex:1;">
+                    <label>Nom</label>
+                    <input type="text" id="reg-lastname" placeholder="Nom" autocomplete="family-name">
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>Prénom</label>
+                    <input type="text" id="reg-name" placeholder="Prénom" autocomplete="given-name">
+                </div>
             </div>
             <div class="form-group">
                 <label>Email</label>
@@ -395,9 +437,14 @@
                 <label>Mot de passe (6 caractères minimum)</label>
                 <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password">
             </div>
+            <div class="form-group">
+                <label>Numéro de téléphone (optionnel)</label>
+                <input type="tel" id="reg-phone" placeholder="+32 XXX XX XX XX" autocomplete="tel">
+            </div>
             <div class="separator">Choisis ton avatar</div>
             <div class="avatar-grid" id="avatar-grid"></div>
             <button class="btn-submit" onclick="goToStep2()">Continuer →</button>
+            <button class="btn-theme" onclick="openThemePicker()" type="button">🎨 Personnaliser l'apparence</button>
         </div>
 
         <!-- Étape 2 : profil d'apprentissage -->
@@ -492,10 +539,12 @@ auth.onAuthStateChanged(user => {
 });
 
 // ── Avatars ──
-const AVATARS = ['🦊','🐱','🐶','🐼','🦁','🐸','🦉','🐙','🦋','🐢','🐬','🦄','🐧','🐰','🐝'];
+const AVATARS = ['🦊','🐱','🐶','🐼','🦁'];
 let selectedAvatar = AVATARS[0];
 
 const grid = document.getElementById('avatar-grid');
+
+// 5 animaux
 AVATARS.forEach((av, i) => {
     const btn = document.createElement('div');
     btn.className = 'avatar-option' + (i === 0 ? ' selected' : '');
@@ -506,6 +555,47 @@ AVATARS.forEach((av, i) => {
         selectedAvatar = av;
     };
     grid.appendChild(btn);
+});
+
+// Initiales
+const initialsBtn = document.createElement('div');
+initialsBtn.className = 'avatar-option';
+initialsBtn.id = 'initials-avatar';
+initialsBtn.style.fontSize = '16px';
+initialsBtn.style.fontWeight = '800';
+initialsBtn.style.color = '#2ecc71';
+initialsBtn.textContent = '??';
+initialsBtn.title = 'Tes initiales';
+initialsBtn.onclick = () => {
+    const fn = document.getElementById('reg-name').value.trim();
+    const ln = document.getElementById('reg-lastname').value.trim();
+    const initials = ((fn[0]||'')+(ln[0]||'')).toUpperCase() || '??';
+    initialsBtn.textContent = initials;
+    document.querySelectorAll('.avatar-option').forEach(b => b.classList.remove('selected'));
+    initialsBtn.classList.add('selected');
+    selectedAvatar = '✏️' + initials;
+};
+grid.appendChild(initialsBtn);
+
+// Créer avatar
+const createBtn = document.createElement('div');
+createBtn.className = 'avatar-option';
+createBtn.style.fontSize = '18px';
+createBtn.textContent = '🎨';
+createBtn.title = 'Créer mon avatar';
+createBtn.style.opacity = '0.5';
+createBtn.onclick = () => {
+    alert('Tu pourras créer ton avatar personnalisé après l\'inscription, dans "Mon profil" !');
+};
+grid.appendChild(createBtn);
+
+// Auto-update initials when name changes
+['reg-name','reg-lastname'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+        const fn = document.getElementById('reg-name').value.trim();
+        const ln = document.getElementById('reg-lastname').value.trim();
+        initialsBtn.textContent = ((fn[0]||'')+(ln[0]||'')).toUpperCase() || '??';
+    });
 });
 
 // ── Onglets ──
@@ -629,7 +719,10 @@ async function doRegister() {
             name: name,
             lastname: lastname,
             email: email,
-            avatar: selectedAvatar,
+            phone: document.getElementById('reg-phone').value.trim(),
+            avatar: selectedAvatar.startsWith('✏️') ? selectedAvatar.slice(2) : selectedAvatar,
+            avatarType: selectedAvatar.startsWith('✏️') ? 'initials' : 'emoji',
+            theme: selectedTheme,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             learningProfile: {
                 annee: annee,
@@ -713,6 +806,62 @@ function createSym() {
 }
 for (let i = 0; i < 12; i++) setTimeout(createSym, i * 600);
 setInterval(createSym, 2500);
+</script>
+
+<!-- Theme picker modal -->
+<div class="theme-modal" id="theme-modal">
+    <div class="theme-box">
+        <div class="theme-title">🎨 Choisis ton thème</div>
+        <div class="theme-grid">
+            <div class="theme-opt selected" onclick="selectTheme('green')" style="background:linear-gradient(135deg,#040804,#081a0e);" data-theme="green">
+                <div style="width:20px;height:20px;border-radius:50%;background:#2ecc71;"></div>
+                <span class="theme-opt-name">Forêt</span>
+            </div>
+            <div class="theme-opt" onclick="selectTheme('blue')" style="background:linear-gradient(135deg,#040810,#081428);" data-theme="blue">
+                <div style="width:20px;height:20px;border-radius:50%;background:#3498db;"></div>
+                <span class="theme-opt-name">Océan</span>
+            </div>
+            <div class="theme-opt" onclick="selectTheme('purple')" style="background:linear-gradient(135deg,#0a0418,#1a0a30);" data-theme="purple">
+                <div style="width:20px;height:20px;border-radius:50%;background:#9b59b6;"></div>
+                <span class="theme-opt-name">Cosmos</span>
+            </div>
+            <div class="theme-opt" onclick="selectTheme('red')" style="background:linear-gradient(135deg,#0a0404,#1a0808);" data-theme="red">
+                <div style="width:20px;height:20px;border-radius:50%;background:#e74c3c;"></div>
+                <span class="theme-opt-name">Lave</span>
+            </div>
+        </div>
+        <button class="theme-close" onclick="closeThemePicker()">Valider</button>
+    </div>
+</div>
+
+<script>
+let selectedTheme = 'green';
+
+function openThemePicker() { document.getElementById('theme-modal').classList.add('open'); }
+function closeThemePicker() { document.getElementById('theme-modal').classList.remove('open'); }
+
+function selectTheme(theme) {
+    selectedTheme = theme;
+    document.querySelectorAll('.theme-opt').forEach(t => t.classList.toggle('selected', t.dataset.theme === theme));
+}
+
+async function resetPassword() {
+    const email = document.getElementById('login-email').value.trim();
+    const errEl = document.getElementById('error-msg');
+    const sucEl = document.getElementById('success-msg');
+    errEl.textContent = '';
+    sucEl.textContent = '';
+
+    if (!email) { errEl.textContent = 'Entre ton email pour réinitialiser.'; return; }
+
+    try {
+        await auth.sendPasswordResetEmail(email);
+        sucEl.textContent = '📧 Email de réinitialisation envoyé ! Vérifie ta boîte mail.';
+    } catch(e) {
+        if (e.code === 'auth/user-not-found') errEl.textContent = 'Aucun compte avec cet email.';
+        else errEl.textContent = 'Erreur : ' + e.message;
+    }
+}
 </script>
 
 </body>
