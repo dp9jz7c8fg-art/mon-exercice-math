@@ -223,20 +223,7 @@
         }
         .btn-forgot:hover { color: #2ecc71; }
 
-        .btn-theme {
-            width: 100%;
-            padding: 12px;
-            border: 1px dashed rgba(46,204,113,0.25);
-            border-radius: 12px;
-            font-size: 13px;
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            background: none;
-            color: rgba(46,204,113,0.5);
-            transition: all 0.15s;
-        }
-        .btn-theme:hover { border-color: rgba(46,204,113,0.5); color: #2ecc71; }
+
 
         .theme-modal { display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:2000;align-items:center;justify-content:center }
         .theme-modal.open { display:flex }
@@ -245,7 +232,7 @@
         .theme-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:12px;width:100% }
         .theme-opt { aspect-ratio:1;border-radius:16px;cursor:pointer;border:3px solid transparent;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px }
         .theme-opt:hover { transform:scale(1.05) }
-        .theme-opt.selected { border-color:#fff;box-shadow:0 0 20px rgba(255,255,255,0.15) }
+        .theme-opt.selected { border-color:#fff !important;box-shadow:0 0 20px rgba(255,255,255,0.15) }
         .theme-opt-name { font-size:10px;font-weight:600;color:rgba(255,255,255,0.6) }
         .theme-close { background:#2ecc71;color:#040804;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer }
 
@@ -416,7 +403,7 @@
     </div>
 
     <!-- INSCRIPTION -->
-    <div id="register-fields">
+    <div id="register-fields" style="gap:20px;">
         <!-- Étape 1 : infos de base -->
         <div id="reg-step1">
             <div style="display:flex;gap:10px;width:100%;">
@@ -444,7 +431,25 @@
             <div class="separator">Choisis ton avatar</div>
             <div class="avatar-grid" id="avatar-grid"></div>
             <button class="btn-submit" onclick="goToStep2()">Continuer →</button>
-            <button class="btn-theme" onclick="openThemePicker()" type="button">🎨 Personnaliser l'apparence</button>
+            <div class="separator">🎨 Apparence du site</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;">
+                <div class="theme-opt selected" onclick="selectTheme('green')" style="background:linear-gradient(135deg,#040804,#081a0e);aspect-ratio:1;border-radius:14px;border:2px solid transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:all 0.2s;" data-theme="green">
+                    <div style="width:18px;height:18px;border-radius:50%;background:#2ecc71;"></div>
+                    <span style="font-size:9px;font-weight:600;color:rgba(255,255,255,0.5);">Forêt</span>
+                </div>
+                <div class="theme-opt" onclick="selectTheme('blue')" style="background:linear-gradient(135deg,#040810,#081428);aspect-ratio:1;border-radius:14px;border:2px solid transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:all 0.2s;" data-theme="blue">
+                    <div style="width:18px;height:18px;border-radius:50%;background:#3498db;"></div>
+                    <span style="font-size:9px;font-weight:600;color:rgba(255,255,255,0.5);">Océan</span>
+                </div>
+                <div class="theme-opt" onclick="selectTheme('purple')" style="background:linear-gradient(135deg,#0a0418,#1a0a30);aspect-ratio:1;border-radius:14px;border:2px solid transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:all 0.2s;" data-theme="purple">
+                    <div style="width:18px;height:18px;border-radius:50%;background:#9b59b6;"></div>
+                    <span style="font-size:9px;font-weight:600;color:rgba(255,255,255,0.5);">Cosmos</span>
+                </div>
+                <div class="theme-opt" onclick="selectTheme('red')" style="background:linear-gradient(135deg,#0a0404,#1a0808);aspect-ratio:1;border-radius:14px;border:2px solid transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:all 0.2s;" data-theme="red">
+                    <div style="width:18px;height:18px;border-radius:50%;background:#e74c3c;"></div>
+                    <span style="font-size:9px;font-weight:600;color:rgba(255,255,255,0.5);">Lave</span>
+                </div>
+            </div>
         </div>
 
         <!-- Étape 2 : profil d'apprentissage -->
