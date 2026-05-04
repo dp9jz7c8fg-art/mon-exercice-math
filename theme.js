@@ -260,6 +260,103 @@ function applyTheme(themeName) {
         el.style.background = t.accent;
     });
 
+    // Social links hover color (via CSS variable)
+    document.querySelectorAll('.social-link').forEach(el => {
+        el.style.borderColor = t.border;
+        el.onmouseenter = () => { el.style.borderColor = t.accent; el.style.background = t.accentDim; el.querySelector('svg').style.fill = t.accent; };
+        el.onmouseleave = () => { el.style.borderColor = t.border; el.style.background = 'rgba(255,255,255,0.05)'; el.querySelector('svg').style.fill = 'rgba(255,255,255,0.4)'; };
+    });
+
+    // Logout button hover
+    document.querySelectorAll('.ub-logout,.ep-logout').forEach(el => {
+        el.onmouseenter = () => { el.style.borderColor = `rgba(${t.accentRGB},0.3)`; el.style.color = t.accent; };
+        el.onmouseleave = () => { el.style.borderColor = 'rgba(255,255,255,0.08)'; el.style.color = 'rgba(255,255,255,0.3)'; };
+    });
+
+    // Badges mini link
+    document.querySelectorAll('#badges-mini a,.ep-badges a').forEach(el => {
+        el.style.color = t.accent;
+        el.style.borderColor = `rgba(${t.accentRGB},0.18)`;
+        el.style.background = `rgba(${t.accentRGB},0.08)`;
+        el.onmouseenter = () => { el.style.background = `rgba(${t.accentRGB},0.15)`; el.style.borderColor = `rgba(${t.accentRGB},0.4)`; };
+        el.onmouseleave = () => { el.style.background = `rgba(${t.accentRGB},0.08)`; el.style.borderColor = `rgba(${t.accentRGB},0.18)`; };
+    });
+
+    // "Voir tous les succès" link
+    document.querySelectorAll('a[href="badges.html"]').forEach(el => {
+        if (el.style) el.style.color = `rgba(${t.accentRGB},0.7)`;
+    });
+
+    // Exercise page specific elements
+    // QCM buttons
+    document.querySelectorAll('.qcm-btn').forEach(el => {
+        el.style.borderColor = t.border;
+        el.style.background = t.surface;
+    });
+
+    // Variante badge
+    document.querySelectorAll('#variante-badge').forEach(el => {
+        el.style.borderColor = t.border;
+        el.style.background = t.surface;
+    });
+
+    // Consigne box
+    document.querySelectorAll('#consigne-box').forEach(el => {
+        el.style.borderColor = t.border;
+        el.style.background = t.card;
+    });
+
+    // Reponse zone
+    document.querySelectorAll('#reponse-zone,.reponses-eleve').forEach(el => {
+        el.style.borderColor = t.border;
+        el.style.background = t.card;
+    });
+
+    // Feedback box
+    document.querySelectorAll('#feedback-box').forEach(el => {
+        el.style.borderColor = t.border;
+        el.style.background = t.surface;
+    });
+
+    // Toolbar buttons
+    document.querySelectorAll('.zoom-btn,.tbtn').forEach(el => {
+        el.style.borderColor = t.border;
+        el.style.background = t.surface;
+        el.onmouseenter = () => { el.style.borderColor = t.accent; };
+        el.onmouseleave = () => { el.style.borderColor = t.border; };
+    });
+
+    // Score board
+    document.querySelectorAll('#score-board,#score-display').forEach(el => {
+        el.style.color = t.muted;
+    });
+
+    // Size control slider track
+    document.querySelectorAll('#equerre-size,#equerre-size-ge,input[type=range]').forEach(el => {
+        el.style.background = t.border;
+    });
+
+    // Nav links hover
+    document.querySelectorAll('.nav a,.back-link').forEach(el => {
+        el.style.color = t.muted;
+        el.onmouseenter = () => { el.style.color = t.accent; };
+        el.onmouseleave = () => { el.style.color = t.muted; };
+    });
+
+    // Space cards hover
+    document.querySelectorAll('.space-card,.card,.chapter-card,.p-card').forEach(el => {
+        el.onmouseenter = () => { el.style.borderColor = `rgba(${t.accentRGB},0.45)`; };
+        el.onmouseleave = () => { el.style.borderColor = t.border; };
+    });
+
+    // Profile page button avatar
+    document.querySelectorAll('.btn-avatar,.ph-btn').forEach(el => {
+        el.style.borderColor = `rgba(${t.accentRGB},0.2)`;
+        el.style.color = t.muted;
+        el.onmouseenter = () => { el.style.borderColor = t.accent; el.style.color = t.accent; };
+        el.onmouseleave = () => { el.style.borderColor = `rgba(${t.accentRGB},0.2)`; el.style.color = t.muted; };
+    });
+
     // Store locally for instant load
     try { localStorage.setItem('stef-theme', themeName); } catch(e) {}
 }
