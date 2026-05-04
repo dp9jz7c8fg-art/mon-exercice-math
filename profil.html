@@ -5,447 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Profil – La Classe de Stef</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'DM Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#040804,#061008,#081a0e,#0a2414,#040804);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center}
+        @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .content{width:100%;max-width:600px;padding:20px 14px 60px;display:flex;flex-direction:column;gap:20px}
 
-        body {
-            font-family: 'DM Sans', sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #040804 0%, #061008 25%, #081a0e 50%, #0a2414 75%, #040804 100%);
-            background-size: 400% 400%;
-            animation: grad 20s ease infinite;
-            color: #f0f0f8;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
-        }
+        /* Profile card */
+        .profile-card{background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:20px;padding:28px 24px;display:flex;flex-direction:column;align-items:center;gap:14px;backdrop-filter:blur(12px);position:relative;overflow:hidden}
+        .profile-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 40% 40%,rgba(46,204,113,0.03),transparent 50%);pointer-events:none}
+        .avatar-big{font-size:64px;width:100px;height:100px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(46,204,113,0.06);border:3px solid rgba(46,204,113,0.25);box-shadow:0 0 25px rgba(46,204,113,0.08);cursor:pointer;transition:border-color 0.2s}
+        .avatar-big:hover{border-color:rgba(46,204,113,0.5)}
+        .profile-name{font-family:'Playfair Display',serif;font-style:italic;font-size:26px;font-weight:700;background:linear-gradient(135deg,#2ecc71,#a8f0c0,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .profile-email{font-size:12px;color:rgba(255,255,255,0.3)}
+        .profile-joined{font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:0.06em;text-transform:uppercase}
+        .btn-avatar{background:rgba(46,204,113,0.06);border:1px solid rgba(46,204,113,0.15);border-radius:8px;padding:8px 16px;color:rgba(46,204,113,0.5);font-size:12px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:all 0.15s}
+        .btn-avatar:hover{border-color:rgba(46,204,113,0.4);color:#2ecc71}
 
-        @keyframes grad {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        /* Sections */
+        .section{background:rgba(10,30,16,0.5);border:1px solid rgba(40,100,55,0.2);border-radius:16px;padding:18px 16px;display:flex;flex-direction:column;gap:10px}
+        .section-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;color:#e8f5e9}
 
-        .content {
-            width: 100%;
-            max-width: 600px;
-            padding: 20px 14px 60px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        /* RDV */
+        .rdv-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(0,0,0,0.15);border-radius:10px}
+        .rdv-icon{font-size:18px;flex-shrink:0}
+        .rdv-text{font-size:13px;font-weight:600;color:#e8f5e9}
+        .rdv-date{font-size:11px;color:rgba(255,255,255,0.25);margin-left:auto}
+        .no-items{font-size:12px;color:rgba(255,255,255,0.2);text-align:center;padding:8px}
 
-        /* Nav */
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        /* Objectifs */
+        .obj-mini{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,0,0,0.12);border-radius:8px}
+        .obj-mini-status{font-size:12px;font-weight:700;width:20px;text-align:center}
+        .obj-mini-text{font-size:12px;color:rgba(255,255,255,0.6);flex:1}
+        .obj-mini.done{opacity:0.3}
+        .obj-mini.done .obj-mini-text{text-decoration:line-through}
 
-        .nav a {
-            color: rgba(255,255,255,0.5);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            transition: color 0.15s;
-        }
+        /* Badges summary */
+        .badges-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+        .badges-row span{font-size:28px;cursor:default;transition:transform 0.15s;display:inline-block}
+        .badges-row span:hover{transform:scale(1.25)}
+        .badges-link{color:rgba(46,204,113,0.6);font-size:12px;font-weight:600;text-decoration:none;text-align:center;margin-top:4px;display:block}
+        .badges-link:hover{color:#2ecc71}
 
-        .nav a:hover { color: #f0f0f8; }
+        /* ══════════════════════════════════════════════
+           CARTE MENTALE SKETCHNOTE
+           ══════════════════════════════════════════════ */
+        .mindmap-wrap{position:relative;width:100%;overflow:hidden;border-radius:16px;background:rgba(10,30,16,0.4);border:1px solid rgba(40,100,55,0.2);min-height:400px}
+        .mindmap-svg{width:100%;height:auto;display:block}
 
-        .nav-title {
-            font-size: 15px;
-            font-weight: 800;
-            color: rgba(255,255,255,0.8);
-        }
+        .btn-edit-profile{display:block;width:100%;background:rgba(46,204,113,0.06);border:1px dashed rgba(46,204,113,0.3);border-radius:12px;padding:14px;text-align:center;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;color:rgba(46,204,113,0.6);cursor:pointer;transition:all 0.15s;text-decoration:none}
+        .btn-edit-profile:hover{background:rgba(46,204,113,0.12);border-color:rgba(46,204,113,0.5);color:#2ecc71}
 
-        /* Carte profil */
-        .profile-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 32px 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            backdrop-filter: blur(12px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .profile-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 40% 40%, rgba(248,213,110,0.04), transparent 50%);
-            pointer-events: none;
-        }
-
-        .avatar-big {
-            font-size: 72px;
-            width: 110px;
-            height: 110px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.06);
-            border: 3px solid rgba(46,204,113,0.3);
-            box-shadow: 0 0 30px rgba(46,204,113,0.1);
-        }
-
-        .profile-name {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #2ecc71, #a8f0c0, #2ecc71);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .profile-email {
-            font-size: 13px;
-            color: rgba(255,255,255,0.35);
-        }
-
-        .profile-joined {
-            font-size: 11px;
-            color: rgba(255,255,255,0.25);
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-        }
-
-        /* Statistiques globales */
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            width: 100%;
-        }
-
-        .stat-box {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 14px;
-            padding: 18px 12px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .stat-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 28px;
-            font-weight: 700;
-            color: #2ecc71;
-        }
-
-        .stat-value.green { color: #2ecc71; }
-        .stat-value.blue { color: #4f8ef7; }
-
-        .stat-label {
-            font-size: 11px;
-            color: rgba(255,255,255,0.4);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            font-weight: 600;
-        }
-
-        /* Section titre */
-        .section-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: rgba(255,255,255,0.7);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .section-title::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: rgba(255,255,255,0.08);
-        }
-
-        /* Barres de progression par objectif */
-        .progress-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .progress-item {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 12px;
-            padding: 14px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .progress-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .progress-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #f0f0f8;
-        }
-
-        .progress-score {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            color: rgba(255,255,255,0.5);
-        }
-
-        .progress-score strong {
-            color: #2ecc71;
-        }
-
-        .progress-bar-bg {
-            width: 100%;
-            height: 6px;
-            background: rgba(255,255,255,0.06);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.6s ease;
-            min-width: 0;
-        }
-
-        .fill-green  { background: linear-gradient(90deg, #2ecc71, #27ae60); }
-        .fill-blue   { background: linear-gradient(90deg, #4f8ef7, #3b7ddd); }
-        .fill-orange { background: linear-gradient(90deg, #8b5cf6, #7c3aed); }
-
-        /* Bouton changer avatar */
-        .btn-avatar {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 10px;
-            padding: 10px 20px;
-            color: rgba(255,255,255,0.5);
-            font-size: 13px;
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-
-        .btn-avatar:hover { border-color: #2ecc71; color: #2ecc71; }
-
-        /* Modal avatar */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(6px);
-        }
-
-        .modal-overlay.open { display: flex; }
-
-        .modal-box {
-            background: #081a0e;
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 20px;
-            padding: 28px;
-            width: 90%;
-            max-width: 360px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .modal-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #f0f0f8;
-        }
-
-        .avatar-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            width: 100%;
-        }
-
-        .av-opt {
-            aspect-ratio: 1;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.1);
-            font-size: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.15s;
-            background: rgba(255,255,255,0.04);
-        }
-
-        .av-opt:hover { border-color: rgba(255,255,255,0.3); transform: scale(1.1); }
-
-        .av-opt.sel {
-            border-color: #2ecc71;
-            background: rgba(46,204,113,0.15);
-            transform: scale(1.1);
-            box-shadow: 0 0 14px rgba(46,204,113,0.2);
-        }
-
-        .modal-btns {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .modal-btns button {
-            flex: 1;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 700;
-            cursor: pointer;
-            transition: opacity 0.15s;
-            border: none;
-        }
-
-        .btn-cancel {
-            background: rgba(255,255,255,0.06);
-            color: rgba(255,255,255,0.5);
-        }
-
-        .btn-save {
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            color: #1a1a2e;
-        }
-
-        .btn-save:hover, .btn-cancel:hover { opacity: 0.8; }
-
-        /* Responsive */
-        @media (max-width: 480px) {
-            .stats-row { grid-template-columns: 1fr 1fr; }
-            .avatar-big { font-size: 56px; width: 90px; height: 90px; }
-            .profile-name { font-size: 22px; }
-            .av-opt { font-size: 22px; }
-        }
-
-        /* Loading */
-        #loading-screen {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 60vh;
-            font-size: 14px;
-            color: rgba(255,255,255,0.4);
-            gap: 10px;
-        }
-
-        .spinner {
-            width: 20px; height: 20px;
-            border: 2px solid rgba(255,255,255,0.1);
-            border-top-color: #2ecc71;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
+        #loading-screen{display:flex;align-items:center;justify-content:center;min-height:50vh;font-size:14px;color:rgba(255,255,255,0.35);gap:10px}
+        .spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.1);border-top-color:#2ecc71;border-radius:50%;animation:spin 0.7s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
     </style>
 </head>
 <body>
 
 <div class="content">
+    <div id="loading-screen"><div class="spinner"></div><span>Chargement du profil…</span></div>
 
-    <div id="loading-screen">
-        <div class="spinner"></div>
-        <span>Chargement du profil…</span>
-    </div>
+    <div id="profile-content" style="display:none;flex-direction:column;gap:20px;">
 
-    <div id="profile-content" style="display:none;">
-
+        <!-- Carte profil -->
         <div class="profile-card">
-            <div class="avatar-big" id="avatar-display">🦊</div>
+            <div class="avatar-big" id="avatar-display" onclick="window.location.href='avatar-creator.html'" title="Personnaliser">🦊</div>
             <div class="profile-name" id="profile-name">Élève</div>
             <div class="profile-email" id="profile-email"></div>
             <div class="profile-joined" id="profile-joined"></div>
             <button class="btn-avatar" onclick="window.location.href='avatar-creator.html'">🎨 Personnaliser mon avatar</button>
         </div>
 
-        <div class="stats-row">
-            <div class="stat-box">
-                <div class="stat-value" id="stat-total">0</div>
-                <div class="stat-label">Exercices</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-value green" id="stat-correct">0</div>
-                <div class="stat-label">Corrects</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-value blue" id="stat-pct">0%</div>
-                <div class="stat-label">Réussite</div>
-            </div>
+        <!-- Prochains RDV -->
+        <div class="section">
+            <div class="section-title">📅 Prochains rendez-vous avec Stef</div>
+            <div id="rdv-list"></div>
         </div>
 
-        <div class="section-title">📐 Mesure d'angles</div>
-        <div class="progress-list" id="angles-progress"></div>
-
-        <div class="section-title">½ Fractions</div>
-        <div class="progress-list" id="fractions-progress"></div>
-
-        <div class="section-title">𝑥 Calcul algébrique</div>
-        <div class="progress-list" id="algebre-progress"></div>
-
-        <div class="section-title">🎯 Mes objectifs</div>
-        <div class="progress-list" id="objectifs-list" style="font-size:13px;color:rgba(255,255,255,0.4);">Chargement…</div>
-
-        <div class="section-title">📅 Prochains rendez-vous</div>
-        <div class="progress-list" id="rdv-list" style="font-size:13px;color:rgba(255,255,255,0.4);">Chargement…</div>
-
-        <div class="section-title">🏆 Succès</div>
-        <div id="badges-summary" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
-        <a href="badges.html" style="color:rgba(46,204,113,0.7);font-size:13px;font-weight:600;text-decoration:none;text-align:center;margin-top:4px;">Voir tous les succès →</a>
-
-        <div class="section-title">📚 Profil d'apprentissage</div>
-        <div id="learning-profile" style="background:rgba(0,0,0,0.15);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;">
-            <div class="no-items" style="font-size:12px;color:rgba(255,255,255,0.25);">Chargement…</div>
+        <!-- Inscriptions aux ateliers -->
+        <div class="section">
+            <div class="section-title">🎓 Inscriptions aux ateliers</div>
+            <div class="no-items">Bientôt disponible — les ateliers seront affichés ici.</div>
         </div>
-        <button class="btn-avatar" onclick="window.location.href='profil-edit.html'" style="align-self:center;margin-top:4px;">✏️ Modifier mon profil d'apprentissage</button>
 
-    </div>
-
-</div>
-
-<!-- Modal avatar -->
-<div class="modal-overlay" id="avatar-modal">
-    <div class="modal-box">
-        <div class="modal-title">Choisis ton avatar</div>
-        <div class="avatar-grid" id="avatar-grid-modal"></div>
-        <div class="modal-btns">
-            <button class="btn-cancel" onclick="closeAvatarModal()">Annuler</button>
-            <button class="btn-save" onclick="saveAvatar()">Enregistrer</button>
+        <!-- Succès -->
+        <div class="section">
+            <div class="section-title">🏆 Succès</div>
+            <div class="badges-row" id="badges-summary"></div>
+            <a href="badges.html" class="badges-link">Voir tous les succès →</a>
         </div>
+
+        <!-- Profil d'apprentissage (Carte mentale) -->
+        <div class="section">
+            <div class="section-title">📚 Mon profil d'apprentissage</div>
+            <div class="mindmap-wrap" id="mindmap-container">
+                <div class="no-items">Chargement…</div>
+            </div>
+            <a href="profil-edit.html" class="btn-edit-profile">✏️ Modifier mon profil d'apprentissage</a>
+        </div>
+
     </div>
 </div>
 
@@ -459,274 +119,232 @@
 <script src="breadcrumb.js"></script>
 
 <script>
-const AVATARS = ['🦊','🐱','🐶','🐼','🦁','🐸','🦉','🐙','🦋','🐢','🐬','🦄','🐧','🐰','🐝'];
-const ALG_LABELS = {
-    'comprendre':'📖 Comprendre', 'evaluer':'🔢 Évaluer', 'simplifier':'✂️ Simplifier',
-    'parentheses':'🔓 Parenthèses', 'developper':'📐 Développer', 'factoriser':'🧩 Factoriser',
-    'identites':'💡 Identités', 'polynomes':'📊 Polynômes', 'problemes':'🧠 Problèmes',
-};
-const FRAC_LABELS = {
-    'comparer':   '⚖️ Comparer',
-    'convertir':  '🔄 Convertir',
-    'arrondir':   '🎯 Arrondir',
-    'simplifier': '✂️ Simplifier',
-    'add-sub':    '➕ Add / Soustr',
-    'multiplier': '✖️ Multiplier',
-    'diviser':    '➗ Diviser',
-};
-
-let currentProfile = null;
 let currentUser = null;
-let newAvatar = null;
+let currentProfile = null;
 
 requireAuth((user, profile) => {
     currentUser = user;
     currentProfile = profile;
 
     document.getElementById('loading-screen').style.display = 'none';
-    document.getElementById('profile-content').style.display = 'flex';
-    document.getElementById('profile-content').style.flexDirection = 'column';
-    document.getElementById('profile-content').style.gap = '20px';
+    const content = document.getElementById('profile-content');
+    content.style.display = 'flex';
 
     renderProfile(profile);
-    renderAlgebreProgress(profile);
-    renderBadgesSummary(profile);
-    renderLearningProfile(profile);
-    renderObjectifs();
     renderRDV();
+    renderBadgesSummary(profile);
+    renderMindmap(profile);
 });
 
 function renderProfile(p) {
-    // Avatar SVG ou emoji
+    // Avatar
     const avatarEl = document.getElementById('avatar-display');
     if (p.avatarSVG) {
         avatarEl.innerHTML = p.avatarSVG;
         avatarEl.style.fontSize = '0';
-        avatarEl.querySelector('svg').style.width = '100%';
-        avatarEl.querySelector('svg').style.height = '100%';
+        const svg = avatarEl.querySelector('svg');
+        if (svg) { svg.style.width = '100%'; svg.style.height = '100%'; }
+    } else if (p.avatarType === 'initials') {
+        avatarEl.textContent = p.avatar || '??';
+        avatarEl.style.fontSize = '28px';
+        avatarEl.style.fontWeight = '800';
+        avatarEl.style.color = '#2ecc71';
     } else {
         avatarEl.textContent = p.avatar || '🦊';
     }
-    document.getElementById('profile-name').textContent = p.name || 'Élève';
+
+    document.getElementById('profile-name').textContent = (p.name || '') + ' ' + (p.lastname || '');
     document.getElementById('profile-email').textContent = p.email || '';
 
     if (p.createdAt) {
         const d = p.createdAt.toDate ? p.createdAt.toDate() : new Date(p.createdAt);
         document.getElementById('profile-joined').textContent = 'Membre depuis ' + d.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
     }
-
-    const totalEx = p.totalExercises || 0;
-    const totalCo = p.totalCorrect || 0;
-    const pct = totalEx > 0 ? Math.round(totalCo / totalEx * 100) : 0;
-
-    document.getElementById('stat-total').textContent = totalEx;
-    document.getElementById('stat-correct').textContent = totalCo;
-    document.getElementById('stat-pct').textContent = pct + '%';
-
-    // Angles
-    const anglesEl = document.getElementById('angles-progress');
-    const angles = p.scores?.angles || { done: 0, correct: 0 };
-    anglesEl.innerHTML = buildProgressItem('📐 Mesure d\'angles', angles.done, angles.correct, 'fill-blue');
-
-    // Fractions
-    const fracEl = document.getElementById('fractions-progress');
-    const fracScores = p.scores?.fractions || {};
-    let fracHTML = '';
-    for (const [key, label] of Object.entries(FRAC_LABELS)) {
-        const s = fracScores[key] || { done: 0, correct: 0 };
-        fracHTML += buildProgressItem(label, s.done, s.correct, 'fill-green');
-    }
-    fracEl.innerHTML = fracHTML;
 }
 
-function buildProgressItem(name, done, correct, fillClass) {
-    const pct = done > 0 ? Math.round(correct / done * 100) : 0;
-    return `
-        <div class="progress-item">
-            <div class="progress-top">
-                <span class="progress-name">${name}</span>
-                <span class="progress-score"><strong>${correct}</strong> / ${done} (${pct}%)</span>
-            </div>
-            <div class="progress-bar-bg">
-                <div class="progress-bar-fill ${fillClass}" style="width: ${pct}%"></div>
-            </div>
-        </div>`;
-}
-
-// ── Avatar Modal ──
-function openAvatarModal() {
-    newAvatar = currentProfile.avatar || '🦊';
-    const grid = document.getElementById('avatar-grid-modal');
-    grid.innerHTML = '';
-    AVATARS.forEach(av => {
-        const btn = document.createElement('div');
-        btn.className = 'av-opt' + (av === newAvatar ? ' sel' : '');
-        btn.textContent = av;
-        btn.onclick = () => {
-            grid.querySelectorAll('.av-opt').forEach(b => b.classList.remove('sel'));
-            btn.classList.add('sel');
-            newAvatar = av;
-        };
-        grid.appendChild(btn);
-    });
-    document.getElementById('avatar-modal').classList.add('open');
-}
-
-function closeAvatarModal() {
-    document.getElementById('avatar-modal').classList.remove('open');
-}
-
-async function saveAvatar() {
-    if (!currentUser || !newAvatar) return;
+async function renderRDV() {
+    const list = document.getElementById('rdv-list');
     try {
-        await db.collection('users').doc(currentUser.uid).update({ avatar: newAvatar });
-        currentProfile.avatar = newAvatar;
-        document.getElementById('avatar-display').textContent = newAvatar;
-        closeAvatarModal();
-    } catch (e) {
-        console.error('Erreur avatar:', e);
-        alert('Erreur lors de la sauvegarde.');
-    }
-}
-
-function renderAlgebreProgress(p) {
-    const el = document.getElementById('algebre-progress');
-    const algScores = p.scores?.algebre || {};
-    let html = '';
-    for (const [key, label] of Object.entries(ALG_LABELS)) {
-        const s = algScores[key] || { done: 0, correct: 0 };
-        html += buildProgressItem(label, s.done, s.correct, 'fill-orange');
-    }
-    el.innerHTML = html;
+        const snap = await db.collection('bookings').where('userId','==',currentUser.uid).orderBy('createdAt','desc').limit(5).get();
+        if (snap.empty) { list.innerHTML = '<div class="no-items">Aucun rendez-vous prévu</div>'; return; }
+        let html = '';
+        snap.forEach(doc => {
+            const b = doc.data();
+            html += `<div class="rdv-item"><span class="rdv-icon">📅</span><span class="rdv-text">${b.day} ${b.time}</span><span class="rdv-date">Semaine du ${b.weekStart}</span></div>`;
+        });
+        list.innerHTML = html;
+    } catch(e) { list.innerHTML = '<div class="no-items">Erreur de chargement</div>'; }
 }
 
 function renderBadgesSummary(p) {
     const container = document.getElementById('badges-summary');
     const userBadges = p.badges || [];
-
     if (userBadges.length === 0) {
-        container.innerHTML = '<span style="font-size:13px;color:rgba(255,255,255,0.3);">Aucun succès pour le moment — continue à t\'entraîner !</span>';
+        container.innerHTML = '<span style="font-size:12px;color:rgba(255,255,255,0.2);">Aucun succès — continue à t\'entraîner !</span>';
         return;
     }
-
     let html = '';
     for (const id of userBadges) {
         const badge = ALL_BADGES.find(b => b.id === id);
         if (!badge) continue;
-        html += `<span title="${badge.name}: ${badge.desc}" style="font-size:32px;cursor:default;transition:transform 0.15s;display:inline-block;" onmouseover="this.style.transform='scale(1.3)'" onmouseout="this.style.transform='scale(1)'">${badge.emoji}</span>`;
+        html += `<span title="${badge.name}: ${badge.desc}">${badge.emoji}</span>`;
     }
     container.innerHTML = html;
 }
 
-function renderLearningProfile(p) {
-    const container = document.getElementById('learning-profile');
+// ═══════════════════════════════════════════════════════════
+//  CARTE MENTALE SKETCHNOTE
+// ═══════════════════════════════════════════════════════════
+function renderMindmap(p) {
+    const container = document.getElementById('mindmap-container');
     const lp = p.learningProfile;
+
     if (!lp) {
-        container.innerHTML = '<div style="font-size:12px;color:rgba(255,255,255,0.25);text-align:center;">Profil non renseigné</div>';
+        container.innerHTML = '<div class="no-items">Profil non renseigné — <a href="profil-edit.html" style="color:#2ecc71;">Compléter maintenant</a></div>';
         return;
     }
 
+    const W = 700;
+    const H = 500;
+    const cx = W / 2;
+    const cy = H / 2;
+
     const anneeLabels = {'1':'1ère','2':'2ème','3':'3ème','4':'4ème','5':'5ème','6':'6ème'};
+    const prenom = p.name || 'Moi';
 
-    function chipList(items, color) {
-        if (!items || items.length === 0) return '<span style="color:rgba(255,255,255,0.2);">—</span>';
-        return items.map(i => `<span style="display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;background:rgba(${color},0.1);color:rgba(${color},0.8);border:1px solid rgba(${color},0.15);margin:2px;">${i}</span>`).join('');
-    }
+    // Branches de la carte mentale
+    const branches = [];
 
-    let html = '';
-    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-        <span style="font-size:12px;color:rgba(255,255,255,0.35);">📅 Année</span>
-        <span style="font-size:14px;font-weight:600;color:#2ecc71;">${anneeLabels[lp.annee] || lp.annee} année</span>
-    </div>`;
+    // 1. Année
+    branches.push({
+        label: '📅 ' + (anneeLabels[lp.annee] || lp.annee || '?') + ' année',
+        items: [],
+        angle: -90, dist: 130, color: '#2ecc71'
+    });
 
+    // 2. Points forts
+    branches.push({
+        label: '💪 Points forts',
+        items: lp.pointsForts || lp.easySubjects || [],
+        detail: lp.pointsFortsCoursDetail || '',
+        angle: -35, dist: 160, color: '#2ecc71'
+    });
+
+    // 3. À travailler
+    branches.push({
+        label: '🔧 À travailler',
+        items: lp.pointsFaibles || lp.hardSubjects || [],
+        detail: lp.pointsFaiblesCoursDetail || '',
+        angle: 35, dist: 160, color: '#e74c3c'
+    });
+
+    // 4. Troubles
     if (lp.troubles && lp.troubles.length > 0) {
-        html += `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-            <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:6px;">⚠️ Troubles</div>
-            <div style="display:flex;flex-wrap:wrap;gap:4px;">${chipList(lp.troubles, '243,156,18')}</div>
-        </div>`;
+        branches.push({
+            label: '⚠️ Troubles',
+            items: lp.troubles,
+            angle: 90, dist: 130, color: '#f39c12'
+        });
     }
 
-    html += `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-        <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:6px;">💪 Points forts</div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;">${chipList(lp.pointsForts, '46,204,113')}</div>
-        ${lp.pointsFortsCoursDetail ? '<div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;">Cours : '+lp.pointsFortsCoursDetail+'</div>' : ''}
-    </div>`;
-
-    html += `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-        <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:6px;">🔧 À travailler</div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;">${chipList(lp.pointsFaibles, '231,76,60')}</div>
-        ${lp.pointsFaiblesCoursDetail ? '<div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;">Cours : '+lp.pointsFaiblesCoursDetail+'</div>' : ''}
-    </div>`;
-
+    // 5. Suivis
     if (lp.suivisExt && lp.suivisExt.length > 0 && !lp.suivisExt.includes('Aucun')) {
-        html += `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-            <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:6px;">🩺 Suivis extérieurs</div>
-            <div style="display:flex;flex-wrap:wrap;gap:4px;">${chipList(lp.suivisExt, '52,152,219')}</div>
-        </div>`;
+        branches.push({
+            label: '🩺 Suivis',
+            items: lp.suivisExt,
+            angle: 145, dist: 150, color: '#3498db'
+        });
     }
 
+    // 6. Aides
     if (lp.aides) {
-        html += `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-            <span style="font-size:12px;color:rgba(255,255,255,0.35);">✅ Aides qui fonctionnent</span>
-            <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;">${lp.aides}</div>
-        </div>`;
+        branches.push({
+            label: '✅ Aides',
+            items: [lp.aides],
+            angle: -145, dist: 150, color: '#9b59b6'
+        });
     }
 
+    // 7. Notes
     if (lp.notes) {
-        html += `<div style="padding:6px 0;">
-            <span style="font-size:12px;color:rgba(255,255,255,0.35);">📝 Notes</span>
-            <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;">${lp.notes}</div>
-        </div>`;
+        branches.push({
+            label: '📝 Notes',
+            items: [lp.notes],
+            angle: 180, dist: 120, color: '#7f8c8d'
+        });
     }
 
-    container.innerHTML = html;
-}
+    // Générer le SVG
+    let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" class="mindmap-svg" style="font-family:'Caveat',cursive;">`;
 
-async function renderObjectifs() {
-    const list = document.getElementById('objectifs-list');
-    if (!currentUser) return;
-    try {
-        const snap = await db.collection('objectifs').where('userId','==',currentUser.uid).orderBy('createdAt','desc').get();
-        if (snap.empty) { list.innerHTML = '<div style="font-size:12px;color:rgba(255,255,255,0.2);text-align:center;">Aucun objectif</div>'; return; }
+    // Fond papier
+    svg += `<rect width="${W}" height="${H}" fill="rgba(0,0,0,0.15)" rx="12"/>`;
 
-        const statusColors = {'not-started':'rgba(255,255,255,0.25)','in-progress':'#f39c12','completed':'#2ecc71'};
-        const statusIcons = {'not-started':'○','in-progress':'◐','completed':'✓'};
+    // Lignes de fond (style carnet)
+    for (let y = 40; y < H; y += 28) {
+        svg += `<line x1="30" y1="${y}" x2="${W-30}" y2="${y}" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>`;
+    }
 
-        let html = '';
-        snap.forEach(doc => {
-            const o = doc.data();
-            const st = o.status || 'not-started';
-            const opacity = st === 'completed' ? '0.35' : '1';
-            const textDeco = st === 'completed' ? 'line-through' : 'none';
-            html += `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(0,0,0,0.15);border-radius:8px;opacity:${opacity};">
-                <span style="color:${statusColors[st]};font-size:14px;font-weight:700;">${statusIcons[st]}</span>
-                <span style="font-size:13px;color:#e8f5e9;text-decoration:${textDeco};flex:1;">${o.text}</span>
-                <span style="font-size:14px;">🎯</span>
-            </div>`;
-        });
-        list.innerHTML = html;
-    } catch(e) { list.innerHTML = '<div style="font-size:12px;color:rgba(255,255,255,0.2);">Erreur</div>'; }
-}
+    // Cercle central
+    svg += `<circle cx="${cx}" cy="${cy}" r="42" fill="rgba(46,204,113,0.1)" stroke="rgba(46,204,113,0.3)" stroke-width="2"/>`;
+    svg += `<text x="${cx}" y="${cy-6}" text-anchor="middle" fill="#2ecc71" font-size="18" font-weight="700">${prenom}</text>`;
+    svg += `<text x="${cx}" y="${cy+14}" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="12">Mon profil</text>`;
 
-async function renderRDV() {
-    const list = document.getElementById('rdv-list');
-    if (!currentUser) return;
-    try {
-        const snap = await db.collection('bookings').where('userId','==',currentUser.uid).orderBy('createdAt','desc').limit(5).get();
-        if (snap.empty) { list.innerHTML = '<div style="font-size:12px;color:rgba(255,255,255,0.2);text-align:center;">Aucun rendez-vous</div>'; return; }
+    // Dessiner les branches
+    branches.forEach((branch, idx) => {
+        const rad = branch.angle * Math.PI / 180;
+        const bx = cx + Math.cos(rad) * branch.dist;
+        const by = cy + Math.sin(rad) * branch.dist;
 
-        let html = '';
-        snap.forEach(doc => {
-            const b = doc.data();
-            html += `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(0,0,0,0.15);border-radius:8px;">
-                <span style="font-size:16px;">📅</span>
-                <span style="font-size:13px;color:#e8f5e9;font-weight:600;">${b.day} ${b.time}</span>
-                <span style="font-size:11px;color:rgba(255,255,255,0.25);margin-left:auto;">Semaine du ${b.weekStart}</span>
-            </div>`;
-        });
-        list.innerHTML = html;
-    } catch(e) { list.innerHTML = '<div style="font-size:12px;color:rgba(255,255,255,0.2);">Erreur</div>'; }
+        // Ligne ondulée (courbe de Bézier pour effet dessiné)
+        const mx = (cx + bx) / 2 + (Math.random() - 0.5) * 20;
+        const my = (cy + by) / 2 + (Math.random() - 0.5) * 20;
+        svg += `<path d="M ${cx} ${cy} Q ${mx} ${my} ${bx} ${by}" fill="none" stroke="${branch.color}" stroke-width="2.5" stroke-linecap="round" opacity="0.5" stroke-dasharray="6 4"/>`;
+
+        // Bulle du label
+        const labelW = branch.label.length * 8 + 24;
+        svg += `<rect x="${bx - labelW/2}" y="${by - 16}" width="${labelW}" height="28" rx="14" fill="${branch.color}" opacity="0.15" stroke="${branch.color}" stroke-width="1.5" opacity="0.3"/>`;
+        svg += `<text x="${bx}" y="${by + 4}" text-anchor="middle" fill="${branch.color}" font-size="14" font-weight="700">${branch.label}</text>`;
+
+        // Sous-items
+        if (branch.items && branch.items.length > 0) {
+            branch.items.forEach((item, j) => {
+                const subAngle = rad + (j - (branch.items.length - 1) / 2) * 0.35;
+                const subDist = 55 + j * 8;
+                const sx = bx + Math.cos(subAngle) * subDist;
+                const sy = by + Math.sin(subAngle) * subDist;
+
+                // Petite ligne
+                svg += `<line x1="${bx}" y1="${by + 12}" x2="${sx}" y2="${sy}" stroke="${branch.color}" stroke-width="1" opacity="0.25" stroke-dasharray="3 3"/>`;
+
+                // Texte
+                const truncated = item.length > 22 ? item.slice(0, 20) + '…' : item;
+                svg += `<text x="${sx}" y="${sy + 4}" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="11">${truncated}</text>`;
+            });
+        }
+
+        // Détail cours
+        if (branch.detail) {
+            const dy = by + 12 + (branch.items ? branch.items.length * 8 + 30 : 25);
+            svg += `<text x="${bx}" y="${dy}" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="10" font-style="italic">Cours: ${branch.detail}</text>`;
+        }
+    });
+
+    // Petits dessins décoratifs (style sketchnote)
+    svg += `<text x="35" y="30" fill="rgba(255,255,255,0.06)" font-size="22">✏️</text>`;
+    svg += `<text x="${W-50}" y="30" fill="rgba(255,255,255,0.06)" font-size="22">📖</text>`;
+    svg += `<text x="35" y="${H-15}" fill="rgba(255,255,255,0.06)" font-size="22">💡</text>`;
+    svg += `<text x="${W-50}" y="${H-15}" fill="rgba(255,255,255,0.06)" font-size="22">🎯</text>`;
+
+    // Petites étoiles décoratives
+    [{ x: 80, y: 90 }, { x: W-90, y: 120 }, { x: 120, y: H-70 }, { x: W-110, y: H-90 }].forEach(p => {
+        svg += `<text x="${p.x}" y="${p.y}" fill="rgba(255,255,255,0.04)" font-size="16">✦</text>`;
+    });
+
+    svg += '</svg>';
+    container.innerHTML = svg;
 }
 </script>
+
 </body>
 </html>
