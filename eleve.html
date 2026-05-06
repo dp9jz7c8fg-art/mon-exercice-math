@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        html,body{height:auto;min-height:100%}
+        html,body{font-family:'DM Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#040804,#061008,#081a0e,#0a2414,#040804);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
         body{
             font-family:'DM Sans',sans-serif;
             background:linear-gradient(135deg,#040804 0%,#061008 25%,#081a0e 50%,#0a2414 75%,#040804 100%);
@@ -17,7 +17,7 @@
         }
         @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-        .page{width:100%;max-width:680px;min-min-height:100svh;display:flex;flex-direction:column;align-items:center;padding:20px 16px 40px;gap:14px}
+        .page{width:100%;max-width:680px;display:flex;flex-direction:column;align-items:center;padding:20px 14px 48px;gap:14px}
 
         /* Nav */
         .nav{width:100%;display:flex;justify-content:space-between;align-items:center}
@@ -136,6 +136,13 @@
             .section-dashed { padding: 16px 14px !important; }
         }
         
+
+        @media (max-width: 520px) {
+            .grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+            .card { padding: 16px 14px !important; }
+            .eleve-profile { flex-wrap: wrap !important; }
+            #next-rdv { flex-direction: column !important; text-align: center !important; }
+        }
 </style>
 </head>
 <body>
