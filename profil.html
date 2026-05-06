@@ -127,12 +127,17 @@
     <div id="profile-content" style="display:none;flex-direction:column;gap:20px;">
 
         <!-- Carte profil -->
-        <div class="profile-card">
-            <div class="avatar-big" id="avatar-display" onclick="window.location.href='avatar-creator.html'" title="Personnaliser">🦊</div>
-            <div class="profile-name" id="profile-name">Élève</div>
-            <div class="profile-email" id="profile-email"></div>
-            <div class="profile-joined" id="profile-joined"></div>
-            <button class="btn-avatar" onclick="window.location.href='avatar-creator.html'">🎨 Personnaliser mon avatar</button>
+        <div class="profile-card" style="flex-direction:row;align-items:flex-start;gap:16px;padding:16px;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;">
+                <div class="avatar-big" id="avatar-display" title="Mon avatar">🦊</div>
+                <button class="btn-avatar" onclick="window.location.href='avatar-creator.html'" style="font-size:11px;padding:6px 12px;">🎨 Modifier</button>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0;">
+                <div class="profile-name" id="profile-name" style="font-size:18px;">Élève</div>
+                <div class="profile-email" id="profile-email" style="font-size:12px;"></div>
+                <div class="profile-phone" id="profile-phone" style="font-size:12px;color:rgba(255,255,255,0.3);"></div>
+                <div class="profile-joined" id="profile-joined" style="font-size:10px;margin-top:4px;"></div>
+            </div>
         </div>
 
         <!-- Timeline -->
@@ -215,6 +220,7 @@ function renderProfile(p) {
 
     document.getElementById('profile-name').textContent = (p.name || '') + ' ' + (p.lastname || '');
     document.getElementById('profile-email').textContent = p.email || '';
+    document.getElementById('profile-phone').textContent = p.phone || '';
 
     if (p.createdAt) {
         const d = p.createdAt.toDate ? p.createdAt.toDate() : new Date(p.createdAt);
