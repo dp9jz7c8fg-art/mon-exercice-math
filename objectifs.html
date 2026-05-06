@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes objectifs – La Classe de Stef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'DM Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#040804,#061008,#081a0e,#0a2414,#040804);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
+        @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .content{width:100%;max-width:560px;padding:20px 14px 60px;display:flex;flex-direction:column;gap:16px}
+        h1{font-size:22px;font-weight:800;text-align:center;color:#2ecc71;display:flex;align-items:center;justify-content:center;gap:8px}
+
+        .section{background:rgba(10,30,16,0.55);border:2px solid rgba(40,100,55,0.25);border-radius:16px;padding:18px 16px;display:flex;flex-direction:column;gap:10px;backdrop-filter:blur(8px)}
+        .section-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+
+        .obj-list{display:flex;flex-direction:column;gap:8px}
+        .obj-card{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:12px;background:rgba(0,0,0,0.2);transition:opacity 0.3s}
+        .obj-card.achieved{opacity:0.35}
+        .obj-left{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-top:2px}
+        .obj-target{font-size:16px}
+        .obj-status-btn{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all 0.2s;flex-shrink:0}
+        .obj-status-btn.not-started{border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.2)}
+        .obj-status-btn.in-progress{border-color:#f39c12;background:rgba(243,156,18,0.1);color:#f39c12}
+        .obj-status-btn.completed{border-color:#2ecc71;background:rgba(46,204,113,0.15);color:#2ecc71}
+        .obj-body{display:flex;flex-direction:column;gap:3px;flex:1}
+        .obj-text{font-size:13px;color:#e8f5e9;line-height:1.5}
+        .obj-card.achieved .obj-text{text-decoration:line-through;color:rgba(255,255,255,0.25)}
+        .obj-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+        .obj-status-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em}
+        .obj-status-label.not-started{color:rgba(255,255,255,0.25)}
+        .obj-status-label.in-progress{color:#f39c12}
+        .obj-status-label.completed{color:#2ecc71}
+        .obj-date{font-size:9px;color:rgba(255,255,255,0.18)}
+        .obj-author{font-size:9px;color:rgba(255,255,255,0.18)}
+        .obj-emoji{font-size:14px}
+        .obj-del{background:none;border:none;color:rgba(255,255,255,0.1);font-size:13px;cursor:pointer;padding:4px;transition:color 0.15s;flex-shrink:0}
+        .obj-del:hover{color:#e74c3c}
+
+        .add-row{display:flex;gap:8px}
+        .add-input{flex:1;background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:8px;padding:12px 14px;font-size:13px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none}
+        .add-input::placeholder{color:rgba(255,255,255,0.2)}
+        .add-input:focus{border-color:rgba(46,204,113,0.4)}
+        .add-btn{background:#2ecc71;color:#040804;border:none;border-radius:8px;padding:12px 16px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;white-space:nowrap}
+        .add-btn:hover{opacity:0.85}
+        .no-items{font-size:12px;color:rgba(255,255,255,0.2);text-align:center;padding:8px}
+        .fb{font-size:11px;text-align:center;min-height:14px}
+        .fb-ok{color:#2ecc71}.fb-err{color:#e74c3c}
+
+        @media(max-width:480px){.add-row{flex-direction:column}.add-btn{width:100%}}
+    </style>
+</head>
+<body>
+<div class="content">
+    <h1>🎯 Mes objectifs</h1>
+
+    <div class="section">
+        <div class="section-title">📋 Mes objectifs</div>
+        <div class="obj-list" id="obj-list"><div class="no-items">Chargement…</div></div>
+        <div class="add-row">
+            <input type="text" class="add-input" id="obj-input" placeholder="Ajouter un objectif…">
+            <button class="add-btn" onclick="addObjectif()">Ajouter</button>
+        </div>
+        <div class="fb" id="obj-fb"></div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+<script src="theme.js"></script>
+<script src="breadcrumb.js"></script>
+<script>
+let currentUser = null;
+const STATUS_CYCLE = ['not-started','in-progress','completed'];
+const STATUS_ICONS = {'not-started':'○','in-progress':'◐','completed':'✓'};
+const STATUS_LABELS = {'not-started':'Pas entamé','in-progress':'En cours','completed':'Atteint'};
+const STATUS_EMOJI = {'not-started':'⬜','in-progress':'🟡','completed':'✅'};
+
+document.getElementById('obj-input').addEventListener('keydown', e => { if(e.key==='Enter') addObjectif(); });
+
+requireAuth((user, profile) => {
+    currentUser = user;
+    loadObjectifs();
+});
+
+async function loadObjectifs() {
+    const list = document.getElementById('obj-list');
+    try {
+        const snap = await db.collection('objectifs').where('userId','==',currentUser.uid).orderBy('createdAt','desc').get();
+        if (snap.empty) { list.innerHTML = '<div class="no-items">Aucun objectif pour le moment.</div>'; return; }
+
+        const docs = [];
+        snap.forEach(doc => docs.push({id:doc.id,...doc.data()}));
+        docs.sort((a,b) => (a.status==='completed'?1:0)-(b.status==='completed'?1:0));
+
+        let html = '';
+        docs.forEach(obj => {
+            const st = obj.status||'not-started';
+            const isAchieved = st === 'completed';
+            const date = obj.createdAt ? obj.createdAt.toDate().toLocaleDateString('fr-FR',{day:'numeric',month:'short'}) : '';
+            const author = obj.addedBy === 'stef' ? '· Fixé par Stef' : '· Fixé par moi';
+            html += `<div class="obj-card ${isAchieved?'achieved':''}">
+                <div class="obj-left">
+                    <span class="obj-target">🎯</span>
+                    <button class="obj-status-btn ${st}" onclick="cycleStatus('${obj.id}','${st}')" title="Changer le statut">${STATUS_ICONS[st]}</button>
+                </div>
+                <div class="obj-body">
+                    <div class="obj-text">${obj.text} <span class="obj-emoji">${STATUS_EMOJI[st]}</span></div>
+                    <div class="obj-meta">
+                        <span class="obj-status-label ${st}">${STATUS_LABELS[st]}</span>
+                        <span class="obj-date">${date}</span>
+                        <span class="obj-author">${author}</span>
+                    </div>
+                </div>
+                <button class="obj-del" onclick="deleteObj('${obj.id}')" title="Supprimer">✕</button>
+            </div>`;
+        });
+        list.innerHTML = html;
+    } catch(e) { list.innerHTML = '<div class="no-items">Erreur de chargement</div>'; }
+}
+
+async function addObjectif() {
+    const input = document.getElementById('obj-input');
+    const text = input.value.trim();
+    const fb = document.getElementById('obj-fb');
+    fb.textContent = '';
+    if (!text) { fb.textContent = 'Écris un objectif.'; fb.className = 'fb fb-err'; return; }
+    try {
+        await db.collection('objectifs').add({
+            userId: currentUser.uid, text, status: 'not-started', addedBy: 'eleve',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        input.value = '';
+        fb.textContent = '✓ Objectif ajouté !'; fb.className = 'fb fb-ok';
+        setTimeout(() => fb.textContent='', 2000);
+        loadObjectifs();
+    } catch(e) { fb.textContent = 'Erreur.'; fb.className = 'fb fb-err'; }
+}
+
+async function cycleStatus(docId, current) {
+    const next = STATUS_CYCLE[(STATUS_CYCLE.indexOf(current)+1) % STATUS_CYCLE.length];
+    try { await db.collection('objectifs').doc(docId).update({status:next}); loadObjectifs(); } catch(e) {}
+}
+
+async function deleteObj(docId) {
+    if (!confirm('Supprimer cet objectif ?')) return;
+    try { await db.collection('objectifs').doc(docId).delete(); loadObjectifs(); } catch(e) {}
+}
+</script>
+</body>
+</html>
