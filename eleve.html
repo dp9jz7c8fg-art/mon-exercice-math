@@ -140,7 +140,7 @@
     <div class="objectif-card">
         <div class="oc-title">🎯 Mon objectif de la semaine</div>
         <div id="objectif-list"><div class="no-obj">Chargement…</div></div>
-        <a href="suivi.html" class="oc-link">Gérer mes objectifs →</a>
+        <a href="https://calendly.com/laclassedestef" target="_blank" class="oc-link">📅 Réserver un cours avec Stef →</a>
     </div>
 
     <!-- ── GRILLE 4 CHAPITRES ── -->
@@ -341,34 +341,10 @@ requireAuth(async (user, profile) => {
     loadObjectif(user.uid);
 });
 
-async function loadNextRDV(uid) {
-    try {
-        const snap = await db.collection('bookings').where('userId','==',uid).get();
-        if (!snap.empty) {
-            // Trouver le RDV le plus récent
-            let latest = null;
-            snap.forEach(doc => {
-                const d = doc.data();
-                if (!latest) latest = d;
-                else {
-                    // Comparer par weekStart + time
-                    const a = (latest.weekStart||'') + (latest.time||'');
-                    const b = (d.weekStart||'') + (d.time||'');
-                    if (b > a) latest = d;
-                }
-            });
-            if (latest) {
-                const dayCapital = (latest.day||'').charAt(0).toUpperCase() + (latest.day||'').slice(1);
-                document.getElementById('rdv-value').innerHTML = 
-                    `<span style="font-size:16px;font-weight:800;color:#2ecc71;">${dayCapital} à ${latest.time}</span>` +
-                    `<br><span style="font-size:11px;color:rgba(46,204,113,0.5);">Semaine du ${latest.weekStart||'—'}</span>`;
-            }
-        } else {
-            document.getElementById('rdv-value').innerHTML = '<span class="no-rdv">Aucun RDV prévu — <a href="https://calendly.com/laclassedestef" target="_blank" style="color:#2ecc71;">Réserver</a></span>';
-        }
-    } catch(e) {
-        document.getElementById('rdv-value').innerHTML = '<span class="no-rdv"><a href="https://calendly.com/laclassedestef" target="_blank" style="color:#2ecc71;">Réserver un cours</a></span>';
-    }
+function loadNextRDV(uid) {
+    // Lien direct Calendly - les RDV se gèrent via Calendly
+    document.getElementById('rdv-value').innerHTML = 
+        `<a href="https://calendly.com/laclassedestef" target="_blank" style="color:#2ecc71;font-weight:700;font-size:14px;text-decoration:none;">📅 Réserver un cours avec Stef</a>`;
 }
 
 async function loadObjectif(uid) {

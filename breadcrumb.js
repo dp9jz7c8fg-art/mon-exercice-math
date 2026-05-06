@@ -23,8 +23,6 @@ const SITEMAP = {
     'atelier-emotions.html':   { label: '💚 Émotions', parent: 'dev-soi.html' },
     'atelier-profil.html':     { label: '🔍 Profil apprentissage', parent: 'dev-soi.html' },
     'maths.html':              { label: '📐 Maths', parent: 'eleve.html' },
-    'suivi.html':              { label: '📋 Suivi', parent: 'maths.html' },
-    'agenda.html':             { label: '📅 Agenda', parent: 'suivi.html' },
     'exercices-en-ligne.html': { label: '💻 Exercices', parent: 'maths.html' },
     '1ere-annee.html':         { label: '1️⃣ 1ère année', parent: 'exercices-en-ligne.html' },
     '2eme-annee.html':         { label: '2️⃣ 2ème année', parent: 'exercices-en-ligne.html' },
