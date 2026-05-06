@@ -24,7 +24,7 @@
         .ep-badges a:hover{background:rgba(46,204,113,0.15);border-color:rgba(46,204,113,0.3)}
         .ep-logout{background:none;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:6px 12px;font-size:11px;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.3);cursor:pointer;transition:all 0.15s;white-space:nowrap}
         .ep-logout:hover{border-color:rgba(239,68,68,0.3);color:#ef4444}
-        .profile-rdv{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(46,204,113,0.05);border:1px solid rgba(46,204,113,0.1);border-radius:12px}
+        .profile-rdv{display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(46,204,113,0.08);border:2px solid rgba(46,204,113,0.25);border-radius:14px}
         .rdv-icon-btn{font-size:20px;flex-shrink:0}
         .rdv-details{display:flex;flex-direction:column;gap:1px;flex:1}
         .rdv-label{font-size:10px;color:rgba(46,204,113,0.5);font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
@@ -128,7 +128,7 @@
             <button class="ep-logout" onclick="logout()">Déconnexion</button>
         </div>
         <div class="profile-rdv" id="profile-rdv">
-            <span class="rdv-icon-btn">📅</span>
+            <span class="rdv-icon-btn" style="font-size:28px;">📅</span>
             <div class="rdv-details">
                 <div class="rdv-label">Prochain rendez-vous</div>
                 <div class="rdv-value" id="rdv-value"><span class="no-rdv">Aucun RDV prévu</span></div>
@@ -343,14 +343,32 @@ requireAuth(async (user, profile) => {
 
 async function loadNextRDV(uid) {
     try {
-        const snap = await db.collection('bookings').where('userId','==',uid).orderBy('createdAt','desc').limit(1).get();
+        const snap = await db.collection('bookings').where('userId','==',uid).get();
         if (!snap.empty) {
-            const b = snap.docs[0].data();
-            document.getElementById('rdv-value').innerHTML = `<strong>${b.day} ${b.time}</strong> — sem. du ${b.weekStart}`;
+            // Trouver le RDV le plus récent
+            let latest = null;
+            snap.forEach(doc => {
+                const d = doc.data();
+                if (!latest) latest = d;
+                else {
+                    // Comparer par weekStart + time
+                    const a = (latest.weekStart||'') + (latest.time||'');
+                    const b = (d.weekStart||'') + (d.time||'');
+                    if (b > a) latest = d;
+                }
+            });
+            if (latest) {
+                const dayCapital = (latest.day||'').charAt(0).toUpperCase() + (latest.day||'').slice(1);
+                document.getElementById('rdv-value').innerHTML = 
+                    `<span style="font-size:16px;font-weight:800;color:#2ecc71;">${dayCapital} à ${latest.time}</span>` +
+                    `<br><span style="font-size:11px;color:rgba(46,204,113,0.5);">Semaine du ${latest.weekStart||'—'}</span>`;
+            }
         } else {
             document.getElementById('rdv-value').innerHTML = '<span class="no-rdv">Aucun RDV prévu — <a href="https://calendly.com/laclassedestef" target="_blank" style="color:#2ecc71;">Réserver</a></span>';
         }
-    } catch(e) {}
+    } catch(e) {
+        document.getElementById('rdv-value').innerHTML = '<span class="no-rdv"><a href="https://calendly.com/laclassedestef" target="_blank" style="color:#2ecc71;">Réserver un cours</a></span>';
+    }
 }
 
 async function loadObjectif(uid) {
