@@ -245,17 +245,22 @@
             <button class="modal-close-btn" onclick="closeModal('methodo-modal')">✕</button>
         </div>
         <p style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;text-align:center;">Petits ateliers en groupe ou en solo pour apprendre à apprendre. Le but : devenir un super apprenant ! 🚀</p>
-        <div class="ateliers-list">
-            <div class="atelier-item"><div class="atelier-name">🌟 C'est quoi, bien apprendre ?</div><div class="atelier-sub">Les secrets pour que ça rentre</div></div>
-            <div class="atelier-item"><div class="atelier-name">🧠 Ton cerveau, c'est un super pouvoir</div><div class="atelier-sub">Comprendre comment il marche pour apprendre plus vite</div></div>
-            <div class="atelier-item"><div class="atelier-name">🎯 Focus mode : ON</div><div class="atelier-sub">Maîtrise ta concentration en 5 étapes</div></div>
-            <div class="atelier-item"><div class="atelier-name">📝 Notes de ouf</div><div class="atelier-sub">Prendre des notes qui te sauvent vraiment</div></div>
-            <div class="atelier-item"><div class="atelier-name">🏋️ Mémo warrior</div><div class="atelier-sub">Entraîne ta mémoire et retiens tout facilement</div></div>
-            <div class="atelier-item"><div class="atelier-name">🗂️ Organise tes idées</div><div class="atelier-sub">Structurer et synthétiser tes cours sans stress</div></div>
-            <div class="atelier-item"><div class="atelier-name">⏱️ Time management ninja <span class="badge-bonus">BONUS</span></div><div class="atelier-sub">Organiser ton temps et tes deadlines</div></div>
-            <div class="atelier-item"><div class="atelier-name">🔥 Révise smart, pas hard <span class="badge-bonus">BONUS</span></div><div class="atelier-sub">Techniques de révision qui marchent vraiment</div></div>
-            <div class="atelier-item"><div class="atelier-name">🌍 Parler une autre langue ? Challenge accepted ! <span class="badge-bonus">BONUS</span></div><div class="atelier-sub">Apprendre une langue en mode fun</div></div>
+        <div class="ateliers-list" id="methodo-list"></div>
+    </div>
+</div>
+
+<!-- MODAL DESCRIPTIF ATELIER -->
+<div class="modal-overlay" id="desc-modal">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <div class="modal-title" id="desc-title"></div>
+            <button class="modal-close-btn" onclick="closeModal('desc-modal')">✕</button>
         </div>
+        <div id="desc-content"></div>
+        <a href="https://calendly.com/laclassedestef" target="_blank" class="ch-btn" style="margin-top:8px;background:rgba(46,204,113,0.12);border-color:rgba(46,204,113,0.3);color:#2ecc71;justify-content:center;font-size:14px;padding:12px;">
+            <span>📅</span> Réserver ma place
+        </a>
     </div>
 </div>
 
@@ -268,16 +273,7 @@
             <button class="modal-close-btn" onclick="closeModal('devsoi-modal')">✕</button>
         </div>
         <p style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;text-align:center;">Petits ateliers pour apprendre à mieux se connaître, gérer ses émotions et construire son avenir. 💚</p>
-        <div class="ateliers-list">
-            <div class="atelier-item"><div class="atelier-name">⚡ Quel est ton super pouvoir ?</div><div class="atelier-sub">Découvre ton profil d'apprentissage</div></div>
-            <div class="atelier-item"><div class="atelier-name">🎨 Les 8 intelligences : trouve la tienne</div><div class="atelier-sub">Tu es peut-être intelligent autrement</div></div>
-            <div class="atelier-item"><div class="atelier-name">🔥 Motivation on !</div><div class="atelier-sub">Rester motivé même quand c'est dur</div></div>
-            <div class="atelier-item"><div class="atelier-name">💚 Émotions : les comprendre, les dompter</div><div class="atelier-sub">Gérer le stress, la peur, les doutes</div></div>
-            <div class="atelier-item"><div class="atelier-name">💪 Je peux le faire !</div><div class="atelier-sub">Construire sa confiance en soi</div></div>
-            <div class="atelier-item"><div class="atelier-name">🎤 Les oraux, c'est pas la mort</div><div class="atelier-sub">S'exprimer sans stresser</div></div>
-            <div class="atelier-item"><div class="atelier-name">🤝 Ensemble c'est mieux <span class="badge-bonus">BONUS</span></div><div class="atelier-sub">Travailler en groupe sans se tuer</div></div>
-            <div class="atelier-item"><div class="atelier-name">🧭 Mon futur, c'est maintenant <span class="badge-bonus">BONUS</span></div><div class="atelier-sub">Orientation scolaire sans pression</div></div>
-        </div>
+        <div class="ateliers-list" id="devsoi-list"></div>
     </div>
 </div>
 
@@ -308,6 +304,122 @@ let currentUserData = null;
 let selectedStars = 5;
 
 const STATUS_ICONS = {'not-started':'○','in-progress':'◐','completed':'✓'};
+
+// ── Données ateliers ──
+const METHODO_ATELIERS = [
+    { id:'m1', icon:'🌟', name:"C'est quoi, bien apprendre ?", sub:"Les secrets pour que ça rentre", bonus:false,
+      quoi:"Un atelier pour comprendre ce qui rend l'apprentissage efficace et découvrir les stratégies qui font vraiment la différence.",
+      public:"Tous niveaux", objectifs:"Identifier ses habitudes, découvrir des stratégies efficaces", dynamique:"Interactif, quiz, échanges en groupe", lieu:"En classe ou en ligne" },
+    { id:'m2', icon:'🧠', name:"Ton cerveau, c'est un super pouvoir", sub:"Comprendre comment il marche pour apprendre plus vite", bonus:false,
+      quoi:"On explore ensemble le fonctionnement du cerveau : mémoire, concentration, émotions et apprentissage.",
+      public:"Tous niveaux", objectifs:"Comprendre la plasticité cérébrale, mieux mémoriser", dynamique:"Présentation, expériences, jeux de mémoire", lieu:"En classe ou en ligne" },
+    { id:'m3', icon:'🎯', name:"Focus mode : ON", sub:"Maîtrise ta concentration en 5 étapes", bonus:false,
+      quoi:"Des techniques concrètes pour améliorer ta concentration et éviter les distractions.",
+      public:"Tous niveaux", objectifs:"Techniques de concentration, gestion des distractions", dynamique:"Exercices pratiques, défis chrono", lieu:"En classe ou en ligne" },
+    { id:'m4', icon:'📝', name:"Notes de ouf", sub:"Prendre des notes qui te sauvent vraiment", bonus:false,
+      quoi:"Apprends à prendre des notes utiles : mind maps, Cornell, sketchnotes...",
+      public:"Tous niveaux", objectifs:"Maîtriser différentes méthodes de prise de notes", dynamique:"Pratique sur cours réels, comparaison de méthodes", lieu:"En classe" },
+    { id:'m5', icon:'🏋️', name:"Mémo warrior", sub:"Entraîne ta mémoire et retiens tout facilement", bonus:false,
+      quoi:"Des techniques de mémorisation éprouvées : répétition espacée, associations, palais de la mémoire.",
+      public:"Tous niveaux", objectifs:"Développer des stratégies de mémorisation durables", dynamique:"Jeux de mémoire, flashcards, défis", lieu:"En classe ou en ligne" },
+    { id:'m6', icon:'🗂️', name:"Organise tes idées", sub:"Structurer et synthétiser tes cours sans stress", bonus:false,
+      quoi:"Comment faire une bonne synthèse, créer des fiches efficaces et structurer ses idées.",
+      public:"Tous niveaux", objectifs:"Créer des fiches, synthèses et mind maps efficaces", dynamique:"Atelier pratique sur matière réelle", lieu:"En classe" },
+    { id:'m7', icon:'⏱️', name:"Time management ninja", sub:"Organiser ton temps et tes deadlines", bonus:true,
+      quoi:"Gérer son agenda, ses priorités et éviter la procrastination avec des outils simples.",
+      public:"À partir de la 3e", objectifs:"Planning hebdomadaire, gestion des priorités", dynamique:"Création d'un planning personnel", lieu:"En classe ou en ligne" },
+    { id:'m8', icon:'🔥', name:"Révise smart, pas hard", sub:"Techniques de révision qui marchent vraiment", bonus:true,
+      quoi:"Les meilleures techniques de révision : active recall, test yourself, interleaving...",
+      public:"Tous niveaux", objectifs:"Réviser efficacement, réduire le stress des examens", dynamique:"Mise en pratique immédiate, auto-évaluation", lieu:"En classe ou en ligne" },
+    { id:'m9', icon:'🌍', name:"Parler une autre langue ? Challenge accepted !", sub:"Apprendre une langue en mode fun", bonus:true,
+      quoi:"Des stratégies pour apprendre une langue de façon engageante et efficace.",
+      public:"Tous niveaux", objectifs:"Méthodes immersives, outils numériques, motivation", dynamique:"Jeux de rôle, apps, échanges", lieu:"En classe ou en ligne" },
+];
+
+const DEVSOI_ATELIERS = [
+    { id:'d1', icon:'⚡', name:"Quel est ton super pouvoir ?", sub:"Découvre ton profil d'apprentissage", bonus:false,
+      quoi:"Un atelier pour identifier ton style d'apprentissage unique et l'exploiter au maximum.",
+      public:"Tous niveaux", objectifs:"Découvrir son profil visuel/auditif/kinesthésique", dynamique:"Tests, échanges, plan d'action personnel", lieu:"En classe ou en ligne" },
+    { id:'d2', icon:'🎨', name:"Les 8 intelligences : trouve la tienne", sub:"Tu es peut-être intelligent autrement", bonus:false,
+      quoi:"Basé sur la théorie de Gardner, on explore les 8 formes d'intelligence pour valoriser tes forces.",
+      public:"Tous niveaux", objectifs:"Identifier ses intelligences dominantes, se valoriser", dynamique:"Quiz, activités créatives, réflexion", lieu:"En classe ou en ligne" },
+    { id:'d3', icon:'🔥', name:"Motivation on !", sub:"Rester motivé même quand c'est dur", bonus:false,
+      quoi:"Comprendre ce qui te motive et créer des stratégies pour maintenir le cap.",
+      public:"Tous niveaux", objectifs:"Trouver ses moteurs, gérer les baisses de motivation", dynamique:"Réflexion personnelle, partage, outils", lieu:"En classe ou en ligne" },
+    { id:'d4', icon:'💚', name:"Émotions : les comprendre, les dompter", sub:"Gérer le stress, la peur, les doutes", bonus:false,
+      quoi:"Apprendre à reconnaître et réguler ses émotions pour mieux vivre l'école.",
+      public:"Tous niveaux", objectifs:"Identifier et gérer ses émotions, réduire le stress", dynamique:"Techniques de régulation, jeux de rôle", lieu:"En classe" },
+    { id:'d5', icon:'💪', name:"Je peux le faire !", sub:"Construire sa confiance en soi", bonus:false,
+      quoi:"Des outils concrets pour développer l'estime de soi et oser prendre sa place.",
+      public:"Tous niveaux", objectifs:"Renforcer l'estime de soi, surmonter les blocages", dynamique:"Exercices, défis, bienveillance collective", lieu:"En classe" },
+    { id:'d6', icon:'🎤', name:"Les oraux, c'est pas la mort", sub:"S'exprimer sans stresser", bonus:false,
+      quoi:"Techniques pour préparer et réussir ses exposés, interrogations orales et présentations.",
+      public:"Tous niveaux", objectifs:"Gérer le trac, structurer un oral, capter l'attention", dynamique:"Mise en situation, feedback bienveillant", lieu:"En classe" },
+    { id:'d7', icon:'🤝', name:"Ensemble c'est mieux", sub:"Travailler en groupe sans se tuer", bonus:true,
+      quoi:"Comment collaborer efficacement, gérer les conflits et tirer le meilleur du travail d'équipe.",
+      public:"Tous niveaux", objectifs:"Coopération, rôles en équipe, communication", dynamique:"Projets collaboratifs, jeux coopératifs", lieu:"En classe" },
+    { id:'d8', icon:'🧭', name:"Mon futur, c'est maintenant", sub:"Orientation scolaire sans pression", bonus:true,
+      quoi:"Explorer ses intérêts, ses valeurs et les filières possibles pour construire son projet d'avenir.",
+      public:"À partir de la 4e", objectifs:"Connaissance de soi, exploration des métiers", dynamique:"Tests d'orientation, témoignages, plan", lieu:"En classe ou en ligne" },
+];
+
+function buildAtelierItem(atelier, listId) {
+    return `<div class="atelier-item" style="gap:8px;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+            <div style="flex:1;">
+                <div class="atelier-name">${atelier.icon} ${atelier.name}${atelier.bonus ? ' <span class="badge-bonus">BONUS</span>' : ''}</div>
+                <div class="atelier-sub">${atelier.sub}</div>
+            </div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:4px;">
+            <button onclick="openDesc('${atelier.id}')" style="flex:1;padding:7px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:all 0.15s;" onmouseenter="this.style.borderColor='rgba(46,204,113,0.3)';this.style.color='#2ecc71'" onmouseleave="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='rgba(255,255,255,0.5)'">
+                📋 Descriptif
+            </button>
+            <a href="https://calendly.com/laclassedestef" target="_blank" style="flex:1;padding:7px;border-radius:8px;border:1px solid rgba(46,204,113,0.2);background:rgba(46,204,113,0.06);color:rgba(46,204,113,0.7);font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:4px;transition:all 0.15s;" onmouseenter="this.style.background='rgba(46,204,113,0.12)'" onmouseleave="this.style.background='rgba(46,204,113,0.06)'">
+                📅 Réserver
+            </a>
+        </div>
+    </div>`;
+}
+
+function buildAteliersList(ateliers, containerId) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    el.innerHTML = ateliers.map(a => buildAtelierItem(a)).join('');
+}
+
+const ALL_ATELIERS = [...METHODO_ATELIERS, ...DEVSOI_ATELIERS];
+
+function openDesc(id) {
+    const atelier = ALL_ATELIERS.find(a => a.id === id);
+    if (!atelier) return;
+    document.getElementById('desc-title').textContent = atelier.icon + ' ' + atelier.name;
+    document.getElementById('desc-content').innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:10px;">
+            <p style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;">${atelier.quoi}</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:10px;">
+                    <div style="font-size:9px;font-weight:700;color:rgba(46,204,113,0.5);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">👥 Public</div>
+                    <div style="font-size:12px;color:#e8f5e9;">${atelier.public}</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:10px;">
+                    <div style="font-size:9px;font-weight:700;color:rgba(46,204,113,0.5);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">📍 Lieu</div>
+                    <div style="font-size:12px;color:#e8f5e9;">${atelier.lieu}</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:10px;grid-column:span 2;">
+                    <div style="font-size:9px;font-weight:700;color:rgba(46,204,113,0.5);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">🎯 Objectifs</div>
+                    <div style="font-size:12px;color:#e8f5e9;">${atelier.objectifs}</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:10px;grid-column:span 2;">
+                    <div style="font-size:9px;font-weight:700;color:rgba(46,204,113,0.5);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">⚡ Dynamique</div>
+                    <div style="font-size:12px;color:#e8f5e9;">${atelier.dynamique}</div>
+                </div>
+            </div>
+        </div>`;
+    closeModal('methodo-modal');
+    closeModal('devsoi-modal');
+    document.getElementById('desc-modal').classList.add('open');
+}
 const STATUS_LABELS = {'not-started':'Pas entamé','in-progress':'En cours','completed':'Atteint'};
 const STATUS_CYCLE = ['not-started','in-progress','completed'];
 
@@ -338,6 +450,9 @@ requireAuth(async (user, profile) => {
 
     // RDV
     loadNextRDV(user.uid);
+    // Construire les listes d'ateliers
+    buildAteliersList(METHODO_ATELIERS, 'methodo-list');
+    buildAteliersList(DEVSOI_ATELIERS, 'devsoi-list');
 
     // Objectif semaine
     loadObjectif(user.uid);

@@ -13,11 +13,11 @@
         .content{width:100%;max-width:600px;padding:20px 14px 60px;display:flex;flex-direction:column;gap:20px}
 
         /* Profile card */
-        .profile-card{background:rgba(10,30,16,0.55);border:2px solid rgba(40,100,55,0.3);border-radius:20px;padding:28px 24px;display:flex;flex-direction:column;align-items:center;gap:14px;backdrop-filter:blur(12px);position:relative;overflow-x:hidden}
+        .profile-card{background:rgba(10,30,16,0.55);border:2px solid rgba(40,100,55,0.3);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;align-items:center;gap:10px;backdrop-filter:blur(12px);position:relative;overflow-x:hidden}
         .profile-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 40% 40%,rgba(46,204,113,0.03),transparent 50%);pointer-events:none}
-        .avatar-big{font-size:64px;width:100px;height:100px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(46,204,113,0.06);border:3px solid rgba(46,204,113,0.25);box-shadow:0 0 25px rgba(46,204,113,0.08);cursor:pointer;transition:border-color 0.2s}
+        .avatar-big{font-size:46px;width:76px;height:76px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(46,204,113,0.06);border:3px solid rgba(46,204,113,0.25);box-shadow:0 0 25px rgba(46,204,113,0.08);cursor:pointer;transition:border-color 0.2s}
         .avatar-big:hover{border-color:rgba(46,204,113,0.5)}
-        .profile-name{font-family:'Playfair Display',serif;font-style:italic;font-size:26px;font-weight:700;background:linear-gradient(135deg,#2ecc71,#a8f0c0,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .profile-name{font-family:'Playfair Display',serif;font-style:italic;font-size:20px;font-weight:700;background:linear-gradient(135deg,#2ecc71,#a8f0c0,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
         .profile-email{font-size:12px;color:rgba(255,255,255,0.3)}
         .profile-joined{font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:0.06em;text-transform:uppercase}
         .btn-avatar{background:rgba(46,204,113,0.06);border:1px solid rgba(46,204,113,0.15);border-radius:8px;padding:8px 16px;color:rgba(46,204,113,0.5);font-size:12px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:all 0.15s}
@@ -143,6 +143,12 @@
             </div>
         </div>
 
+        <!-- Participation ateliers -->
+        <div class="section">
+            <div class="section-title">🎓 Ma participation aux cours & ateliers</div>
+            <div id="participation-list"><div class="no-items">Chargement…</div></div>
+        </div>
+
         <!-- Succès -->
         <div class="section">
             <div class="section-title">🏆 Succès</div>
@@ -186,6 +192,7 @@ requireAuth((user, profile) => {
     renderProfile(profile);
     renderTimeline();
     renderBadgesSummary(profile);
+    renderParticipation();
     renderMindmap(profile);
 });
 
@@ -278,6 +285,70 @@ async function renderTimeline() {
         html += '</div>';
         container.innerHTML = html;
     } catch(e) { container.innerHTML = '<div class="no-items">Erreur de chargement</div>'; }
+}
+
+async function renderParticipation() {
+    const container = document.getElementById('participation-list');
+    // Pour l'instant, afficher les réservations de cours comme participation
+    // + les activités d'ateliers sauvegardées
+    try {
+        const [bookSnap, actSnap] = await Promise.all([
+            db.collection('bookings').where('userId','==',currentUser.uid).orderBy('createdAt','desc').get(),
+            db.collection('activities').where('userId','==',currentUser.uid).get().catch(()=>({docs:[]}))
+        ]);
+
+        let html = '';
+
+        // Cours réservés
+        if (!bookSnap.empty) {
+            bookSnap.forEach(doc => {
+                const b = doc.data();
+                const dayC = (b.day||'').charAt(0).toUpperCase()+(b.day||'').slice(1);
+                html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(0,0,0,0.15);border-radius:10px;">
+                    <span style="font-size:18px;">📐</span>
+                    <div style="flex:1;">
+                        <div style="font-size:13px;font-weight:600;color:#e8f5e9;">Cours de maths</div>
+                        <div style="font-size:11px;color:rgba(255,255,255,0.3);">${dayC} ${b.time} — sem. du ${b.weekStart||''}</div>
+                    </div>
+                </div>`;
+            });
+        }
+
+        // Ateliers complétés (activités sauvegardées)
+        const ATELIER_NAMES = {
+            'cerveau': { icon:'🧠', name:"Ton cerveau, c'est un super pouvoir", res:'Fiches neurosciences' },
+            'organisation': { icon:'📋', name:'Organise tes idées', res:'Templates de fiches' },
+            'planification': { icon:'📅', name:'Time management ninja', res:'Modèle de planning' },
+            'synthese': { icon:'📝', name:'Notes de ouf', res:'Guide prise de notes' },
+            'memorisation': { icon:'🏋️', name:'Mémo warrior', res:'Flashcards et techniques' },
+            'consignes': { icon:'📖', name:'Focus mode : ON', res:'Checklist concentration' },
+        };
+
+        const actDocs = actSnap.docs || [];
+        actDocs.forEach(doc => {
+            const d = doc.data();
+            const atelier = d.atelier || '';
+            const info = ATELIER_NAMES[atelier] || { icon:'🎓', name:'Atelier '+atelier, res:'Ressources' };
+            html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(46,204,113,0.04);border:1px solid rgba(46,204,113,0.1);border-radius:10px;">
+                <span style="font-size:18px;">${info.icon}</span>
+                <div style="flex:1;">
+                    <div style="font-size:13px;font-weight:600;color:#e8f5e9;">${info.name}</div>
+                    <div style="font-size:11px;color:rgba(46,204,113,0.4);">Atelier complété ✓</div>
+                </div>
+                <button onclick="alert('Ressources : ${info.res} — disponibles bientôt !')" style="background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.2);border-radius:8px;padding:6px 10px;font-size:10px;font-family:'DM Sans',sans-serif;font-weight:700;color:rgba(46,204,113,0.7);cursor:pointer;">
+                    📂 Ressources
+                </button>
+            </div>`;
+        });
+
+        if (!html) {
+            container.innerHTML = '<div class="no-items">Aucun cours ou atelier pour le moment.</div>';
+        } else {
+            container.innerHTML = html;
+        }
+    } catch(e) {
+        container.innerHTML = '<div class="no-items">Erreur de chargement</div>';
+    }
 }
 
 function renderBadgesSummary(p) {
