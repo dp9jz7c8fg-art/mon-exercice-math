@@ -13,7 +13,7 @@
         .page{width:100%;max-width:700px;display:flex;flex-direction:column;align-items:center;padding:20px 14px 60px;gap:14px}
 
         /* ── Profil card ── */
-        .profile-card{width:100%;background:rgba(10,30,16,0.6);border:1px solid rgba(40,100,55,0.25);border-radius:20px;padding:18px 16px;display:flex;flex-direction:column;gap:12px;backdrop-filter:blur(10px)}
+        .profile-card{width:100%;background:rgba(10,30,16,0.6);border:2px solid rgba(40,100,55,0.3);border-radius:20px;padding:18px 16px;display:flex;flex-direction:column;gap:12px;backdrop-filter:blur(10px)}
         .profile-top{display:flex;align-items:center;gap:14px}
         .ep-avatar{font-size:42px;width:64px;height:64px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(46,204,113,0.08);border:2px solid rgba(46,204,113,0.2);flex-shrink:0;cursor:pointer;transition:border-color 0.2s}
         .ep-avatar:hover{border-color:rgba(46,204,113,0.5)}
@@ -32,7 +32,7 @@
         .no-rdv{color:rgba(255,255,255,0.25);font-size:12px}
 
         /* ── Objectif semaine ── */
-        .objectif-card{width:100%;background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;backdrop-filter:blur(8px)}
+        .objectif-card{width:100%;background:rgba(10,30,16,0.55);border:2px solid rgba(40,100,55,0.3);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;backdrop-filter:blur(8px)}
         .oc-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
         .objectif-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(0,0,0,0.15);border-radius:10px;cursor:pointer;transition:background 0.15s}
         .objectif-item:hover{background:rgba(0,0,0,0.25)}
@@ -52,7 +52,7 @@
 
         /* ── Grille 4 chapitres ── */
         .chapters-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%}
-        .ch-card{background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:16px;padding:16px 14px;display:flex;flex-direction:column;gap:10px;transition:all 0.2s;backdrop-filter:blur(8px)}
+        .ch-card{background:rgba(10,30,16,0.55);border:2px solid rgba(40,100,55,0.3);border-radius:16px;padding:16px 14px;display:flex;flex-direction:column;gap:10px;transition:all 0.2s;backdrop-filter:blur(8px)}
         .ch-card:hover{border-color:rgba(46,204,113,0.35);background:rgba(20,50,28,0.6)}
         .ch-header{display:flex;align-items:center;gap:10px}
         .ch-icon{font-size:26px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:12px;flex-shrink:0}
@@ -63,7 +63,7 @@
         .ch-title{font-size:14px;font-weight:700;line-height:1.2}
         .ch-desc{font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5}
         .ch-actions{display:flex;flex-direction:column;gap:6px}
-        .ch-btn{display:flex;align-items:center;gap:8px;padding:9px 12px;background:rgba(0,0,0,0.2);border-radius:8px;border:1px solid rgba(40,100,55,0.15);text-decoration:none;color:rgba(255,255,255,0.6);font-size:12px;font-weight:600;transition:all 0.15s;cursor:pointer}
+        .ch-btn{display:flex;align-items:center;gap:8px;padding:9px 12px;background:rgba(0,0,0,0.2);border-radius:8px;border:1px solid rgba(40,100,55,0.2);text-decoration:none;color:rgba(255,255,255,0.6);font-size:12px;font-weight:600;transition:all 0.15s;cursor:pointer}
         .ch-btn:hover{border-color:rgba(46,204,113,0.3);color:#2ecc71;background:rgba(46,204,113,0.05)}
         .ch-btn-icon{font-size:16px;flex-shrink:0}
 
@@ -366,13 +366,19 @@ async function loadObjectif(uid) {
         let html = '';
         shown.forEach(obj => {
             const st = obj.status||'not-started';
+            const statusEmoji = {'not-started':'⬜','in-progress':'🟡','completed':'✅'}[st];
+            const author = obj.addedBy === 'stef' ? 'Stef' : 'Moi';
+            const date = obj.createdAt ? obj.createdAt.toDate().toLocaleDateString('fr-FR',{day:'numeric',month:'short'}) : '';
             html += `<div class="objectif-item ${st==='completed'?'done':''}" onclick="cycleObjectif('${obj.id}','${st}')">
-                <div class="obj-status-btn ${st}">${STATUS_ICONS[st]}</div>
-                <div style="flex:1;display:flex;flex-direction:column;gap:1px;">
-                    <div class="obj-text-mini">${obj.text}</div>
-                    <div class="obj-label-mini ${st}">${STATUS_LABELS[st]}</div>
+                <span style="font-size:16px;flex-shrink:0;">🎯</span>
+                <div style="flex:1;display:flex;flex-direction:column;gap:2px;">
+                    <div class="obj-text-mini">${obj.text} ${statusEmoji}</div>
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <div class="obj-label-mini ${st}">${STATUS_LABELS[st]}</div>
+                        <span style="font-size:9px;color:rgba(255,255,255,0.18);">· ${author} · ${date}</span>
+                    </div>
                 </div>
-                <span style="font-size:14px;">🎯</span>
+                <div class="obj-status-btn ${st}" style="flex-shrink:0;">${STATUS_ICONS[st]}</div>
             </div>`;
         });
         list.innerHTML = html;
@@ -422,5 +428,12 @@ async function submitAvis() {
     } catch(e){fb.textContent='Erreur';fb.style.color='#e74c3c'}
 }
 </script>
+
+<!-- Bouton WhatsApp flottant -->
+<div style="position:fixed;bottom:24px;right:24px;z-index:100;display:flex;flex-direction:column;align-items:center;gap:8px;">
+    <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:0.06em;text-transform:uppercase;">Discuter</div>
+    <a href="https://wa.me/32472637660" target="_blank" style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;font-size:26px;text-decoration:none;box-shadow:0 4px 20px rgba(37,211,102,0.4);transition:transform 0.2s;" onmouseenter="this.style.transform='scale(1.1)'" onmouseleave="this.style.transform='scale(1)'">💬</a>
+</div>
+
 </body>
 </html>
