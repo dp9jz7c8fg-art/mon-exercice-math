@@ -132,9 +132,10 @@
     <!-- STEP 1 : Identification -->
     <div class="step active" id="step-1">
         <div class="id-box">
-            <div class="id-title">Entrez le nom et le prénom de l'élève</div>
+            <div class="id-title">Entrez les informations de l'élève</div>
             <input type="text" class="id-input" id="child-lastname" placeholder="Nom de famille" autocomplete="off">
             <input type="text" class="id-input" id="child-firstname" placeholder="Prénom" autocomplete="off">
+            <input type="email" class="id-input" id="child-email" placeholder="Adresse email de l'élève" autocomplete="off">
             <button class="id-btn" onclick="findChild()">Continuer</button>
             <div id="id-error"></div>
         </div>
@@ -242,6 +243,7 @@ const ROLES=[
 let childProfile=null;let childId=null;let selectedRole=null;let selectedStars=5;
 
 document.getElementById('child-firstname').addEventListener('keydown',e=>{if(e.key==='Enter')findChild()});
+document.getElementById('child-email').addEventListener('keydown',e=>{if(e.key==='Enter')findChild()});
 document.getElementById('obj-input-partner').addEventListener('keydown',e=>{if(e.key==='Enter')addObjPartner()});
 
 // Rôles
