@@ -90,12 +90,18 @@ requireAuth((user, profile) => {
 async function loadObjectifs() {
     const list = document.getElementById('obj-list');
     try {
-        const snap = await db.collection('objectifs').where('userId','==',currentUser.uid).orderBy('createdAt','desc').get();
+        const snap = await db.collection('objectifs').where('userId','==',currentUser.uid).get();
         if (snap.empty) { list.innerHTML = '<div class="no-items">Aucun objectif pour le moment.</div>'; return; }
 
         const docs = [];
         snap.forEach(doc => docs.push({id:doc.id,...doc.data()}));
-        docs.sort((a,b) => (a.status==='completed'?1:0)-(b.status==='completed'?1:0));
+        docs.sort((a,b) => {
+            const da = a.createdAt ? a.createdAt.toMillis() : 0;
+            const db2 = b.createdAt ? b.createdAt.toMillis() : 0;
+            if(a.status==='completed' && b.status!=='completed') return 1;
+            if(a.status!=='completed' && b.status==='completed') return -1;
+            return db2 - da;
+        });
 
         let html = '';
         docs.forEach(obj => {

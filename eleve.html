@@ -510,12 +510,18 @@ async function loadNextRDV(uid) {
 async function loadObjectif(uid) {
     const list = document.getElementById('objectif-list');
     try {
-        const snap = await db.collection('objectifs').where('userId','==',uid).orderBy('createdAt','desc').get();
+        const snap = await db.collection('objectifs').where('userId','==',uid).get();
         if (snap.empty) { list.innerHTML = '<div class="no-obj">Aucun objectif — <a href="suivi.html" style="color:#2ecc71;">En ajouter un</a></div>'; return; }
         const docs = [];
         snap.forEach(doc => docs.push({id:doc.id,...doc.data()}));
-        // Trier: non-atteints en premier, max 3
-        docs.sort((a,b) => (a.status==='completed'?1:0)-(b.status==='completed'?1:0));
+        // Trier: par date desc, non-atteints en premier
+        docs.sort((a,b) => {
+            const dateA = a.createdAt ? a.createdAt.toMillis() : 0;
+            const dateB = b.createdAt ? b.createdAt.toMillis() : 0;
+            if(a.status==='completed' && b.status!=='completed') return 1;
+            if(a.status!=='completed' && b.status==='completed') return -1;
+            return dateB - dateA;
+        });
         const shown = docs.slice(0,3); // max 3 objectifs affichés
         let html = '';
         shown.forEach(obj => {
