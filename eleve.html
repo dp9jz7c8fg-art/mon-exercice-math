@@ -513,7 +513,7 @@ async function loadObjectif(uid) {
         const snap = await db.collection('objectifs').where('userId','==',uid).get();
         if (snap.empty) { list.innerHTML = '<div class="no-obj">Aucun objectif — <a href="suivi.html" style="color:#2ecc71;">En ajouter un</a></div>'; return; }
         const docs = [];
-        snap.forEach(doc => { const d = doc.data(); console.log('OBJ:', d.text, 'addedBy:', d.addedBy, 'addedByLabel:', d.addedByLabel); docs.push({id:doc.id,...d}); });
+        snap.forEach(doc => docs.push({id:doc.id,...doc.data()}));
         // Trier: par date desc, non-atteints en premier
         docs.sort((a,b) => {
             const dateA = a.createdAt ? a.createdAt.toMillis() : 0;
