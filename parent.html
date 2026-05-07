@@ -8,158 +8,121 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        body{font-family:'DM Sans',sans-serif;min-min-height:100svh;background:linear-gradient(135deg,#040804 0%,#061008 25%,#081a0e 50%,#0a2414 75%,#040804 100%);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center}
+        body{font-family:'DM Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#040804,#061008,#081a0e,#0a2414,#040804);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
         @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-        .content{width:100%;max-width:620px;padding:20px 16px 60px;display:flex;flex-direction:column;align-items:center;gap:18px}
-        .nav{width:100%;display:flex;justify-content:flex-start}
-        .nav a{color:rgba(46,204,113,0.5);text-decoration:none;font-size:13px;font-weight:600;transition:color 0.15s}
-        .nav a:hover{color:#2ecc71}
+        .content{width:100%;max-width:620px;padding:20px 14px 60px;display:flex;flex-direction:column;gap:16px;align-items:center}
         .page-header{text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center}
         .page-icon{font-size:44px}
         .page-title{font-family:'Playfair Display',serif;font-style:italic;font-size:26px;font-weight:700;background:linear-gradient(135deg,#2ecc71,#a8f0c0,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
         .page-sub{font-size:12px;color:rgba(46,204,113,0.4);letter-spacing:0.1em;text-transform:uppercase;font-weight:600}
 
-        /* ── Étapes ── */
-        .step{display:none;width:100%;flex-direction:column;gap:16px;align-items:center}
+        .step{display:none;flex-direction:column;gap:14px;width:100%}
         .step.active{display:flex}
 
-        /* ── Step 1 : Identification élève ── */
-        .id-box{background:rgba(10,30,16,0.6);border:1px solid rgba(40,100,55,0.25);border-radius:18px;padding:28px 24px;width:100%;display:flex;flex-direction:column;gap:14px;backdrop-filter:blur(8px)}
+        /* Step 1 */
+        .id-box{background:rgba(10,30,16,0.6);border:2px solid rgba(40,100,55,0.25);border-radius:18px;padding:24px 20px;width:100%;display:flex;flex-direction:column;gap:12px}
         .id-title{font-size:14px;font-weight:600;color:rgba(255,255,255,0.6);text-align:center}
         .id-input{background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:10px;padding:14px 16px;font-size:15px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none;width:100%;transition:border-color 0.2s}
         .id-input::placeholder{color:rgba(255,255,255,0.2)}
         .id-input:focus{border-color:rgba(46,204,113,0.4)}
-        .id-btn{background:#2ecc71;color:#040804;border:none;border-radius:10px;padding:14px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;transition:opacity 0.15s}
+        .id-btn{background:#2ecc71;color:#040804;border:none;border-radius:10px;padding:14px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer}
         .id-btn:hover{opacity:0.85}
-        #id-error{font-size:12px;color:#e74c3c;text-align:center;min-height:16px}
+        #id-error{font-size:12px;color:#e74c3c;text-align:center;min-height:14px}
 
-        /* ── Step 2 : Qui êtes-vous ? ── */
+        /* Step 2 - Rôle */
         .role-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%}
-        .role-btn{background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:14px;padding:16px 12px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;font-size:14px;color:#e8f5e9;font-weight:500}
-        .role-btn:hover{border-color:rgba(46,204,113,0.4);background:rgba(20,50,28,0.5)}
-        .role-btn.selected{border-color:#2ecc71;background:rgba(46,204,113,0.12)}
-        .role-icon{font-size:24px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(46,204,113,0.08);flex-shrink:0}
-        .role-btn.selected .role-icon{background:rgba(46,204,113,0.2)}
+        .role-btn{background:rgba(10,30,16,0.55);border:2px solid rgba(40,100,55,0.2);border-radius:14px;padding:14px 12px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;font-size:14px;color:#e8f5e9;font-weight:500}
+        .role-btn:hover{border-color:rgba(46,204,113,0.35)}
+        .role-btn.selected{border-color:#2ecc71;background:rgba(46,204,113,0.1)}
+        .role-icon{font-size:22px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(46,204,113,0.08);flex-shrink:0}
+        #role-error{font-size:12px;color:#e74c3c;text-align:center;min-height:14px}
 
-        /* ── Step 3 : Dashboard partenaire ── */
-        .partner-header{width:100%;display:flex;align-items:center;justify-content:space-between;background:rgba(10,30,16,0.5);border:1px solid rgba(40,100,55,0.2);border-radius:14px;padding:12px 16px}
-        .ph-left{display:flex;flex-direction:column;gap:2px}
-        .ph-child{font-size:15px;font-weight:700}
-        .ph-role{font-size:11px;color:rgba(46,204,113,0.6);font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
-        .ph-btn{background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.2);border-radius:8px;padding:6px 12px;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;color:#2ecc71;cursor:pointer;transition:all 0.15s}
-        .ph-btn:hover{background:rgba(46,204,113,0.15)}
-
-        /* Stats */
-        .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
-        .stat-box{background:rgba(10,30,16,0.5);border:1px solid rgba(40,100,55,0.2);border-radius:12px;padding:16px;text-align:center}
-        .stat-val{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:#2ecc71}
-        .stat-label{font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.06em;margin-top:4px;font-weight:600}
-
-        /* Sections */
-        .section{width:100%;background:rgba(10,30,16,0.5);border:1px solid rgba(40,100,55,0.2);border-radius:14px;padding:18px 16px;display:flex;flex-direction:column;gap:12px}
+        /* Step 3 - Dashboard */
+        .section{width:100%;background:rgba(10,30,16,0.5);border:2px solid rgba(40,100,55,0.2);border-radius:16px;padding:18px 16px;display:flex;flex-direction:column;gap:12px}
         .section-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
 
-        /* Barres de progression */
-        .prog-row{display:flex;align-items:center;gap:8px}
-        .prog-name{width:90px;font-size:11px;color:rgba(255,255,255,0.4);text-align:right;flex-shrink:0}
-        .prog-bar-bg{flex:1;height:8px;background:rgba(255,255,255,0.04);border-radius:4px;overflow-x:hidden;overflow-y:auto}
-        .prog-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#2ecc71,#27ae60)}
-        .prog-score{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);width:50px}
+        .partner-header{width:100%;display:flex;align-items:center;justify-content:space-between;background:rgba(10,30,16,0.5);border:2px solid rgba(40,100,55,0.2);border-radius:14px;padding:12px 16px}
+        .ph-child{font-size:15px;font-weight:700}
+        .ph-role{font-size:11px;color:rgba(46,204,113,0.6);font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+        .ph-btn{background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.2);border-radius:8px;padding:6px 12px;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;color:#2ecc71;cursor:pointer}
+        .ph-btn:hover{background:rgba(46,204,113,0.15)}
 
-        /* Notes/Remarques */
-        .notes-list{display:flex;flex-direction:column;gap:8px;max-height:200px;overflow-y:auto}
+        /* Objectifs */
+        .obj-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:rgba(0,0,0,0.15);border-radius:10px}
+        .obj-status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
+        .dot-ns{background:rgba(255,255,255,0.2)}
+        .dot-ip{background:#f39c12}
+        .dot-co{background:#2ecc71}
+        .obj-text-p{font-size:13px;color:#e8f5e9;flex:1;line-height:1.4}
+        .obj-meta-p{font-size:10px;color:rgba(255,255,255,0.2);margin-top:2px}
+
+        .add-obj-row{display:flex;gap:8px;margin-top:4px}
+        .add-obj-input{flex:1;background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.2);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none}
+        .add-obj-input::placeholder{color:rgba(255,255,255,0.2)}
+        .add-obj-input:focus{border-color:rgba(46,204,113,0.4)}
+        .add-obj-btn{background:#2ecc71;color:#040804;border:none;border-radius:8px;padding:10px 14px;font-size:12px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;white-space:nowrap}
+        .add-obj-btn:hover{opacity:0.85}
+
+        /* Stats cours */
+        .stats-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+        .stat-mini-box{background:rgba(0,0,0,0.2);border-radius:10px;padding:12px 8px;text-align:center}
+        .stat-mini-val{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#2ecc71}
+        .stat-mini-label{font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;margin-top:3px}
+        .calendly-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;background:rgba(46,204,113,0.06);border:1px solid rgba(46,204,113,0.2);border-radius:10px;color:#2ecc71;font-size:13px;font-weight:700;text-decoration:none;transition:all 0.15s}
+        .calendly-btn:hover{background:rgba(46,204,113,0.12);border-color:rgba(46,204,113,0.4)}
+
+        /* Notes */
         .note-card{background:rgba(0,0,0,0.2);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
-        .note-top{display:flex;justify-content:space-between;align-items:center}
-        .note-author{font-size:12px;font-weight:600;color:#e8f5e9}
-        .note-role{font-size:9px;color:rgba(46,204,113,0.5);font-weight:600;text-transform:uppercase;letter-spacing:0.04em}
+        .note-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px}
+        .note-author-name{font-size:12px;font-weight:600;color:#e8f5e9}
+        .note-role-tag{font-size:9px;color:rgba(46,204,113,0.5);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;padding:2px 6px;border-radius:4px;background:rgba(46,204,113,0.06)}
         .note-date{font-size:9px;color:rgba(255,255,255,0.2)}
         .note-text{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.5}
+        .note-reply-tag{font-size:9px;color:#f39c12;font-weight:600}
         .no-notes{font-size:12px;color:rgba(255,255,255,0.2);text-align:center;padding:8px}
 
-        /* Formulaire note */
-        .note-form{display:flex;flex-direction:column;gap:10px;margin-top:6px;padding-top:10px;border-top:1px solid rgba(40,100,55,0.15)}
-        .note-textarea{background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:8px;padding:12px;font-size:13px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none;resize:vertical;min-height:60px;width:100%}
+        .note-form{display:flex;flex-direction:column;gap:10px;padding-top:10px;border-top:1px solid rgba(40,100,55,0.1)}
+        .note-textarea{background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.2);border-radius:8px;padding:12px;font-size:13px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none;resize:vertical;min-height:70px;width:100%}
         .note-textarea::placeholder{color:rgba(255,255,255,0.2)}
         .note-textarea:focus{border-color:rgba(46,204,113,0.4)}
-        .note-submit{background:#2ecc71;color:#040804;border:none;border-radius:8px;padding:10px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;align-self:flex-end;padding-left:20px;padding-right:20px}
+        .note-options{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .note-reply-check{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.4);cursor:pointer}
+        .note-reply-check input{cursor:pointer;accent-color:#f39c12}
+        .note-submit{background:#2ecc71;color:#040804;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;margin-left:auto}
         .note-submit:hover{opacity:0.85}
-        .note-submit:disabled{opacity:0.4}
-        #note-fb{font-size:11px;text-align:center;min-height:14px}
-        .af-ok{color:#2ecc71}.af-err{color:#e74c3c}
 
-        /* Avis */
-        .avis-section{width:100%}
+        /* Avis - même style espace élève */
+        .btn-avis-bottom{width:100%;background:rgba(10,30,16,0.4);border:1px solid rgba(40,100,55,0.15);border-radius:12px;padding:12px;text-align:center;font-size:13px;font-weight:600;color:rgba(46,204,113,0.5);cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+        .btn-avis-bottom:hover{background:rgba(46,204,113,0.08);border-color:rgba(46,204,113,0.3);color:#2ecc71}
+
+        .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+        .modal-overlay.open{display:flex}
+        .modal-sheet{background:#081a0e;border:1px solid rgba(40,100,55,0.3);border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:500px;display:flex;flex-direction:column;gap:14px;max-height:85vh;overflow-y:auto}
+        .modal-handle{width:36px;height:4px;background:rgba(255,255,255,0.12);border-radius:2px;align-self:center}
+        .modal-title{font-size:16px;font-weight:700;text-align:center}
+        .modal-close-btn{align-self:flex-end;background:none;border:none;color:rgba(255,255,255,0.3);font-size:20px;cursor:pointer}
+
+        .form-row{display:flex;flex-direction:column;gap:4px}
+        .form-row label{font-size:10px;font-weight:600;color:rgba(46,204,113,0.5);text-transform:uppercase;letter-spacing:0.06em}
+        .form-row textarea{background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:8px;padding:12px;font-size:13px;font-family:'DM Sans',sans-serif;color:#e8f5e9;outline:none;resize:vertical;min-height:70px;width:100%}
+        .form-row textarea::placeholder{color:rgba(255,255,255,0.2)}
+        .form-row textarea:focus{border-color:rgba(46,204,113,0.4)}
         .stars-input{display:flex;gap:6px}
-        .star-btn{font-size:28px;cursor:pointer;color:rgba(255,255,255,0.15);transition:color 0.15s,transform 0.1s;background:none;border:none;padding:0}
+        .star-btn{font-size:26px;cursor:pointer;color:rgba(255,255,255,0.15);transition:color 0.15s;background:none;border:none;padding:0}
         .star-btn.active{color:#f39c12}
-        .star-btn:hover{transform:scale(1.2)}
-        #avis-fb{font-size:11px;text-align:center;min-height:14px}
+        .btn-submit-avis{background:#2ecc71;color:#040804;border:none;border-radius:10px;padding:12px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer}
+        .btn-submit-avis:hover{opacity:0.85}
+        #avis-fb{font-size:11px;text-align:center;min-height:14px;color:#2ecc71}
 
-        @media(max-width:520px){.role-grid{grid-template-columns:1fr}.stats-row{grid-template-columns:1fr 1fr 1fr}.page-title{font-size:22px}}
-    
-        /* ── MOBILE RESPONSIVE ── */
-        @media (max-width: 600px) {
-            .grid-2, .grid-3, .grid { grid-template-columns: 1fr !important; }
-            .grid-2 { gap: 12px !important; }
-            .space-card { padding: 22px 16px !important; }
-            .space-icon { width: 60px !important; height: 60px !important; font-size: 36px !important; }
-            .space-title { font-size: 17px !important; }
-            .space-desc { font-size: 11px !important; }
-            .card { padding: 18px 14px !important; gap: 10px !important; }
-            .card-icon { width: 50px !important; height: 50px !important; font-size: 28px !important; }
-            .card-title { font-size: 14px !important; }
-            .card-desc { font-size: 11px !important; }
-            .p-card { padding: 18px 12px !important; }
-            .p-card-icon { width: 48px !important; height: 48px !important; font-size: 28px !important; }
-            .eleve-profile { padding: 10px 14px !important; gap: 10px !important; }
-            .ep-avatar { width: 44px !important; height: 44px !important; font-size: 28px !important; }
-            .ep-name { font-size: 14px !important; }
-            .section { padding: 16px 14px !important; }
-            .section-title { font-size: 13px !important; }
-            .welcome-title, .page-title { font-size: 20px !important; }
-            .logo-wrap { padding: 10px 24px !important; }
-            .logo-wrap img { max-height: 48px !important; }
-            #breadcrumb { font-size: 10px !important; padding: 6px 12px !important; }
-            body { padding-top: 32px !important; }
-            .stats-row { gap: 6px !important; }
-            .stat-box { padding: 10px 8px !important; }
-            .stat-val { font-size: 20px !important; }
-            .stat-label { font-size: 8px !important; }
-            .btn-save, .btn-submit, .id-btn, .add-btn { padding: 14px !important; font-size: 14px !important; }
-            .avis-wrap { height: 44px !important; }
-            .avis-text { font-size: 11px !important; }
-            .social-row { gap: 12px !important; }
-            .social-link { width: 40px !important; height: 40px !important; }
-            .footer { font-size: 8px !important; }
-            .stef-inline { width: 32px !important; height: 32px !important; font-size: 18px !important; }
-            .agenda-btn { width: 40px !important; height: 40px !important; font-size: 18px !important; }
-            .tab { padding: 6px 10px !important; font-size: 10px !important; }
-            .ans-input { width: 100% !important; font-size: 16px !important; }
-            .expr-display { font-size: 16px !important; padding: 12px !important; }
-            .qcm-grid { grid-template-columns: 1fr !important; }
-            .qcm-btn { padding: 12px !important; font-size: 14px !important; }
-            .profile-card { padding: 20px 16px !important; }
-            .avatar-big { width: 80px !important; height: 80px !important; font-size: 48px !important; }
-            .profile-name { font-size: 20px !important; }
-            .mindmap-svg { height: auto !important; }
-            .content { padding-left: 12px !important; padding-right: 12px !important; }
-            .id-box { padding: 20px 16px !important; }
-            .role-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
-            .role-btn { padding: 12px 10px !important; font-size: 13px !important; }
-            .role-icon { width: 34px !important; height: 34px !important; font-size: 20px !important; }
-            .add-row { flex-direction: column !important; }
-            .add-btn { width: 100% !important; }
-            .obj-card { padding: 10px 12px !important; }
-            .section-dashed { padding: 16px 14px !important; }
-        }
-        
-</style>
+        .fb{font-size:11px;min-height:14px}
+        .fb-ok{color:#2ecc71}.fb-err{color:#e74c3c}
+
+        @media(max-width:520px){.role-grid{grid-template-columns:1fr}.stats-mini{grid-template-columns:1fr 1fr 1fr}}
+    </style>
 </head>
 <body>
 
 <div class="content">
-    <div class="nav"><a href="index.html">← Accueil</a></div>
-
     <div class="page-header">
         <span class="page-icon">🤝</span>
         <h1 class="page-title">Espace Partenaires</h1>
@@ -177,74 +140,86 @@
         </div>
     </div>
 
-    <!-- STEP 2 : Qui êtes-vous ? -->
+    <!-- STEP 2 : Rôle -->
     <div class="step" id="step-2">
         <div class="id-box">
             <div class="id-title">Vous êtes…</div>
             <div class="role-grid" id="role-grid"></div>
             <button class="id-btn" onclick="confirmRole()">Accéder au suivi</button>
-            <div id="role-error" style="font-size:12px;color:#e74c3c;text-align:center;min-height:16px"></div>
+            <div id="role-error"></div>
         </div>
     </div>
 
     <!-- STEP 3 : Dashboard -->
     <div class="step" id="step-3">
+
+        <!-- Header élève -->
         <div class="partner-header">
-            <div class="ph-left">
+            <div>
                 <div class="ph-child" id="display-child"></div>
                 <div class="ph-role" id="display-role"></div>
             </div>
             <button class="ph-btn" onclick="resetPartner()">Changer d'élève</button>
         </div>
 
-        <!-- Stats globales -->
-        <div class="stats-row">
-            <div class="stat-box"><div class="stat-val" id="s-exercises">0</div><div class="stat-label">Exercices</div></div>
-            <div class="stat-box"><div class="stat-val" id="s-correct">0</div><div class="stat-label">Corrects</div></div>
-            <div class="stat-box"><div class="stat-val" id="s-pct">0%</div><div class="stat-label">Réussite</div></div>
-        </div>
-
-        <!-- Progression -->
+        <!-- Objectifs -->
         <div class="section">
-            <div class="section-title">📊 Progression par objectif</div>
-            <div id="progression-bars"></div>
+            <div class="section-title">🎯 Objectifs de l'élève</div>
+            <div id="obj-list-partner"></div>
+            <div class="add-obj-row">
+                <input type="text" class="add-obj-input" id="obj-input-partner" placeholder="Ajouter un objectif pour l'élève…">
+                <button class="add-obj-btn" onclick="addObjPartner()">Ajouter</button>
+            </div>
+            <div class="fb" id="obj-fb-partner"></div>
         </div>
 
-        <!-- Cours & ateliers -->
+        <!-- Cours & Ateliers -->
         <div class="section">
             <div class="section-title">📅 Cours & Ateliers</div>
-            <div class="stats-row" style="margin-top:4px">
-                <div class="stat-box"><div class="stat-val" id="s-cours">0</div><div class="stat-label">Cours réservés</div></div>
-                <div class="stat-box"><div class="stat-val" id="s-badges">0</div><div class="stat-label">Badges</div></div>
-                <div class="stat-box"><div class="stat-val" id="s-ateliers">—</div><div class="stat-label">Ateliers</div></div>
+            <div class="stats-mini">
+                <div class="stat-mini-box"><div class="stat-mini-val" id="s-cours">0</div><div class="stat-mini-label">Cours réservés</div></div>
+                <div class="stat-mini-box"><div class="stat-mini-val" id="s-badges">0</div><div class="stat-mini-label">Succès</div></div>
+                <div class="stat-mini-box"><div class="stat-mini-val" id="s-exercises">0</div><div class="stat-mini-label">Exercices</div></div>
             </div>
+            <a href="https://calendly.com/laclassedestef" target="_blank" class="calendly-btn">
+                📅 Réserver un cours pour l'élève
+            </a>
         </div>
 
-        <!-- Notes partagées -->
+        <!-- Notes & Remarques -->
         <div class="section">
             <div class="section-title">📝 Notes & Remarques</div>
-            <div class="notes-list" id="notes-list"></div>
+            <div id="notes-list"></div>
             <div class="note-form">
-                <textarea class="note-textarea" id="note-text" placeholder="Ajouter une note sur l'élève…"></textarea>
-                <div style="display:flex;align-items:center;justify-content:space-between">
-                    <div id="note-fb"></div>
+                <textarea class="note-textarea" id="note-text" placeholder="Ajouter une note ou remarque sur l'élève…"></textarea>
+                <div class="note-options">
+                    <label class="note-reply-check">
+                        <input type="checkbox" id="need-reply"> Réponse souhaitée
+                    </label>
                     <button class="note-submit" id="btn-note" onclick="submitNote()">Envoyer</button>
                 </div>
+                <div class="fb" id="note-fb"></div>
             </div>
         </div>
 
         <!-- Laisser un avis -->
-        <div class="section avis-section">
-            <div class="section-title">⭐ Laisser un avis</div>
-            <div style="display:flex;flex-direction:column;gap:10px">
-                <div class="stars-input" id="stars-input"></div>
-                <textarea class="note-textarea" id="avis-text" placeholder="Votre avis sur La Classe de Stef…"></textarea>
-                <div style="display:flex;align-items:center;justify-content:space-between">
-                    <div id="avis-fb"></div>
-                    <button class="note-submit" onclick="submitAvis()">Envoyer</button>
-                </div>
-            </div>
+        <button class="btn-avis-bottom" onclick="openAvis()">✍️ Laisser un avis</button>
+
+    </div>
+</div>
+
+<!-- Modal Avis -->
+<div class="modal-overlay" id="avis-modal">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="modal-title">⭐ Laisser un avis</div>
+            <button class="modal-close-btn" onclick="closeModal('avis-modal')">✕</button>
         </div>
+        <div class="form-row"><label>Note</label><div class="stars-input" id="stars-input"></div></div>
+        <div class="form-row"><label>Votre avis</label><textarea id="avis-text" placeholder="Partagez votre expérience…"></textarea></div>
+        <button class="btn-submit-avis" onclick="submitAvis()">Envoyer</button>
+        <div id="avis-fb"></div>
     </div>
 </div>
 
@@ -257,138 +232,117 @@ const firebaseConfig={apiKey:"AIzaSyB0djV_ZDOsYngnUeceNiTUt60IEKP_Qvg",authDomai
 firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore();
 
-const ROLES = [
-    {id:'papa',label:'Papa',icon:'👨'},
-    {id:'maman',label:'Maman',icon:'👩'},
-    {id:'logopede',label:'Logopède',icon:'🗣️'},
-    {id:'neuropsy',label:'Neuropsychologue',icon:'🧠'},
-    {id:'coach',label:'Coach scolaire',icon:'🎯'},
-    {id:'prof',label:'Professeur',icon:'👩‍🏫'},
-    {id:'educateur',label:'Éducateur',icon:'🤝'},
-    {id:'autre',label:'Autre',icon:'👤'},
+const ROLES=[
+    {id:'papa',label:'Papa',icon:'👨'},{id:'maman',label:'Maman',icon:'👩'},
+    {id:'logopede',label:'Logopède',icon:'🗣️'},{id:'neuropsy',label:'Neuropsychologue',icon:'🧠'},
+    {id:'coach',label:'Coach scolaire',icon:'🎯'},{id:'prof',label:'Professeur',icon:'👩‍🏫'},
+    {id:'educateur',label:'Éducateur',icon:'🤝'},{id:'autre',label:'Autre',icon:'👤'},
 ];
 
-let childProfile = null;
-let childId = null;
-let selectedRole = null;
-let selectedStars = 5;
+let childProfile=null;let childId=null;let selectedRole=null;let selectedStars=5;
 
-// Enter keys
 document.getElementById('child-firstname').addEventListener('keydown',e=>{if(e.key==='Enter')findChild()});
+document.getElementById('obj-input-partner').addEventListener('keydown',e=>{if(e.key==='Enter')addObjPartner()});
 
-// Build role grid
-const roleGrid = document.getElementById('role-grid');
-ROLES.forEach(r => {
-    const btn = document.createElement('div');
-    btn.className = 'role-btn';
-    btn.innerHTML = `<div class="role-icon">${r.icon}</div><span>${r.label}</span>`;
-    btn.onclick = () => {
-        roleGrid.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));
-        btn.classList.add('selected');
-        selectedRole = r;
-    };
+// Rôles
+const roleGrid=document.getElementById('role-grid');
+ROLES.forEach(r=>{
+    const btn=document.createElement('div');btn.className='role-btn';
+    btn.innerHTML=`<div class="role-icon">${r.icon}</div><span>${r.label}</span>`;
+    btn.onclick=()=>{roleGrid.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');selectedRole=r};
     roleGrid.appendChild(btn);
 });
 
 // Stars
-const starsEl = document.getElementById('stars-input');
+const starsEl=document.getElementById('stars-input');
 for(let i=1;i<=5;i++){
     const btn=document.createElement('button');btn.className='star-btn active';btn.textContent='★';btn.dataset.val=i;
     btn.onclick=()=>{selectedStars=i;starsEl.querySelectorAll('.star-btn').forEach(b=>{b.classList.toggle('active',parseInt(b.dataset.val)<=i)})};
     starsEl.appendChild(btn);
 }
 
-function showStep(n){
-    document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
-    document.getElementById('step-'+n).classList.add('active');
-}
+function showStep(n){document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));document.getElementById('step-'+n).classList.add('active')}
 
-// STEP 1: Find child
+// STEP 1
 async function findChild(){
     const ln=document.getElementById('child-lastname').value.trim().toLowerCase();
     const fn=document.getElementById('child-firstname').value.trim().toLowerCase();
-    const err=document.getElementById('id-error');
-    err.textContent='';
+    const err=document.getElementById('id-error');err.textContent='';
     if(!ln||!fn){err.textContent='Veuillez remplir les deux champs.';return}
-
     try{
         const snap=await db.collection('users').get();
         let found=null;let fId=null;
         snap.forEach(doc=>{
             const d=doc.data();
-            if((d.name||'').toLowerCase()===fn && (d.lastname||'').toLowerCase()===ln){found=d;fId=doc.id}
+            if((d.name||'').toLowerCase()===fn&&(d.lastname||'').toLowerCase()===ln){found=d;fId=doc.id}
         });
         if(!found){err.textContent='Aucun élève trouvé. Vérifiez l\'orthographe.';return}
-        childProfile=found;childId=fId;
-        showStep(2);
+        childProfile=found;childId=fId;showStep(2);
     }catch(e){err.textContent='Erreur de connexion.'}
 }
 
-// STEP 2: Confirm role
+// STEP 2
 function confirmRole(){
-    const err=document.getElementById('role-error');
-    err.textContent='';
-    if(!selectedRole){err.textContent='Veuillez sélectionner votre rôle.';return}
-    showStep(3);
-    renderDashboard();
-}
-
-function resetPartner(){
-    childProfile=null;childId=null;selectedRole=null;
-    roleGrid.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));
-    document.getElementById('child-lastname').value='';
-    document.getElementById('child-firstname').value='';
-    showStep(1);
-}
-
-// STEP 3: Dashboard
-async function renderDashboard(){
-    const p=childProfile;
-    const fullName=(p.name||'')+' '+(p.lastname||'');
-    document.getElementById('display-child').textContent=fullName;
+    if(!selectedRole){document.getElementById('role-error').textContent='Sélectionnez votre rôle.';return}
+    document.getElementById('display-child').textContent=(childProfile.name||'')+' '+(childProfile.lastname||'');
     document.getElementById('display-role').textContent=selectedRole.icon+' '+selectedRole.label;
+    showStep(3);
+    loadDashboard();
+}
 
-    const totalEx=p.totalExercises||0;
-    const totalCo=p.totalCorrect||0;
-    const pct=totalEx>0?Math.round(totalCo/totalEx*100):0;
+function resetPartner(){childProfile=null;childId=null;selectedRole=null;roleGrid.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));document.getElementById('child-lastname').value='';document.getElementById('child-firstname').value='';showStep(1)}
 
-    document.getElementById('s-exercises').textContent=totalEx;
-    document.getElementById('s-correct').textContent=totalCo;
-    document.getElementById('s-pct').textContent=pct+'%';
-    document.getElementById('s-badges').textContent=(p.badges||[]).length;
-
-    // Count bookings
-    try{
-        const bSnap=await db.collection('bookings').where('userId','==',childId).get();
-        document.getElementById('s-cours').textContent=bSnap.size;
-    }catch(e){document.getElementById('s-cours').textContent='—'}
-
-    // Progression bars
-    let barsHTML='';
-
-    // Angles
-    const ang=p.scores?.angles||{done:0,correct:0};
-    barsHTML+=barRow('📐 Angles',ang.done,ang.correct);
-
-    // Fractions
-    const fracKeys=['comparer','convertir','arrondir','simplifier','add-sub','multiplier','diviser'];
-    const fracLabels={comparer:'Comparer',convertir:'Convertir',arrondir:'Arrondir',simplifier:'Simplifier','add-sub':'Add/Soustr',multiplier:'Multiplier',diviser:'Diviser'};
-    fracKeys.forEach(k=>{const s=p.scores?.fractions?.[k]||{done:0,correct:0};barsHTML+=barRow('½ '+fracLabels[k],s.done,s.correct)});
-
-    // Algèbre
-    const algKeys=['comprendre','evaluer','simplifier','parentheses','developper','factoriser','identites','polynomes','problemes'];
-    const algLabels={comprendre:'Comprendre',evaluer:'Évaluer',simplifier:'Simplifier',parentheses:'Parenthèses',developper:'Développer',factoriser:'Factoriser',identites:'Identités',polynomes:'Polynômes',problemes:'Problèmes'};
-    algKeys.forEach(k=>{const s=p.scores?.algebre?.[k]||{done:0,correct:0};barsHTML+=barRow('𝑥 '+algLabels[k],s.done,s.correct)});
-
-    document.getElementById('progression-bars').innerHTML=barsHTML;
-
-    // Load notes
+// STEP 3 - Dashboard
+async function loadDashboard(){
+    loadObjectifsPartner();
+    loadStats();
     loadNotes();
 }
 
-function barRow(name,done,correct){
-    const pct=done>0?Math.round(correct/done*100):0;
-    return `<div class="prog-row"><span class="prog-name">${name}</span><div class="prog-bar-bg"><div class="prog-bar-fill" style="width:${pct}%"></div></div><span class="prog-score">${correct}/${done}</span></div>`;
+// Objectifs
+async function loadObjectifsPartner(){
+    const list=document.getElementById('obj-list-partner');
+    try{
+        const snap=await db.collection('objectifs').where('userId','==',childId).orderBy('createdAt','desc').get();
+        if(snap.empty){list.innerHTML='<div class="no-notes">Aucun objectif pour le moment.</div>';return}
+        const ST_COLOR={'not-started':'rgba(255,255,255,0.2)','in-progress':'#f39c12','completed':'#2ecc71'};
+        const ST_LABEL={'not-started':'Pas entamé','in-progress':'En cours','completed':'Atteint'};
+        const ST_EMOJI={'not-started':'⬜','in-progress':'🟡','completed':'✅'};
+        let html='';
+        snap.forEach(doc=>{
+            const o=doc.data();const st=o.status||'not-started';
+            const date=o.createdAt?o.createdAt.toDate().toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';
+            const author=o.addedBy==='stef'?'Stef':'Élève';
+            html+=`<div class="obj-item"><div class="obj-status-dot dot-${st.replace('-','').replace('started','ns').replace('progress','ip').replace('completed','co')}"></div><div style="flex:1"><div class="obj-text-p">${o.text} ${ST_EMOJI[st]}</div><div class="obj-meta-p">${ST_LABEL[st]} · ${author} · ${date}</div></div></div>`;
+        });
+        list.innerHTML=html;
+    }catch(e){list.innerHTML='<div class="no-notes">Erreur</div>'}
+}
+
+async function addObjPartner(){
+    const text=document.getElementById('obj-input-partner').value.trim();
+    const fb=document.getElementById('obj-fb-partner');fb.textContent='';
+    if(!text){fb.textContent='Écris un objectif.';fb.className='fb fb-err';return}
+    try{
+        await db.collection('objectifs').add({
+            userId:childId,text,status:'not-started',addedBy:'stef',
+            createdAt:firebase.firestore.FieldValue.serverTimestamp()
+        });
+        document.getElementById('obj-input-partner').value='';
+        fb.textContent='✓ Objectif ajouté !';fb.className='fb fb-ok';
+        setTimeout(()=>fb.textContent='',2000);
+        loadObjectifsPartner();
+    }catch(e){fb.textContent='Erreur.';fb.className='fb fb-err'}
+}
+
+// Stats
+async function loadStats(){
+    try{
+        const bSnap=await db.collection('bookings').where('userId','==',childId).get();
+        document.getElementById('s-cours').textContent=bSnap.size;
+        document.getElementById('s-badges').textContent=(childProfile.badges||[]).length;
+        document.getElementById('s-exercises').textContent=childProfile.totalExercises||0;
+    }catch(e){}
 }
 
 // Notes
@@ -401,51 +355,61 @@ async function loadNotes(){
         snap.forEach(doc=>{
             const n=doc.data();
             const date=n.createdAt?n.createdAt.toDate().toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
-            html+=`<div class="note-card"><div class="note-top"><div><span class="note-author">${n.authorName||'Anonyme'}</span> <span class="note-role">${n.authorRole||''}</span></div><span class="note-date">${date}</span></div><div class="note-text">${n.text}</div></div>`;
+            html+=`<div class="note-card">
+                <div class="note-header">
+                    <span class="note-author-name">${n.authorName||'Anonyme'}</span>
+                    <span class="note-role-tag">${n.authorRole||''}</span>
+                    <span class="note-date">${date}</span>
+                </div>
+                <div class="note-text">${n.text}</div>
+                ${n.needReply?'<div class="note-reply-tag">⚠️ Réponse souhaitée</div>':''}
+            </div>`;
         });
         list.innerHTML=html;
-    }catch(e){list.innerHTML='<div class="no-notes">Erreur de chargement.</div>'}
+    }catch(e){list.innerHTML='<div class="no-notes">Erreur de chargement</div>'}
 }
 
 async function submitNote(){
     const text=document.getElementById('note-text').value.trim();
-    const fb=document.getElementById('note-fb');
-    const btn=document.getElementById('btn-note');
+    const needReply=document.getElementById('need-reply').checked;
+    const fb=document.getElementById('note-fb');const btn=document.getElementById('btn-note');
     fb.textContent='';
-    if(!text){fb.textContent='Écrivez une note.';fb.className='af-err';return}
+    if(!text){fb.textContent='Écris une note.';fb.className='fb fb-err';return}
     btn.disabled=true;btn.textContent='…';
     try{
         await db.collection('notes').add({
-            childId:childId,
-            childName:(childProfile.name||'')+' '+(childProfile.lastname||''),
-            authorName:selectedRole.label,
-            authorRole:selectedRole.id,
-            authorIcon:selectedRole.icon,
-            text:text,
+            childId,childName:(childProfile.name||'')+' '+(childProfile.lastname||''),
+            authorName:selectedRole.label,authorRole:selectedRole.id,authorIcon:selectedRole.icon,
+            text,needReply,
             createdAt:firebase.firestore.FieldValue.serverTimestamp()
         });
-        fb.textContent='✓ Note ajoutée !';fb.className='af-ok';
+        fb.textContent='✓ Note ajoutée !';fb.className='fb fb-ok';
         document.getElementById('note-text').value='';
+        document.getElementById('need-reply').checked=false;
         loadNotes();
-    }catch(e){fb.textContent='Erreur.';fb.className='af-err'}
+    }catch(e){fb.textContent='Erreur.';fb.className='fb fb-err'}
     btn.disabled=false;btn.textContent='Envoyer';
 }
 
 // Avis
+function openAvis(){document.getElementById('avis-modal').classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')})});
+
 async function submitAvis(){
     const text=document.getElementById('avis-text').value.trim();
-    const fb=document.getElementById('avis-fb');
-    fb.textContent='';
-    if(!text||text.length<10){fb.textContent='Votre avis doit contenir au moins 10 caractères.';fb.className='af-err';return}
+    const fb=document.getElementById('avis-fb');fb.textContent='';
+    if(!text||text.length<5){fb.textContent='Votre avis doit contenir au moins quelques mots.';fb.style.color='#e74c3c';return}
     try{
         await db.collection('avis').add({
-            author:selectedRole.label+' de '+(childProfile.name||''),
-            text:text,stars:selectedStars,type:'partenaire',role:selectedRole.id,
+            author:selectedRole?selectedRole.label+' de '+(childProfile.name||''):'Partenaire',
+            text,stars:selectedStars,type:'partenaire',
             createdAt:firebase.firestore.FieldValue.serverTimestamp()
         });
-        fb.textContent='✓ Merci !';fb.className='af-ok';
+        fb.textContent='✓ Merci !';fb.style.color='#2ecc71';
         document.getElementById('avis-text').value='';
-    }catch(e){fb.textContent='Erreur.';fb.className='af-err'}
+        setTimeout(()=>closeModal('avis-modal'),1200);
+    }catch(e){fb.textContent='Erreur.';fb.style.color='#e74c3c'}
 }
 </script>
 </body>

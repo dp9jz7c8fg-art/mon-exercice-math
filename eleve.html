@@ -486,7 +486,7 @@ async function loadObjectif(uid) {
         snap.forEach(doc => docs.push({id:doc.id,...doc.data()}));
         // Trier: non-atteints en premier, max 3
         docs.sort((a,b) => (a.status==='completed'?1:0)-(b.status==='completed'?1:0));
-        const shown = docs.slice(0,3);
+        const shown = docs.slice(0,3); // max 3 objectifs affichés
         let html = '';
         shown.forEach(obj => {
             const st = obj.status||'not-started';

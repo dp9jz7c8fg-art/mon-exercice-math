@@ -13,7 +13,7 @@
         .content{width:100%;max-width:600px;padding:20px 14px 60px;display:flex;flex-direction:column;gap:20px}
 
         /* Profile card */
-        .profile-card{background:rgba(10,30,16,0.55);border:2px solid rgba(40,100,55,0.3);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;align-items:center;gap:10px;backdrop-filter:blur(12px);position:relative;overflow-x:hidden}
+        .profile-card{background:rgba(10,30,16,0.55);border:2px solid rgba(40,100,55,0.3);border-radius:16px;padding:16px;display:flex;flex-direction:row;align-items:flex-start;gap:16px;overflow:hidden;backdrop-filter:blur(12px);position:relative;overflow-x:hidden}
         .profile-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 40% 40%,rgba(46,204,113,0.03),transparent 50%);pointer-events:none}
         .avatar-big{font-size:46px;width:76px;height:76px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(46,204,113,0.06);border:3px solid rgba(46,204,113,0.25);box-shadow:0 0 25px rgba(46,204,113,0.08);cursor:pointer;transition:border-color 0.2s}
         .avatar-big:hover{border-color:rgba(46,204,113,0.5)}
@@ -127,7 +127,7 @@
     <div id="profile-content" style="display:none;flex-direction:column;gap:20px;">
 
         <!-- Carte profil -->
-        <div class="profile-card" style="flex-direction:row;align-items:flex-start;gap:16px;padding:16px;">
+        <div class="profile-card" style="flex-direction:row;align-items:flex-start;gap:16px;padding:16px;overflow:hidden;">
             <div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;">
                 <div class="avatar-big" id="avatar-display" title="Mon avatar">🦊</div>
                 <button class="btn-avatar" onclick="window.location.href='avatar-creator.html'" style="font-size:11px;padding:6px 12px;">🎨 Modifier</button>
