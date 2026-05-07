@@ -312,7 +312,7 @@ async function loadObjectifsPartner(){
         snap.forEach(doc=>{
             const o=doc.data();const st=o.status||'not-started';
             const date=o.createdAt?o.createdAt.toDate().toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';
-            const author=o.addedBy==='stef'?'Stef':'Élève';
+            const author=o.addedBy==='eleve'?'Élève':(o.addedByLabel||'Stef');
             html+=`<div class="obj-item"><div class="obj-status-dot dot-${st.replace('-','').replace('started','ns').replace('progress','ip').replace('completed','co')}"></div><div style="flex:1"><div class="obj-text-p">${o.text} ${ST_EMOJI[st]}</div><div class="obj-meta-p">${ST_LABEL[st]} · ${author} · ${date}</div></div></div>`;
         });
         list.innerHTML=html;
