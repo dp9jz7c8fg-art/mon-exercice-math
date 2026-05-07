@@ -213,11 +213,17 @@
             <div class="tools-section-title">🎨 Cours d'option</div>
             <button class="tools-item">Bientôt disponible…</button>
         </div>
-        <div class="tools-section">
-            <div class="tools-section-title">🌐 Sites intéressants</div>
-            <button class="tools-item" onclick="window.open('https://www.khanacademy.org/','_blank')">🎓 Khan Academy</button>
-            <button class="tools-item" onclick="window.open('https://www.wolframalpha.com/','_blank')">🔢 WolframAlpha</button>
-            <button class="tools-item" onclick="window.open('https://www.bescherelle.com/','_blank')">📖 Bescherelle</button>
+        <!-- Porte-clé numérique -->
+        <div onclick="openKeyring()" style="margin-top:4px;background:linear-gradient(135deg,rgba(46,204,113,0.08),rgba(52,152,219,0.08));border:2px solid rgba(46,204,113,0.3);border-radius:16px;padding:18px 16px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;" onmouseenter="this.style.background='linear-gradient(135deg,rgba(46,204,113,0.14),rgba(52,152,219,0.12))';this.style.borderColor='rgba(46,204,113,0.5)'" onmouseleave="this.style.background='linear-gradient(135deg,rgba(46,204,113,0.08),rgba(52,152,219,0.08))';this.style.borderColor='rgba(46,204,113,0.3)'">
+            <div style="position:absolute;top:-10px;right:-10px;font-size:60px;opacity:0.06;">🔑</div>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <span style="font-size:32px;flex-shrink:0;">🔑</span>
+                <div>
+                    <div style="font-size:14px;font-weight:800;color:#2ecc71;margin-bottom:4px;">Ma Porte-Clé Numérique</div>
+                    <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;">Obtiens un porte-clé personnalisé avec <strong style="color:rgba(255,255,255,0.7);">tous tes outils numériques favoris</strong> en un seul endroit.</div>
+                    <div style="font-size:10px;color:rgba(46,204,113,0.5);margin-top:6px;font-weight:600;">👆 Clique pour en savoir plus →</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -260,6 +266,47 @@
         </div>
         <p style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;text-align:center;">Petits ateliers pour apprendre à mieux se connaître, gérer ses émotions et construire son avenir. 💚</p>
         <div class="ateliers-list" id="devsoi-list"></div>
+    </div>
+</div>
+
+<!-- MODAL PORTE-CLÉ NUMÉRIQUE -->
+<div class="modal-overlay" id="keyring-modal">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="modal-title">🔑 Ma Porte-Clé Numérique</div>
+            <button class="modal-close-btn" onclick="closeModal('keyring-modal')">✕</button>
+        </div>
+        <div style="text-align:center;font-size:48px;padding:8px 0;">🔑</div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.7;text-align:center;">
+            Imagine un <strong style="color:#2ecc71;">porte-clé numérique</strong> entièrement personnalisé, avec toutes tes ressources préférées accessibles en un seul clic.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;">
+                <span style="font-size:24px;flex-shrink:0;">🎯</span>
+                <div>
+                    <div style="font-size:13px;font-weight:700;color:#e8f5e9;margin-bottom:2px;">Tu choisis tes outils</div>
+                    <div style="font-size:11px;color:rgba(255,255,255,0.4);">Sites, applis, fiches de cours, liens utiles… tu construis ton kit sur mesure.</div>
+                </div>
+            </div>
+            <div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;">
+                <span style="font-size:24px;flex-shrink:0;">📱</span>
+                <div>
+                    <div style="font-size:13px;font-weight:700;color:#e8f5e9;margin-bottom:2px;">Accessible partout</div>
+                    <div style="font-size:11px;color:rgba(255,255,255,0.4);">Sur ton téléphone, ta tablette ou ton ordinateur. Toujours avec toi.</div>
+                </div>
+            </div>
+            <div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;">
+                <span style="font-size:24px;flex-shrink:0;">✨</span>
+                <div>
+                    <div style="font-size:13px;font-weight:700;color:#e8f5e9;margin-bottom:2px;">Personnalisé avec Stef</div>
+                    <div style="font-size:11px;color:rgba(255,255,255,0.4);">Stef t'aide à sélectionner les meilleurs outils pour ton profil et tes besoins.</div>
+                </div>
+            </div>
+        </div>
+        <a href="https://calendly.com/laclassedestef" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.3);border-radius:12px;color:#2ecc71;font-size:14px;font-weight:700;text-decoration:none;margin-top:4px;">
+            📅 En parler avec Stef
+        </a>
     </div>
 </div>
 
@@ -503,6 +550,7 @@ async function cycleObjectif(docId, current) {
 
 // Modals
 function openTools() { document.getElementById('tools-modal').classList.add('open'); }
+function openKeyring() { closeModal('tools-modal'); document.getElementById('keyring-modal').classList.add('open'); }
 function openMethodo() { document.getElementById('methodo-modal').classList.add('open'); }
 function openDevSoi() { document.getElementById('devsoi-modal').classList.add('open'); }
 function openAvis() { document.getElementById('avis-modal').classList.add('open'); }
