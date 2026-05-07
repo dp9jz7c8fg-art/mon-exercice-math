@@ -102,7 +102,7 @@ async function loadObjectifs() {
             const st = obj.status||'not-started';
             const isAchieved = st === 'completed';
             const date = obj.createdAt ? obj.createdAt.toDate().toLocaleDateString('fr-FR',{day:'numeric',month:'short'}) : '';
-            const author = obj.addedBy === 'stef' ? '· Fixé par Stef' : '· Fixé par moi';
+            const author = obj.addedBy === 'eleve' ? '· Fixé par moi' : ('· Fixé par ' + (obj.addedByLabel || 'Stef'));
             html += `<div class="obj-card ${isAchieved?'achieved':''}">
                 <div class="obj-left">
                     <span class="obj-target">🎯</span>
@@ -113,7 +113,7 @@ async function loadObjectifs() {
                     <div class="obj-meta">
                         <span class="obj-status-label ${st}">${STATUS_LABELS[st]}</span>
                         <span class="obj-date">${date}</span>
-                        <span class="obj-author">${author}</span>
+                        <span class="obj-author" style="${obj.addedBy !== 'eleve' ? 'color:rgba(46,204,113,0.5);font-weight:600;' : ''}">${author}</span>
                     </div>
                 </div>
                 <button class="obj-del" onclick="deleteObj('${obj.id}')" title="Supprimer">✕</button>
