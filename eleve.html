@@ -145,59 +145,45 @@
         <a href="objectifs.html" class="oc-link">Gérer mes objectifs →</a>
     </div>
 
-    <!-- ── GRILLE 4 CHAPITRES ── -->
-    <div class="chapters-grid">
-
-        <!-- MATH -->
-        <div class="ch-card">
-            <div class="ch-header">
-                <div class="ch-icon ci-math">📐</div>
-                <div class="ch-title">Mathématiques</div>
-            </div>
-            <div class="ch-actions">
-                <a href="https://calendly.com/laclassedestef" target="_blank" class="ch-btn">
-                    <span class="ch-btn-icon">📅</span>Réserver un cours
-                </a>
-                <a href="exercices-en-ligne.html" class="ch-btn">
-                    <span class="ch-btn-icon">💻</span>S'entraîner en ligne
-                </a>
+    <!-- ── MATH CARD ── -->
+    <div class="ch-card" style="width:100%;">
+        <div class="ch-header">
+            <div class="ch-icon ci-math">📐</div>
+            <div class="ch-title">Mathématiques</div>
+        </div>
+        <div class="ch-actions" style="flex-direction:row;flex-wrap:wrap;gap:8px;">
+            <a href="https://calendly.com/laclassedestef" target="_blank" class="ch-btn" style="flex:1;justify-content:center;">
+                <span class="ch-btn-icon">📅</span>Réserver un cours
+            </a>
+            <a href="exercices-en-ligne.html" class="ch-btn" style="flex:1;justify-content:center;">
+                <span class="ch-btn-icon">💻</span>S'exercer en ligne
+            </a>
+            <div class="ch-btn" style="flex:1;justify-content:center;cursor:default;opacity:0.4;">
+                <span class="ch-btn-icon">🎮</span>Jouer en ligne
+                <span style="font-size:8px;color:rgba(255,255,255,0.3);margin-left:4px;">Bientôt</span>
             </div>
         </div>
+    </div>
 
-        <!-- BOÎTE À OUTILS -->
-        <div class="ch-card" onclick="openTools()" style="cursor:pointer;">
-            <div class="ch-header">
-                <div class="ch-icon ci-tools">🧰</div>
-                <div class="ch-title">Boîte à outils</div>
-            </div>
-            <div class="ch-desc">Cours, ressources et sites utiles pour toutes les matières.</div>
-            <div class="ch-actions">
-                <div class="ch-btn"><span class="ch-btn-icon">📂</span>Accéder aux ressources</div>
-            </div>
-        </div>
+    <!-- ── 3 CHAPITRES EN LIGNE ── -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;">
 
         <!-- MÉTHODOLOGIE -->
-        <div class="ch-card" onclick="openMethodo()" style="cursor:pointer;">
-            <div class="ch-header">
-                <div class="ch-icon ci-methodo">🧠</div>
-                <div class="ch-title">Méthodologie</div>
-            </div>
-            <div class="ch-desc">Petits ateliers pour devenir un super apprenant — en groupe ou en solo.</div>
-            <div class="ch-actions">
-                <div class="ch-btn"><span class="ch-btn-icon">🎓</span>Voir les ateliers</div>
-            </div>
+        <div class="ch-card" onclick="openMethodo()" style="cursor:pointer;padding:16px 12px;align-items:center;text-align:center;">
+            <div class="ch-icon ci-methodo" style="width:48px;height:48px;font-size:24px;border-radius:12px;">🧠</div>
+            <div class="ch-title" style="font-size:12px;">Méthodologie</div>
         </div>
 
         <!-- DÉVELOPPEMENT DE SOI -->
-        <div class="ch-card" onclick="openDevSoi()" style="cursor:pointer;">
-            <div class="ch-header">
-                <div class="ch-icon ci-dev">🌱</div>
-                <div class="ch-title">Développement de soi</div>
-            </div>
-            <div class="ch-desc">Ateliers pour mieux se connaître, grandir et s'épanouir.</div>
-            <div class="ch-actions">
-                <div class="ch-btn"><span class="ch-btn-icon">✨</span>Voir les ateliers</div>
-            </div>
+        <div class="ch-card" onclick="openDevSoi()" style="cursor:pointer;padding:16px 12px;align-items:center;text-align:center;">
+            <div class="ch-icon ci-dev" style="width:48px;height:48px;font-size:24px;border-radius:12px;">🌱</div>
+            <div class="ch-title" style="font-size:12px;">Dev. de soi</div>
+        </div>
+
+        <!-- BOÎTE À OUTILS -->
+        <div class="ch-card" onclick="openTools()" style="cursor:pointer;padding:16px 12px;align-items:center;text-align:center;">
+            <div class="ch-icon ci-tools" style="width:48px;height:48px;font-size:24px;border-radius:12px;">🧰</div>
+            <div class="ch-title" style="font-size:12px;">Boîte à outils</div>
         </div>
 
     </div>
@@ -258,8 +244,8 @@
             <button class="modal-close-btn" onclick="closeModal('desc-modal')">✕</button>
         </div>
         <div id="desc-content"></div>
-        <a href="https://calendly.com/laclassedestef" target="_blank" class="ch-btn" style="margin-top:8px;background:rgba(46,204,113,0.12);border-color:rgba(46,204,113,0.3);color:#2ecc71;justify-content:center;font-size:14px;padding:12px;">
-            <span>📅</span> Réserver ma place
+        <a href="https://calendly.com/laclassedestef" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.3);border-radius:12px;color:#2ecc71;font-size:14px;font-weight:700;text-decoration:none;margin-top:4px;transition:all 0.15s;" onmouseenter="this.style.background='rgba(46,204,113,0.2)'" onmouseleave="this.style.background='rgba(46,204,113,0.12)'">
+            📅 Réserver ma place pour cet atelier
         </a>
     </div>
 </div>
@@ -363,16 +349,13 @@ const DEVSOI_ATELIERS = [
       public:"À partir de la 4e", objectifs:"Connaissance de soi, exploration des métiers", dynamique:"Tests d'orientation, témoignages, plan", lieu:"En classe ou en ligne" },
 ];
 
-function buildAtelierItem(atelier, listId) {
-    return `<div class="atelier-item" style="flex-direction:row;align-items:center;gap:10px;padding:10px 12px;">
+function buildAtelierItem(atelier) {
+    return `<div class="atelier-item" onclick="openDesc('${atelier.id}')" style="flex-direction:row;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;transition:background 0.15s;" onmouseenter="this.style.background='rgba(46,204,113,0.06)'" onmouseleave="this.style.background=''">
         <div style="flex:1;">
             <div class="atelier-name">${atelier.icon} ${atelier.name}${atelier.bonus ? ' <span class="badge-bonus">BONUS</span>' : ''}</div>
             <div class="atelier-sub">${atelier.sub}</div>
         </div>
-        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
-            <span onclick="openDesc('${atelier.id}')" title="Descriptif" style="font-size:20px;cursor:pointer;opacity:0.7;transition:all 0.15s;" onmouseenter="this.style.opacity='1';this.style.transform='scale(1.2)'" onmouseleave="this.style.opacity='0.7';this.style.transform='scale(1)'">📋</span>
-            <a href="https://calendly.com/laclassedestef" target="_blank" title="Réserver ma place" style="font-size:20px;opacity:0.7;text-decoration:none;transition:all 0.15s;display:inline-block;" onmouseenter="this.style.opacity='1';this.style.transform='scale(1.2)'" onmouseleave="this.style.opacity='0.7';this.style.transform='scale(1)'">📅</span>
-        </div>
+        <span style="color:rgba(255,255,255,0.2);font-size:16px;flex-shrink:0;">›</span>
     </div>`;
 }
 
@@ -491,7 +474,7 @@ async function loadObjectif(uid) {
         shown.forEach(obj => {
             const st = obj.status||'not-started';
             const statusEmoji = {'not-started':'⬜','in-progress':'🟡','completed':'✅'}[st];
-            const author = obj.addedBy === 'stef' ? 'Stef' : 'Moi';
+            const author = obj.addedBy === 'eleve' ? 'Moi' : (obj.addedByLabel || 'Stef');
             const date = obj.createdAt ? obj.createdAt.toDate().toLocaleDateString('fr-FR',{day:'numeric',month:'short'}) : '';
             html += `<div class="objectif-item ${st==='completed'?'done':''}" onclick="cycleObjectif('${obj.id}','${st}')">
                 <span style="font-size:16px;flex-shrink:0;">🎯</span>

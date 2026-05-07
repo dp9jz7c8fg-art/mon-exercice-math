@@ -325,7 +325,7 @@ async function addObjPartner(){
     if(!text){fb.textContent='Écris un objectif.';fb.className='fb fb-err';return}
     try{
         await db.collection('objectifs').add({
-            userId:childId,text,status:'not-started',addedBy:'stef',
+            userId:childId,text,status:'not-started',addedBy:'stef',addedByLabel:selectedRole.label+' '+selectedRole.icon,
             createdAt:firebase.firestore.FieldValue.serverTimestamp()
         });
         document.getElementById('obj-input-partner').value='';
