@@ -127,7 +127,9 @@
 
     <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
         <h1 class="welcome-title">Bienvenue dans la Classe de Stef</h1>
-        <div class="stef-inline" onclick="openStef()" title="Qui est Stef ?">👩‍🏫</div>
+        <div class="stef-inline" onclick="openStef()" title="Qui est Stef ?" style="overflow:hidden;padding:0;">
+        <img src="Stef.png" alt="Stef" style="width:100%;height:100%;object-fit:cover;object-position:top;">
+    </div>
     </div>
     <p class="subtitle">Assistant scolaire interactif</p>
 
@@ -164,7 +166,9 @@
 <div class="modal-overlay" id="stef-modal">
     <div class="modal-box">
         <button class="modal-close" onclick="closeStef()">✕</button>
-        <div class="modal-avatar-big">👩‍🏫</div>
+        <div style="width:100px;height:100px;border-radius:50%;overflow:hidden;border:3px solid rgba(46,204,113,0.3);box-shadow:0 0 20px rgba(46,204,113,0.15);flex-shrink:0;">
+        <img src="Stef.png" alt="Stef" style="width:100%;height:100%;object-fit:cover;object-position:top;">
+    </div>
         <div class="modal-name">Stef</div>
 
         <div class="modal-section">
@@ -194,6 +198,10 @@
         <div class="modal-section" style="background:rgba(46,204,113,0.04);border:1px solid rgba(46,204,113,0.1);border-radius:12px;padding:14px;">
             <div class="modal-section-title">💚 Un mot du cœur</div>
             <p style="font-style:italic;line-height:1.8;">Un immense merci à <strong style="color:#2ecc71;">Nicolas</strong>, mon compagnon, qui me soutient jour après jour dans ce projet avec une patience, une générosité et un talent incroyables. C'est lui qui a créé ce site et qui donne vie à chacune de mes idées. Ce projet est autant le sien que le mien. 💚<br><br>Merci également à toute ma famille pour leur amour et leur soutien sans faille. Vous êtes ma force.</p>
+        </div>
+
+        <div style="width:100%;border-radius:16px;overflow:hidden;margin-top:4px;">
+            <img src="Stef_et_Nico.png" alt="Stef et Nicolas" style="width:100%;height:auto;display:block;border-radius:16px;">
         </div>
 
         <div style="display:flex;justify-content:center;gap:16px;margin-top:4px;">
