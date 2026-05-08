@@ -3,495 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau blanc – La Classe de Stef</title>
+    <title>Tableau Mathématique – La Classe de Stef</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
         html,body{height:100%;overflow:hidden}
-        body{font-family:'DM Sans',sans-serif;background:#0a0a0a;color:#e8f5e9;display:flex;flex-direction:column;}
+        body{font-family:'DM Sans',sans-serif;background:#0a0a0a;display:flex;flex-direction:column;}
 
-        /* ── Toolbar ── */
-        .toolbar{display:flex;align-items:center;gap:6px;padding:8px 12px;background:#111;border-bottom:1px solid rgba(46,204,113,0.15);flex-wrap:wrap;flex-shrink:0;z-index:10;}
-        .tb-group{display:flex;align-items:center;gap:4px;padding:0 6px;border-right:1px solid rgba(255,255,255,0.08);}
-        .tb-group:last-child{border-right:none;}
-        .tb-btn{width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all 0.15s;color:#e8f5e9;position:relative;}
-        .tb-btn:hover{background:rgba(46,204,113,0.12);border-color:rgba(46,204,113,0.3);}
-        .tb-btn.active{background:rgba(46,204,113,0.2);border-color:#2ecc71;color:#2ecc71;}
-        .tb-btn[title]:hover::after{content:attr(title);position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);background:#222;color:#fff;font-size:10px;padding:3px 7px;border-radius:4px;white-space:nowrap;z-index:100;pointer-events:none;}
+        /* Toolbar */
+        .toolbar{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#111;border-bottom:1px solid rgba(46,204,113,0.2);flex-shrink:0;flex-wrap:wrap;}
+        .tb-title{font-size:14px;font-weight:700;color:#2ecc71;flex:1;}
+        .tb-subtitle{font-size:10px;color:rgba(255,255,255,0.3);}
 
-        /* Couleurs */
-        .color-btn{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all 0.15s;flex-shrink:0;}
-        .color-btn.active{border-color:#fff;transform:scale(1.2);}
-        .color-btn:hover{transform:scale(1.1);}
+        /* Mode buttons */
+        .mode-grid{display:flex;gap:6px;flex-wrap:wrap;}
+        .mode-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 10px;border-radius:10px;border:1px solid rgba(40,100,55,0.25);background:rgba(255,255,255,0.04);cursor:pointer;transition:all 0.15s;color:rgba(255,255,255,0.5);font-size:10px;font-weight:600;white-space:nowrap;font-family:'DM Sans',sans-serif;}
+        .mode-btn:hover{border-color:rgba(46,204,113,0.4);color:#e8f5e9;background:rgba(46,204,113,0.08);}
+        .mode-btn.active{border-color:#2ecc71;background:rgba(46,204,113,0.15);color:#2ecc71;}
+        .mode-icon{font-size:18px;}
 
-        /* Taille du pinceau */
-        .size-slider{width:80px;accent-color:#2ecc71;cursor:pointer;}
+        /* Back button */
+        .back-btn{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:8px;border:1px solid rgba(40,100,55,0.2);background:none;cursor:pointer;color:rgba(255,255,255,0.4);font-size:12px;font-family:'DM Sans',sans-serif;font-weight:600;text-decoration:none;transition:all 0.15s;}
+        .back-btn:hover{border-color:rgba(46,204,113,0.3);color:#2ecc71;}
 
-        /* Label */
-        .tb-label{font-size:10px;color:rgba(255,255,255,0.3);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap;}
+        /* Main area */
+        .main-area{flex:1;position:relative;overflow:hidden;}
+        iframe{width:100%;height:100%;border:none;display:block;}
 
-        /* Canvas */
-        .canvas-wrap{flex:1;position:relative;overflow:hidden;background:#fff;}
-        #main-canvas{position:absolute;top:0;left:0;cursor:crosshair;touch-action:none;}
-        #grid-canvas{position:absolute;top:0;left:0;pointer-events:none;}
-
-        /* Barre du bas */
-        .statusbar{display:flex;align-items:center;justify-content:space-between;padding:4px 12px;background:#111;border-top:1px solid rgba(255,255,255,0.05);font-size:10px;color:rgba(255,255,255,0.3);font-family:'JetBrains Mono',monospace;flex-shrink:0;}
-
-        /* Input texte */
-        #text-input{position:absolute;display:none;border:2px dashed #2ecc71;background:transparent;color:#222;font-size:16px;font-family:'DM Sans',sans-serif;outline:none;min-width:100px;min-height:30px;z-index:20;padding:2px 6px;resize:both;}
+        /* Info bar */
+        .infobar{display:flex;align-items:center;justify-content:space-between;padding:4px 14px;background:#111;border-top:1px solid rgba(255,255,255,0.04);font-size:10px;color:rgba(255,255,255,0.25);flex-shrink:0;}
+        .infobar a{color:rgba(46,204,113,0.4);text-decoration:none;}
+        .infobar a:hover{color:#2ecc71;}
 
         @media(max-width:600px){
-            .toolbar{gap:4px;padding:6px 8px;}
-            .tb-btn{width:32px;height:32px;font-size:14px;}
-            .size-slider{width:60px;}
-            .tb-label{display:none;}
+            .mode-btn{padding:5px 7px;font-size:9px;}
+            .mode-icon{font-size:16px;}
+            .tb-title{font-size:12px;}
         }
     </style>
 </head>
 <body>
 
-<div class="toolbar" id="toolbar">
-
-    <!-- Navigation -->
-    <div class="tb-group">
-        <a href="eleve.html" style="text-decoration:none;">
-            <div class="tb-btn" title="Retour à l'espace élève">🏠</div>
-        </a>
-        <div class="tb-label">Tableau blanc</div>
+<div class="toolbar">
+    <a href="eleve.html" class="back-btn">← Retour</a>
+    <div>
+        <div class="tb-title">📐 Tableau Mathématique</div>
+        <div class="tb-subtitle">Propulsé par GeoGebra</div>
     </div>
-
-    <!-- Outils -->
-    <div class="tb-group">
-        <div class="tb-btn active" id="tool-pen" onclick="setTool('pen')" title="Crayon">✏️</div>
-        <div class="tb-btn" id="tool-marker" onclick="setTool('marker')" title="Marqueur">🖊️</div>
-        <div class="tb-btn" id="tool-eraser" onclick="setTool('eraser')" title="Gomme">⬜</div>
-        <div class="tb-btn" id="tool-line" onclick="setTool('line')" title="Ligne">╱</div>
-        <div class="tb-btn" id="tool-rect" onclick="setTool('rect')" title="Rectangle">▭</div>
-        <div class="tb-btn" id="tool-circle" onclick="setTool('circle')" title="Cercle">○</div>
-        <div class="tb-btn" id="tool-text" onclick="setTool('text')" title="Texte">T</div>
-        <div class="tb-btn" id="tool-fill" onclick="setTool('fill')" title="Remplissage">🪣</div>
+    <div class="mode-grid">
+        <button class="mode-btn active" onclick="setMode('classic')" id="btn-classic">
+            <span class="mode-icon">📐</span>Géométrie
+        </button>
+        <button class="mode-btn" onclick="setMode('graphing')" id="btn-graphing">
+            <span class="mode-icon">📈</span>Fonctions
+        </button>
+        <button class="mode-btn" onclick="setMode('cas')" id="btn-cas">
+            <span class="mode-icon">🔢</span>Calcul CAS
+        </button>
+        <button class="mode-btn" onclick="setMode('3d')" id="btn-3d">
+            <span class="mode-icon">🧊</span>3D
+        </button>
+        <button class="mode-btn" onclick="setMode('calc')" id="btn-calc">
+            <span class="mode-icon">🧮</span>Calculatrice
+        </button>
+        <button class="mode-btn" onclick="setMode('stats')" id="btn-stats">
+            <span class="mode-icon">📊</span>Stats
+        </button>
     </div>
-
-    <!-- Couleurs -->
-    <div class="tb-group" style="gap:6px;">
-        <div class="tb-label">Couleur</div>
-        <div id="color-palette" style="display:flex;gap:5px;flex-wrap:wrap;max-width:180px;"></div>
-        <input type="color" id="custom-color" value="#2ecc71" style="width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,0.2);cursor:pointer;padding:0;overflow:hidden;" title="Couleur personnalisée">
-    </div>
-
-    <!-- Taille -->
-    <div class="tb-group">
-        <div class="tb-label">Taille</div>
-        <input type="range" class="size-slider" id="brush-size" min="1" max="30" value="3">
-        <span id="size-label" style="font-size:11px;color:rgba(255,255,255,0.4);font-family:'JetBrains Mono',monospace;min-width:24px;">3</span>
-    </div>
-
-    <!-- Grille -->
-    <div class="tb-group">
-        <div class="tb-btn" id="btn-grid" onclick="toggleGrid()" title="Grille">⊞</div>
-        <div class="tb-btn" id="btn-lines" onclick="toggleLines()" title="Lignes">☰</div>
-    </div>
-
-    <!-- Actions -->
-    <div class="tb-group">
-        <div class="tb-btn" onclick="undo()" title="Annuler (Ctrl+Z)">↩️</div>
-        <div class="tb-btn" onclick="redo()" title="Refaire (Ctrl+Y)">↪️</div>
-        <div class="tb-btn" onclick="clearCanvas()" title="Effacer tout">🗑️</div>
-        <div class="tb-btn" onclick="saveImage()" title="Télécharger">💾</div>
-    </div>
-
-    <!-- Fond -->
-    <div class="tb-group">
-        <div class="tb-btn" onclick="setBg('white')" title="Fond blanc" style="background:white;border-color:#ddd;">⬜</div>
-        <div class="tb-btn" onclick="setBg('#1a1a2e')" title="Fond sombre" style="background:#1a1a2e;">⬛</div>
-        <div class="tb-btn" onclick="setBg('#fffde7')" title="Fond jaune" style="background:#fffde7;">🟨</div>
-    </div>
-
 </div>
 
-<div class="canvas-wrap" id="canvas-wrap">
-    <canvas id="grid-canvas"></canvas>
-    <canvas id="main-canvas"></canvas>
-    <textarea id="text-input" rows="1"></textarea>
+<div class="main-area">
+    <iframe id="geo-frame" src="https://www.geogebra.org/classic?lang=fr" allowfullscreen></iframe>
 </div>
 
-<div class="statusbar">
-    <span id="coords">x: 0, y: 0</span>
-    <span id="tool-status">Outil : Crayon</span>
-    <span id="zoom-status">100%</span>
+<div class="infobar">
+    <span>La Classe de Stef — Tableau interactif</span>
+    <a href="https://www.geogebra.org" target="_blank">Powered by GeoGebra (gratuit & open source)</a>
 </div>
 
 <script>
-const canvas = document.getElementById('main-canvas');
-const ctx = canvas.getContext('2d');
-const gridCanvas = document.getElementById('grid-canvas');
-const gridCtx = gridCanvas.getContext('2d');
-const wrap = document.getElementById('canvas-wrap');
-const textInput = document.getElementById('text-input');
+const MODES = {
+    'classic':  'https://www.geogebra.org/classic?lang=fr',
+    'graphing': 'https://www.geogebra.org/graphing?lang=fr',
+    'cas':      'https://www.geogebra.org/cas?lang=fr',
+    '3d':       'https://www.geogebra.org/3d?lang=fr',
+    'calc':     'https://www.geogebra.org/scientific?lang=fr',
+    'stats':    'https://www.geogebra.org/probability?lang=fr',
+};
 
-// ── État ──
-let tool = 'pen';
-let color = '#222222';
-let brushSize = 3;
-let isDrawing = false;
-let startX, startY;
-let lastX, lastY;
-let showGrid = false;
-let showLines = false;
-let bgColor = '#ffffff';
-let zoom = 1;
-let undoStack = [];
-let redoStack = [];
-const MAX_UNDO = 30;
+let currentMode = 'classic';
 
-// ── Couleurs ──
-const COLORS = ['#222222','#ffffff','#e74c3c','#e67e22','#f1c40f','#2ecc71','#3498db','#9b59b6','#1abc9c','#e91e63','#795548','#607d8b'];
-const palette = document.getElementById('color-palette');
-COLORS.forEach(c => {
-    const btn = document.createElement('div');
-    btn.className = 'color-btn' + (c === color ? ' active' : '');
-    btn.style.background = c;
-    btn.style.border = c === '#ffffff' ? '2px solid #ccc' : '2px solid transparent';
-    btn.onclick = () => { setColor(c); };
-    palette.appendChild(btn);
-});
-
-document.getElementById('custom-color').addEventListener('input', e => setColor(e.target.value));
-document.getElementById('brush-size').addEventListener('input', e => {
-    brushSize = parseInt(e.target.value);
-    document.getElementById('size-label').textContent = brushSize;
-});
-
-function setColor(c) {
-    color = c;
-    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-    const idx = COLORS.indexOf(c);
-    if (idx >= 0) palette.children[idx].classList.add('active');
-    document.getElementById('custom-color').value = c;
+function setMode(mode) {
+    if (currentMode === mode) return;
+    currentMode = mode;
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-' + mode).classList.add('active');
+    document.getElementById('geo-frame').src = MODES[mode];
 }
-
-// ── Resize ──
-function resizeCanvas() {
-    const w = wrap.clientWidth;
-    const h = wrap.clientHeight;
-    // Sauver le contenu
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    canvas.width = w;
-    canvas.height = h;
-    gridCanvas.width = w;
-    gridCanvas.height = h;
-    // Restaurer
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(0, 0, w, h);
-    ctx.putImageData(imageData, 0, 0);
-    drawGrid();
-}
-
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-
-// ── Fond ──
-function setBg(c) {
-    bgColor = c;
-    saveToUndo();
-    ctx.fillStyle = c;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
-
-// ── Grille ──
-function drawGrid() {
-    gridCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
-    if (showGrid) {
-        gridCtx.strokeStyle = 'rgba(52,152,219,0.15)';
-        gridCtx.lineWidth = 0.5;
-        const size = 40;
-        for (let x = 0; x < gridCanvas.width; x += size) {
-            gridCtx.beginPath(); gridCtx.moveTo(x,0); gridCtx.lineTo(x,gridCanvas.height); gridCtx.stroke();
-        }
-        for (let y = 0; y < gridCanvas.height; y += size) {
-            gridCtx.beginPath(); gridCtx.moveTo(0,y); gridCtx.lineTo(gridCanvas.width,y); gridCtx.stroke();
-        }
-    }
-    if (showLines) {
-        gridCtx.strokeStyle = 'rgba(52,152,219,0.2)';
-        gridCtx.lineWidth = 0.5;
-        const lineH = 32;
-        for (let y = lineH; y < gridCanvas.height; y += lineH) {
-            gridCtx.beginPath(); gridCtx.moveTo(30,y); gridCtx.lineTo(gridCanvas.width,y); gridCtx.stroke();
-        }
-        gridCtx.strokeStyle = 'rgba(231,76,60,0.3)';
-        gridCtx.lineWidth = 1;
-        gridCtx.beginPath(); gridCtx.moveTo(30,0); gridCtx.lineTo(30,gridCanvas.height); gridCtx.stroke();
-    }
-}
-
-function toggleGrid() {
-    showGrid = !showGrid;
-    showLines = false;
-    document.getElementById('btn-grid').classList.toggle('active', showGrid);
-    document.getElementById('btn-lines').classList.remove('active');
-    drawGrid();
-}
-
-function toggleLines() {
-    showLines = !showLines;
-    showGrid = false;
-    document.getElementById('btn-lines').classList.toggle('active', showLines);
-    document.getElementById('btn-grid').classList.remove('active');
-    drawGrid();
-}
-
-// ── Outil ──
-const TOOL_NAMES = { pen:'Crayon', marker:'Marqueur', eraser:'Gomme', line:'Ligne', rect:'Rectangle', circle:'Cercle', text:'Texte', fill:'Remplissage' };
-function setTool(t) {
-    // Valider le texte en cours
-    if (tool === 'text') commitText();
-    tool = t;
-    document.querySelectorAll('[id^="tool-"]').forEach(b => b.classList.remove('active'));
-    const el = document.getElementById('tool-'+t);
-    if (el) el.classList.add('active');
-    document.getElementById('tool-status').textContent = 'Outil : ' + TOOL_NAMES[t];
-    canvas.style.cursor = t === 'eraser' ? 'cell' : t === 'text' ? 'text' : 'crosshair';
-}
-
-// ── Undo/Redo ──
-function saveToUndo() {
-    undoStack.push(canvas.toDataURL());
-    if (undoStack.length > MAX_UNDO) undoStack.shift();
-    redoStack = [];
-}
-
-function undo() {
-    if (undoStack.length === 0) return;
-    redoStack.push(canvas.toDataURL());
-    const prev = undoStack.pop();
-    const img = new Image();
-    img.onload = () => { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0); };
-    img.src = prev;
-}
-
-function redo() {
-    if (redoStack.length === 0) return;
-    undoStack.push(canvas.toDataURL());
-    const next = redoStack.pop();
-    const img = new Image();
-    img.onload = () => { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0); };
-    img.src = next;
-}
-
-// ── Dessin ──
-let snapshot = null;
-
-function getPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    return { x: (clientX - rect.left) / zoom, y: (clientY - rect.top) / zoom };
-}
-
-canvas.addEventListener('mousedown', startDraw);
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mouseup', stopDraw);
-canvas.addEventListener('mouseleave', stopDraw);
-canvas.addEventListener('touchstart', e => { e.preventDefault(); startDraw(e); }, {passive:false});
-canvas.addEventListener('touchmove', e => { e.preventDefault(); draw(e); }, {passive:false});
-canvas.addEventListener('touchend', stopDraw);
-
-canvas.addEventListener('mousemove', e => {
-    const pos = getPos(e);
-    document.getElementById('coords').textContent = `x: ${Math.round(pos.x)}, y: ${Math.round(pos.y)}`;
-});
-
-function startDraw(e) {
-    if (tool === 'text') { placeText(e); return; }
-    if (tool === 'fill') { floodFill(e); return; }
-    isDrawing = true;
-    const pos = getPos(e);
-    startX = pos.x; startY = pos.y;
-    lastX = pos.x; lastY = pos.y;
-    saveToUndo();
-    if (['line','rect','circle'].includes(tool)) {
-        snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    }
-    if (tool === 'pen' || tool === 'marker' || tool === 'eraser') {
-        ctx.beginPath();
-        ctx.moveTo(lastX, lastY);
-    }
-}
-
-function draw(e) {
-    if (!isDrawing) return;
-    const pos = getPos(e);
-    const x = pos.x, y = pos.y;
-
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-
-    if (tool === 'eraser') {
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.strokeStyle = 'rgba(0,0,0,1)';
-        ctx.lineWidth = brushSize * 3;
-        ctx.lineTo(x, y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-    } else if (tool === 'pen') {
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeStyle = color;
-        ctx.lineWidth = brushSize;
-        ctx.lineTo(x, y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-    } else if (tool === 'marker') {
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeStyle = color + '80';
-        ctx.lineWidth = brushSize * 4;
-        ctx.lineTo(x, y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-    } else if (tool === 'line') {
-        ctx.putImageData(snapshot, 0, 0);
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeStyle = color;
-        ctx.lineWidth = brushSize;
-        ctx.beginPath();
-        ctx.moveTo(startX, startY);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-    } else if (tool === 'rect') {
-        ctx.putImageData(snapshot, 0, 0);
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeStyle = color;
-        ctx.lineWidth = brushSize;
-        ctx.beginPath();
-        ctx.strokeRect(startX, startY, x - startX, y - startY);
-    } else if (tool === 'circle') {
-        ctx.putImageData(snapshot, 0, 0);
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeStyle = color;
-        ctx.lineWidth = brushSize;
-        const rx = Math.abs(x - startX) / 2;
-        const ry = Math.abs(y - startY) / 2;
-        const cx = startX + (x - startX) / 2;
-        const cy = startY + (y - startY) / 2;
-        ctx.beginPath();
-        ctx.ellipse(cx, cy, rx, ry, 0, 0, 2 * Math.PI);
-        ctx.stroke();
-    }
-
-    lastX = x; lastY = y;
-}
-
-function stopDraw() {
-    if (!isDrawing) return;
-    isDrawing = false;
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.beginPath();
-    snapshot = null;
-}
-
-// ── Texte ──
-function placeText(e) {
-    commitText();
-    const pos = getPos(e);
-    textInput.style.display = 'block';
-    textInput.style.left = pos.x + 'px';
-    textInput.style.top = pos.y + 'px';
-    textInput.style.color = color;
-    textInput.style.fontSize = (brushSize * 5 + 10) + 'px';
-    textInput.value = '';
-    textInput.focus();
-}
-
-function commitText() {
-    if (textInput.style.display === 'none' || !textInput.value) {
-        textInput.style.display = 'none';
-        return;
-    }
-    saveToUndo();
-    const x = parseInt(textInput.style.left);
-    const y = parseInt(textInput.style.top);
-    ctx.font = textInput.style.fontSize + " 'DM Sans', sans-serif";
-    ctx.fillStyle = color;
-    ctx.globalCompositeOperation = 'source-over';
-    const lines = textInput.value.split('\n');
-    const lineH = parseInt(textInput.style.fontSize) * 1.2;
-    lines.forEach((line, i) => ctx.fillText(line, x, y + lineH * (i + 1)));
-    textInput.style.display = 'none';
-    textInput.value = '';
-}
-
-textInput.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { textInput.style.display = 'none'; textInput.value = ''; }
-});
-
-// ── Remplissage (flood fill simplifié) ──
-function floodFill(e) {
-    saveToUndo();
-    const pos = getPos(e);
-    const x = Math.round(pos.x), y = Math.round(pos.y);
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
-    const idx = (y * canvas.width + x) * 4;
-    const targetR = data[idx], targetG = data[idx+1], targetB = data[idx+2], targetA = data[idx+3];
-    const fillRGB = hexToRGB(color);
-    if (targetR === fillRGB[0] && targetG === fillRGB[1] && targetB === fillRGB[2]) return;
-
-    const stack = [[x, y]];
-    while (stack.length) {
-        const [cx, cy] = stack.pop();
-        if (cx < 0 || cy < 0 || cx >= canvas.width || cy >= canvas.height) continue;
-        const i = (cy * canvas.width + cx) * 4;
-        if (data[i] !== targetR || data[i+1] !== targetG || data[i+2] !== targetB || data[i+3] !== targetA) continue;
-        data[i] = fillRGB[0]; data[i+1] = fillRGB[1]; data[i+2] = fillRGB[2]; data[i+3] = 255;
-        stack.push([cx+1,cy],[cx-1,cy],[cx,cy+1],[cx,cy-1]);
-    }
-    ctx.putImageData(imageData, 0, 0);
-}
-
-function hexToRGB(hex) {
-    const r = parseInt(hex.slice(1,3),16);
-    const g = parseInt(hex.slice(3,5),16);
-    const b = parseInt(hex.slice(5,7),16);
-    return [r,g,b];
-}
-
-// ── Actions ──
-function clearCanvas() {
-    if (!confirm('Effacer tout le tableau ?')) return;
-    saveToUndo();
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
-
-function saveImage() {
-    const link = document.createElement('a');
-    link.download = 'tableau-laclassedestef.png';
-    link.href = canvas.toDataURL();
-    link.click();
-}
-
-// ── Clavier ──
-document.addEventListener('keydown', e => {
-    if (e.ctrlKey && e.key === 'z') { e.preventDefault(); undo(); }
-    if (e.ctrlKey && e.key === 'y') { e.preventDefault(); redo(); }
-    if (e.key === 'p') setTool('pen');
-    if (e.key === 'm') setTool('marker');
-    if (e.key === 'e') setTool('eraser');
-    if (e.key === 'l') setTool('line');
-    if (e.key === 'r') setTool('rect');
-    if (e.key === 'c') setTool('circle');
-    if (e.key === 't') setTool('text');
-    if (e.key === 'Escape') commitText();
-});
-
-// Init fond blanc
-ctx.fillStyle = bgColor;
-ctx.fillRect(0, 0, canvas.width, canvas.height);
 </script>
 </body>
 </html>
