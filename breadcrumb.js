@@ -12,6 +12,8 @@ const SITEMAP = {
     'avatar-creator.html':     { label: '🎨 Avatar', parent: 'profil.html' },
     'profil-edit.html':        { label: '✏️ Modifier profil', parent: 'profil.html' },
     'objectifs.html':          { label: '🎯 Mes objectifs', parent: 'eleve.html' },
+    'tableau.html':            { label: '🖊️ Tableau blanc', parent: 'eleve.html' },
+    'tableau.html':            { label: '🖊️ Tableau', parent: 'eleve.html' },
     'methodologie.html':       { label: '🧠 Méthodologie', parent: 'eleve.html' },
     'dev-soi.html':            { label: '🌱 Développement', parent: 'eleve.html' },
     'atelier-cerveau.html':    { label: '🧠 Cerveau', parent: 'methodologie.html' },
