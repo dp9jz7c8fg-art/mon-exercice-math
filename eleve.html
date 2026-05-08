@@ -24,7 +24,7 @@
         .ep-badges a:hover{background:rgba(46,204,113,0.15);border-color:rgba(46,204,113,0.3)}
         .ep-logout{background:none;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:6px 12px;font-size:11px;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.3);cursor:pointer;transition:all 0.15s;white-space:nowrap}
         .ep-logout:hover{border-color:rgba(239,68,68,0.3);color:#ef4444}
-        .profile-rdv{display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(46,204,113,0.08);border:2px solid rgba(46,204,113,0.25);border-radius:14px}
+        .profile-rdv{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(46,204,113,0.05);border:1px solid rgba(46,204,113,0.1);border-radius:12px}
         .rdv-icon-btn{font-size:20px;flex-shrink:0}
         .rdv-details{display:flex;flex-direction:column;gap:1px;flex:1}
         .rdv-label{font-size:10px;color:rgba(46,204,113,0.5);font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
@@ -128,12 +128,10 @@
             <button class="ep-logout" onclick="logout()">Déconnexion</button>
         </div>
         <div class="profile-rdv" id="profile-rdv">
-            <a href="https://calendly.com/laclassedestef" target="_blank" style="text-decoration:none;flex-shrink:0;" title="Réserver un cours">
-                <span class="rdv-icon-btn" style="font-size:32px;display:block;transition:transform 0.2s;" onmouseenter="this.style.transform='scale(1.15)'" onmouseleave="this.style.transform='scale(1)'">📅</span>
-            </a>
+            <span class="rdv-icon-btn">📅</span>
             <div class="rdv-details">
                 <div class="rdv-label">Prochain rendez-vous</div>
-                <div class="rdv-value" id="rdv-value"><span class="no-rdv">Aucun RDV enregistré</span></div>
+                <div class="rdv-value" id="rdv-value"><span class="no-rdv">Aucun RDV prévu</span></div>
             </div>
         </div>
     </div>
@@ -142,48 +140,62 @@
     <div class="objectif-card">
         <div class="oc-title">🎯 Mon objectif de la semaine</div>
         <div id="objectif-list"><div class="no-obj">Chargement…</div></div>
-        <a href="objectifs.html" class="oc-link">Gérer mes objectifs →</a>
+        <a href="suivi.html" class="oc-link">Gérer mes objectifs →</a>
     </div>
 
-    <!-- ── MATH CARD ── -->
-    <div class="ch-card" style="width:100%;border:3px solid rgba(46,204,113,0.4);box-shadow:0 0 20px rgba(46,204,113,0.08);">
-        <div class="ch-header">
-            <div class="ch-icon ci-math">📐</div>
-            <div class="ch-title">Mathématiques</div>
-        </div>
-        <div class="ch-actions" style="flex-direction:row;flex-wrap:wrap;gap:8px;">
-            <a href="https://calendly.com/laclassedestef" target="_blank" class="ch-btn" style="flex:1;justify-content:center;">
-                <span class="ch-btn-icon">📅</span>Réserver un cours
-            </a>
-            <a href="exercices-en-ligne.html" class="ch-btn" style="flex:1;justify-content:center;">
-                <span class="ch-btn-icon">💻</span>S'exercer en ligne
-            </a>
-            <div class="ch-btn" style="flex:1;justify-content:center;cursor:default;opacity:0.4;">
-                <span class="ch-btn-icon">🎮</span>Jouer en ligne
-                <span style="font-size:8px;color:rgba(255,255,255,0.3);margin-left:4px;">Bientôt</span>
+    <!-- ── GRILLE 4 CHAPITRES ── -->
+    <div class="chapters-grid">
+
+        <!-- MATH -->
+        <div class="ch-card">
+            <div class="ch-header">
+                <div class="ch-icon ci-math">📐</div>
+                <div class="ch-title">Mathématiques</div>
             </div>
-        </div>
-    </div>
-
-    <!-- ── 3 CHAPITRES EN LIGNE ── -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;">
-
-        <!-- MÉTHODOLOGIE -->
-        <div class="ch-card" onclick="openMethodo()" style="cursor:pointer;padding:16px 12px;align-items:center;text-align:center;">
-            <div class="ch-icon ci-methodo" style="width:48px;height:48px;font-size:24px;border-radius:12px;">🧠</div>
-            <div class="ch-title" style="font-size:12px;">Méthodologie</div>
-        </div>
-
-        <!-- DÉVELOPPEMENT DE SOI -->
-        <div class="ch-card" onclick="openDevSoi()" style="cursor:pointer;padding:16px 12px;align-items:center;text-align:center;">
-            <div class="ch-icon ci-dev" style="width:48px;height:48px;font-size:24px;border-radius:12px;">🌱</div>
-            <div class="ch-title" style="font-size:12px;">Dev. de soi</div>
+            <div class="ch-actions">
+                <a href="https://calendly.com/laclassedestef" target="_blank" class="ch-btn">
+                    <span class="ch-btn-icon">📅</span>Réserver un cours
+                </a>
+                <a href="exercices-en-ligne.html" class="ch-btn">
+                    <span class="ch-btn-icon">💻</span>S'entraîner en ligne
+                </a>
+            </div>
         </div>
 
         <!-- BOÎTE À OUTILS -->
-        <div class="ch-card" onclick="openTools()" style="cursor:pointer;padding:16px 12px;align-items:center;text-align:center;">
-            <div class="ch-icon ci-tools" style="width:48px;height:48px;font-size:24px;border-radius:12px;">🧰</div>
-            <div class="ch-title" style="font-size:12px;">Boîte à outils</div>
+        <div class="ch-card" onclick="openTools()" style="cursor:pointer;">
+            <div class="ch-header">
+                <div class="ch-icon ci-tools">🧰</div>
+                <div class="ch-title">Boîte à outils</div>
+            </div>
+            <div class="ch-desc">Cours, ressources et sites utiles pour toutes les matières.</div>
+            <div class="ch-actions">
+                <div class="ch-btn"><span class="ch-btn-icon">📂</span>Accéder aux ressources</div>
+            </div>
+        </div>
+
+        <!-- MÉTHODOLOGIE -->
+        <div class="ch-card" onclick="openMethodo()" style="cursor:pointer;">
+            <div class="ch-header">
+                <div class="ch-icon ci-methodo">🧠</div>
+                <div class="ch-title">Méthodologie</div>
+            </div>
+            <div class="ch-desc">Petits ateliers pour devenir un super apprenant — en groupe ou en solo.</div>
+            <div class="ch-actions">
+                <div class="ch-btn"><span class="ch-btn-icon">🎓</span>Voir les ateliers</div>
+            </div>
+        </div>
+
+        <!-- DÉVELOPPEMENT DE SOI -->
+        <div class="ch-card" onclick="openDevSoi()" style="cursor:pointer;">
+            <div class="ch-header">
+                <div class="ch-icon ci-dev">🌱</div>
+                <div class="ch-title">Développement de soi</div>
+            </div>
+            <div class="ch-desc">Ateliers pour mieux se connaître, grandir et s'épanouir.</div>
+            <div class="ch-actions">
+                <div class="ch-btn"><span class="ch-btn-icon">✨</span>Voir les ateliers</div>
+            </div>
         </div>
 
     </div>
@@ -213,17 +225,11 @@
             <div class="tools-section-title">🎨 Cours d'option</div>
             <button class="tools-item">Bientôt disponible…</button>
         </div>
-        <!-- Porte-clé numérique -->
-        <div onclick="openKeyring()" style="margin-top:4px;background:linear-gradient(135deg,rgba(46,204,113,0.08),rgba(52,152,219,0.08));border:2px solid rgba(46,204,113,0.3);border-radius:16px;padding:18px 16px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;" onmouseenter="this.style.background='linear-gradient(135deg,rgba(46,204,113,0.14),rgba(52,152,219,0.12))';this.style.borderColor='rgba(46,204,113,0.5)'" onmouseleave="this.style.background='linear-gradient(135deg,rgba(46,204,113,0.08),rgba(52,152,219,0.08))';this.style.borderColor='rgba(46,204,113,0.3)'">
-            <div style="position:absolute;top:-10px;right:-10px;font-size:60px;opacity:0.06;">🔑</div>
-            <div style="display:flex;align-items:center;gap:12px;">
-                <span style="font-size:32px;flex-shrink:0;">🔑</span>
-                <div>
-                    <div style="font-size:14px;font-weight:800;color:#2ecc71;margin-bottom:4px;">Ma Porte-Clé Numérique</div>
-                    <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;">Obtiens un porte-clé personnalisé avec <strong style="color:rgba(255,255,255,0.7);">tous tes outils numériques favoris</strong> en un seul endroit.</div>
-                    <div style="font-size:10px;color:rgba(46,204,113,0.5);margin-top:6px;font-weight:600;">👆 Clique pour en savoir plus →</div>
-                </div>
-            </div>
+        <div class="tools-section">
+            <div class="tools-section-title">🌐 Sites intéressants</div>
+            <button class="tools-item" onclick="window.open('https://www.khanacademy.org/','_blank')">🎓 Khan Academy</button>
+            <button class="tools-item" onclick="window.open('https://www.wolframalpha.com/','_blank')">🔢 WolframAlpha</button>
+            <button class="tools-item" onclick="window.open('https://www.bescherelle.com/','_blank')">📖 Bescherelle</button>
         </div>
     </div>
 </div>
@@ -237,22 +243,17 @@
             <button class="modal-close-btn" onclick="closeModal('methodo-modal')">✕</button>
         </div>
         <p style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;text-align:center;">Petits ateliers en groupe ou en solo pour apprendre à apprendre. Le but : devenir un super apprenant ! 🚀</p>
-        <div class="ateliers-list" id="methodo-list"></div>
-    </div>
-</div>
-
-<!-- MODAL DESCRIPTIF ATELIER -->
-<div class="modal-overlay" id="desc-modal">
-    <div class="modal-sheet">
-        <div class="modal-handle"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <div class="modal-title" id="desc-title"></div>
-            <button class="modal-close-btn" onclick="closeModal('desc-modal')">✕</button>
+        <div class="ateliers-list">
+            <div class="atelier-item"><div class="atelier-name">🌟 C'est quoi, bien apprendre ?</div><div class="atelier-sub">Les secrets pour que ça rentre</div></div>
+            <div class="atelier-item"><div class="atelier-name">🧠 Ton cerveau, c'est un super pouvoir</div><div class="atelier-sub">Comprendre comment il marche pour apprendre plus vite</div></div>
+            <div class="atelier-item"><div class="atelier-name">🎯 Focus mode : ON</div><div class="atelier-sub">Maîtrise ta concentration en 5 étapes</div></div>
+            <div class="atelier-item"><div class="atelier-name">📝 Notes de ouf</div><div class="atelier-sub">Prendre des notes qui te sauvent vraiment</div></div>
+            <div class="atelier-item"><div class="atelier-name">🏋️ Mémo warrior</div><div class="atelier-sub">Entraîne ta mémoire et retiens tout facilement</div></div>
+            <div class="atelier-item"><div class="atelier-name">🗂️ Organise tes idées</div><div class="atelier-sub">Structurer et synthétiser tes cours sans stress</div></div>
+            <div class="atelier-item"><div class="atelier-name">⏱️ Time management ninja <span class="badge-bonus">BONUS</span></div><div class="atelier-sub">Organiser ton temps et tes deadlines</div></div>
+            <div class="atelier-item"><div class="atelier-name">🔥 Révise smart, pas hard <span class="badge-bonus">BONUS</span></div><div class="atelier-sub">Techniques de révision qui marchent vraiment</div></div>
+            <div class="atelier-item"><div class="atelier-name">🌍 Parler une autre langue ? Challenge accepted ! <span class="badge-bonus">BONUS</span></div><div class="atelier-sub">Apprendre une langue en mode fun</div></div>
         </div>
-        <div id="desc-content"></div>
-        <a href="https://calendly.com/laclassedestef" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.3);border-radius:12px;color:#2ecc71;font-size:14px;font-weight:700;text-decoration:none;margin-top:4px;transition:all 0.15s;" onmouseenter="this.style.background='rgba(46,204,113,0.2)'" onmouseleave="this.style.background='rgba(46,204,113,0.12)'">
-            📅 Réserver ma place pour cet atelier
-        </a>
     </div>
 </div>
 
@@ -265,48 +266,16 @@
             <button class="modal-close-btn" onclick="closeModal('devsoi-modal')">✕</button>
         </div>
         <p style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;text-align:center;">Petits ateliers pour apprendre à mieux se connaître, gérer ses émotions et construire son avenir. 💚</p>
-        <div class="ateliers-list" id="devsoi-list"></div>
-    </div>
-</div>
-
-<!-- MODAL PORTE-CLÉ NUMÉRIQUE -->
-<div class="modal-overlay" id="keyring-modal">
-    <div class="modal-sheet">
-        <div class="modal-handle"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div class="modal-title">🔑 Ma Porte-Clé Numérique</div>
-            <button class="modal-close-btn" onclick="closeModal('keyring-modal')">✕</button>
+        <div class="ateliers-list">
+            <div class="atelier-item"><div class="atelier-name">⚡ Quel est ton super pouvoir ?</div><div class="atelier-sub">Découvre ton profil d'apprentissage</div></div>
+            <div class="atelier-item"><div class="atelier-name">🎨 Les 8 intelligences : trouve la tienne</div><div class="atelier-sub">Tu es peut-être intelligent autrement</div></div>
+            <div class="atelier-item"><div class="atelier-name">🔥 Motivation on !</div><div class="atelier-sub">Rester motivé même quand c'est dur</div></div>
+            <div class="atelier-item"><div class="atelier-name">💚 Émotions : les comprendre, les dompter</div><div class="atelier-sub">Gérer le stress, la peur, les doutes</div></div>
+            <div class="atelier-item"><div class="atelier-name">💪 Je peux le faire !</div><div class="atelier-sub">Construire sa confiance en soi</div></div>
+            <div class="atelier-item"><div class="atelier-name">🎤 Les oraux, c'est pas la mort</div><div class="atelier-sub">S'exprimer sans stresser</div></div>
+            <div class="atelier-item"><div class="atelier-name">🤝 Ensemble c'est mieux <span class="badge-bonus">BONUS</span></div><div class="atelier-sub">Travailler en groupe sans se tuer</div></div>
+            <div class="atelier-item"><div class="atelier-name">🧭 Mon futur, c'est maintenant <span class="badge-bonus">BONUS</span></div><div class="atelier-sub">Orientation scolaire sans pression</div></div>
         </div>
-        <div style="text-align:center;font-size:48px;padding:8px 0;">🔑</div>
-        <p style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.7;text-align:center;">
-            Imagine un <strong style="color:#2ecc71;">porte-clé numérique</strong> entièrement personnalisé, avec toutes tes ressources préférées accessibles en un seul clic.
-        </p>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-            <div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;">
-                <span style="font-size:24px;flex-shrink:0;">🎯</span>
-                <div>
-                    <div style="font-size:13px;font-weight:700;color:#e8f5e9;margin-bottom:2px;">Tu choisis tes outils</div>
-                    <div style="font-size:11px;color:rgba(255,255,255,0.4);">Sites, applis, fiches de cours, liens utiles… tu construis ton kit sur mesure.</div>
-                </div>
-            </div>
-            <div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;">
-                <span style="font-size:24px;flex-shrink:0;">📱</span>
-                <div>
-                    <div style="font-size:13px;font-weight:700;color:#e8f5e9;margin-bottom:2px;">Accessible partout</div>
-                    <div style="font-size:11px;color:rgba(255,255,255,0.4);">Sur ton téléphone, ta tablette ou ton ordinateur. Toujours avec toi.</div>
-                </div>
-            </div>
-            <div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;">
-                <span style="font-size:24px;flex-shrink:0;">✨</span>
-                <div>
-                    <div style="font-size:13px;font-weight:700;color:#e8f5e9;margin-bottom:2px;">Personnalisé avec Stef</div>
-                    <div style="font-size:11px;color:rgba(255,255,255,0.4);">Stef t'aide à sélectionner les meilleurs outils pour ton profil et tes besoins.</div>
-                </div>
-            </div>
-        </div>
-        <a href="https://calendly.com/laclassedestef" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.3);border-radius:12px;color:#2ecc71;font-size:14px;font-weight:700;text-decoration:none;margin-top:4px;">
-            📅 En parler avec Stef
-        </a>
     </div>
 </div>
 
@@ -337,113 +306,6 @@ let currentUserData = null;
 let selectedStars = 5;
 
 const STATUS_ICONS = {'not-started':'○','in-progress':'◐','completed':'✓'};
-
-// ── Données ateliers ──
-const METHODO_ATELIERS = [
-    { id:'m1', icon:'🌟', name:"C'est quoi, bien apprendre ?", sub:"Les secrets pour que ça rentre", bonus:false,
-      quoi:"Un atelier pour comprendre ce qui rend l'apprentissage efficace et découvrir les stratégies qui font vraiment la différence.",
-      public:"Tous niveaux", objectifs:"Identifier ses habitudes, découvrir des stratégies efficaces", dynamique:"Interactif, quiz, échanges en groupe", lieu:"En classe ou en ligne" },
-    { id:'m2', icon:'🧠', name:"Ton cerveau, c'est un super pouvoir", sub:"Comprendre comment il marche pour apprendre plus vite", bonus:false,
-      quoi:"On explore ensemble le fonctionnement du cerveau : mémoire, concentration, émotions et apprentissage.",
-      public:"Tous niveaux", objectifs:"Comprendre la plasticité cérébrale, mieux mémoriser", dynamique:"Présentation, expériences, jeux de mémoire", lieu:"En classe ou en ligne" },
-    { id:'m3', icon:'🎯', name:"Focus mode : ON", sub:"Maîtrise ta concentration en 5 étapes", bonus:false,
-      quoi:"Des techniques concrètes pour améliorer ta concentration et éviter les distractions.",
-      public:"Tous niveaux", objectifs:"Techniques de concentration, gestion des distractions", dynamique:"Exercices pratiques, défis chrono", lieu:"En classe ou en ligne" },
-    { id:'m4', icon:'📝', name:"Notes de ouf", sub:"Prendre des notes qui te sauvent vraiment", bonus:false,
-      quoi:"Apprends à prendre des notes utiles : mind maps, Cornell, sketchnotes...",
-      public:"Tous niveaux", objectifs:"Maîtriser différentes méthodes de prise de notes", dynamique:"Pratique sur cours réels, comparaison de méthodes", lieu:"En classe" },
-    { id:'m5', icon:'🏋️', name:"Mémo warrior", sub:"Entraîne ta mémoire et retiens tout facilement", bonus:false,
-      quoi:"Des techniques de mémorisation éprouvées : répétition espacée, associations, palais de la mémoire.",
-      public:"Tous niveaux", objectifs:"Développer des stratégies de mémorisation durables", dynamique:"Jeux de mémoire, flashcards, défis", lieu:"En classe ou en ligne" },
-    { id:'m6', icon:'🗂️', name:"Organise tes idées", sub:"Structurer et synthétiser tes cours sans stress", bonus:false,
-      quoi:"Comment faire une bonne synthèse, créer des fiches efficaces et structurer ses idées.",
-      public:"Tous niveaux", objectifs:"Créer des fiches, synthèses et mind maps efficaces", dynamique:"Atelier pratique sur matière réelle", lieu:"En classe" },
-    { id:'m7', icon:'⏱️', name:"Time management ninja", sub:"Organiser ton temps et tes deadlines", bonus:true,
-      quoi:"Gérer son agenda, ses priorités et éviter la procrastination avec des outils simples.",
-      public:"À partir de la 3e", objectifs:"Planning hebdomadaire, gestion des priorités", dynamique:"Création d'un planning personnel", lieu:"En classe ou en ligne" },
-    { id:'m8', icon:'🔥', name:"Révise smart, pas hard", sub:"Techniques de révision qui marchent vraiment", bonus:true,
-      quoi:"Les meilleures techniques de révision : active recall, test yourself, interleaving...",
-      public:"Tous niveaux", objectifs:"Réviser efficacement, réduire le stress des examens", dynamique:"Mise en pratique immédiate, auto-évaluation", lieu:"En classe ou en ligne" },
-    { id:'m9', icon:'🌍', name:"Parler une autre langue ? Challenge accepted !", sub:"Apprendre une langue en mode fun", bonus:true,
-      quoi:"Des stratégies pour apprendre une langue de façon engageante et efficace.",
-      public:"Tous niveaux", objectifs:"Méthodes immersives, outils numériques, motivation", dynamique:"Jeux de rôle, apps, échanges", lieu:"En classe ou en ligne" },
-];
-
-const DEVSOI_ATELIERS = [
-    { id:'d1', icon:'⚡', name:"Quel est ton super pouvoir ?", sub:"Découvre ton profil d'apprentissage", bonus:false,
-      quoi:"Un atelier pour identifier ton style d'apprentissage unique et l'exploiter au maximum.",
-      public:"Tous niveaux", objectifs:"Découvrir son profil visuel/auditif/kinesthésique", dynamique:"Tests, échanges, plan d'action personnel", lieu:"En classe ou en ligne" },
-    { id:'d2', icon:'🎨', name:"Les 8 intelligences : trouve la tienne", sub:"Tu es peut-être intelligent autrement", bonus:false,
-      quoi:"Basé sur la théorie de Gardner, on explore les 8 formes d'intelligence pour valoriser tes forces.",
-      public:"Tous niveaux", objectifs:"Identifier ses intelligences dominantes, se valoriser", dynamique:"Quiz, activités créatives, réflexion", lieu:"En classe ou en ligne" },
-    { id:'d3', icon:'🔥', name:"Motivation on !", sub:"Rester motivé même quand c'est dur", bonus:false,
-      quoi:"Comprendre ce qui te motive et créer des stratégies pour maintenir le cap.",
-      public:"Tous niveaux", objectifs:"Trouver ses moteurs, gérer les baisses de motivation", dynamique:"Réflexion personnelle, partage, outils", lieu:"En classe ou en ligne" },
-    { id:'d4', icon:'💚', name:"Émotions : les comprendre, les dompter", sub:"Gérer le stress, la peur, les doutes", bonus:false,
-      quoi:"Apprendre à reconnaître et réguler ses émotions pour mieux vivre l'école.",
-      public:"Tous niveaux", objectifs:"Identifier et gérer ses émotions, réduire le stress", dynamique:"Techniques de régulation, jeux de rôle", lieu:"En classe" },
-    { id:'d5', icon:'💪', name:"Je peux le faire !", sub:"Construire sa confiance en soi", bonus:false,
-      quoi:"Des outils concrets pour développer l'estime de soi et oser prendre sa place.",
-      public:"Tous niveaux", objectifs:"Renforcer l'estime de soi, surmonter les blocages", dynamique:"Exercices, défis, bienveillance collective", lieu:"En classe" },
-    { id:'d6', icon:'🎤', name:"Les oraux, c'est pas la mort", sub:"S'exprimer sans stresser", bonus:false,
-      quoi:"Techniques pour préparer et réussir ses exposés, interrogations orales et présentations.",
-      public:"Tous niveaux", objectifs:"Gérer le trac, structurer un oral, capter l'attention", dynamique:"Mise en situation, feedback bienveillant", lieu:"En classe" },
-    { id:'d7', icon:'🤝', name:"Ensemble c'est mieux", sub:"Travailler en groupe sans se tuer", bonus:true,
-      quoi:"Comment collaborer efficacement, gérer les conflits et tirer le meilleur du travail d'équipe.",
-      public:"Tous niveaux", objectifs:"Coopération, rôles en équipe, communication", dynamique:"Projets collaboratifs, jeux coopératifs", lieu:"En classe" },
-    { id:'d8', icon:'🧭', name:"Mon futur, c'est maintenant", sub:"Orientation scolaire sans pression", bonus:true,
-      quoi:"Explorer ses intérêts, ses valeurs et les filières possibles pour construire son projet d'avenir.",
-      public:"À partir de la 4e", objectifs:"Connaissance de soi, exploration des métiers", dynamique:"Tests d'orientation, témoignages, plan", lieu:"En classe ou en ligne" },
-];
-
-function buildAtelierItem(atelier) {
-    return `<div class="atelier-item" onclick="openDesc('${atelier.id}')" style="flex-direction:row;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;transition:background 0.15s;" onmouseenter="this.style.background='rgba(46,204,113,0.06)'" onmouseleave="this.style.background=''">
-        <div style="flex:1;">
-            <div class="atelier-name">${atelier.icon} ${atelier.name}${atelier.bonus ? ' <span class="badge-bonus">BONUS</span>' : ''}</div>
-            <div class="atelier-sub">${atelier.sub}</div>
-        </div>
-        <span style="color:rgba(255,255,255,0.2);font-size:16px;flex-shrink:0;">›</span>
-    </div>`;
-}
-
-function buildAteliersList(ateliers, containerId) {
-    const el = document.getElementById(containerId);
-    if (!el) return;
-    el.innerHTML = ateliers.map(a => buildAtelierItem(a)).join('');
-}
-
-const ALL_ATELIERS = [...METHODO_ATELIERS, ...DEVSOI_ATELIERS];
-
-function openDesc(id) {
-    const atelier = ALL_ATELIERS.find(a => a.id === id);
-    if (!atelier) return;
-    document.getElementById('desc-title').textContent = atelier.icon + ' ' + atelier.name;
-    document.getElementById('desc-content').innerHTML = `
-        <div style="display:flex;flex-direction:column;gap:10px;">
-            <p style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;">${atelier.quoi}</p>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                <div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:10px;">
-                    <div style="font-size:9px;font-weight:700;color:rgba(46,204,113,0.5);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">👥 Public</div>
-                    <div style="font-size:12px;color:#e8f5e9;">${atelier.public}</div>
-                </div>
-                <div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:10px;">
-                    <div style="font-size:9px;font-weight:700;color:rgba(46,204,113,0.5);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">📍 Lieu</div>
-                    <div style="font-size:12px;color:#e8f5e9;">${atelier.lieu}</div>
-                </div>
-                <div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:10px;grid-column:span 2;">
-                    <div style="font-size:9px;font-weight:700;color:rgba(46,204,113,0.5);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">🎯 Objectifs</div>
-                    <div style="font-size:12px;color:#e8f5e9;">${atelier.objectifs}</div>
-                </div>
-                <div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:10px;grid-column:span 2;">
-                    <div style="font-size:9px;font-weight:700;color:rgba(46,204,113,0.5);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">⚡ Dynamique</div>
-                    <div style="font-size:12px;color:#e8f5e9;">${atelier.dynamique}</div>
-                </div>
-            </div>
-        </div>`;
-    closeModal('methodo-modal');
-    closeModal('devsoi-modal');
-    document.getElementById('desc-modal').classList.add('open');
-}
 const STATUS_LABELS = {'not-started':'Pas entamé','in-progress':'En cours','completed':'Atteint'};
 const STATUS_CYCLE = ['not-started','in-progress','completed'];
 
@@ -474,60 +336,38 @@ requireAuth(async (user, profile) => {
 
     // RDV
     loadNextRDV(user.uid);
-    // Construire les listes d'ateliers
-    buildAteliersList(METHODO_ATELIERS, 'methodo-list');
-    buildAteliersList(DEVSOI_ATELIERS, 'devsoi-list');
 
     // Objectif semaine
     loadObjectif(user.uid);
 });
 
 async function loadNextRDV(uid) {
-    const el = document.getElementById('rdv-value');
     try {
-        const snap = await db.collection('bookings').where('userId','==',uid).get();
+        const snap = await db.collection('bookings').where('userId','==',uid).orderBy('createdAt','desc').limit(1).get();
         if (!snap.empty) {
-            let latest = null;
-            snap.forEach(doc => {
-                const d = doc.data();
-                if (!latest) { latest = d; return; }
-                const a = (latest.weekStart||'') + (latest.time||'');
-                const b2 = (d.weekStart||'') + (d.time||'');
-                if (b2 > a) latest = d;
-            });
-            if (latest) {
-                const dayCapital = (latest.day||'').charAt(0).toUpperCase() + (latest.day||'').slice(1);
-                el.innerHTML = `<strong style="color:#fff;font-size:15px;">${dayCapital} à ${latest.time}</strong><br><span style="font-size:11px;color:rgba(255,255,255,0.35);">Semaine du ${latest.weekStart||'—'}</span>`;
-                return;
-            }
+            const b = snap.docs[0].data();
+            document.getElementById('rdv-value').innerHTML = `<strong>${b.day} ${b.time}</strong> — sem. du ${b.weekStart}`;
+        } else {
+            document.getElementById('rdv-value').innerHTML = '<span class="no-rdv">Aucun RDV prévu — <a href="https://calendly.com/laclassedestef" target="_blank" style="color:#2ecc71;">Réserver</a></span>';
         }
-        el.innerHTML = '<span class="no-rdv" style="font-size:12px;">Aucun RDV — clique sur 📅 pour réserver</span>';
-    } catch(e) {
-        el.innerHTML = '<span class="no-rdv" style="font-size:12px;">Clique sur 📅 pour réserver</span>';
-    }
+    } catch(e) {}
 }
 
 async function loadObjectif(uid) {
     const list = document.getElementById('objectif-list');
     try {
-        const snap = await db.collection('objectifs').where('userId','==',uid).get();
+        const snap = await db.collection('objectifs').where('userId','==',uid).orderBy('createdAt','desc').get();
         if (snap.empty) { list.innerHTML = '<div class="no-obj">Aucun objectif — <a href="suivi.html" style="color:#2ecc71;">En ajouter un</a></div>'; return; }
         const docs = [];
         snap.forEach(doc => docs.push({id:doc.id,...doc.data()}));
-        // Trier: par date desc, non-atteints en premier
-        docs.sort((a,b) => {
-            const dateA = a.createdAt ? a.createdAt.toMillis() : 0;
-            const dateB = b.createdAt ? b.createdAt.toMillis() : 0;
-            if(a.status==='completed' && b.status!=='completed') return 1;
-            if(a.status!=='completed' && b.status==='completed') return -1;
-            return dateB - dateA;
-        });
-        const shown = docs.slice(0,3); // max 3 objectifs affichés
+        // Trier: non-atteints en premier, max 3
+        docs.sort((a,b) => (a.status==='completed'?1:0)-(b.status==='completed'?1:0));
+        const shown = docs.slice(0,3);
         let html = '';
         shown.forEach(obj => {
             const st = obj.status||'not-started';
             const statusEmoji = {'not-started':'⬜','in-progress':'🟡','completed':'✅'}[st];
-            const author = obj.addedBy === 'eleve' ? 'Moi' : (obj.addedByLabel ? 'Fixé par ' + obj.addedByLabel : 'Fixé par Stef');
+            const author = obj.addedBy === 'stef' ? 'Stef' : 'Moi';
             const date = obj.createdAt ? obj.createdAt.toDate().toLocaleDateString('fr-FR',{day:'numeric',month:'short'}) : '';
             html += `<div class="objectif-item ${st==='completed'?'done':''}" onclick="cycleObjectif('${obj.id}','${st}')">
                 <span style="font-size:16px;flex-shrink:0;">🎯</span>
@@ -556,7 +396,6 @@ async function cycleObjectif(docId, current) {
 
 // Modals
 function openTools() { document.getElementById('tools-modal').classList.add('open'); }
-function openKeyring() { closeModal('tools-modal'); document.getElementById('keyring-modal').classList.add('open'); }
 function openMethodo() { document.getElementById('methodo-modal').classList.add('open'); }
 function openDevSoi() { document.getElementById('devsoi-modal').classList.add('open'); }
 function openAvis() { document.getElementById('avis-modal').classList.add('open'); }
@@ -596,16 +435,5 @@ async function submitAvis() {
     <a href="https://wa.me/32472637660" target="_blank" style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;font-size:26px;text-decoration:none;box-shadow:0 4px 20px rgba(37,211,102,0.4);transition:transform 0.2s;" onmouseenter="this.style.transform='scale(1.1)'" onmouseleave="this.style.transform='scale(1)'">💬</a>
 </div>
 
-<div style="display:flex;align-items:center;justify-content:center;gap:14px;padding:12px 0;margin-top:8px;">
-    <a href="https://www.facebook.com/people/Cours-de-maths-et-coaching-scolaire/100075848662147/" target="_blank" style="opacity:0.4;transition:opacity 0.2s;display:flex;" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='0.4'" title="Facebook">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--theme-accent,#2ecc71)"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-    </a>
-    <a href="https://www.youtube.com/@stefanigans" target="_blank" style="opacity:0.4;transition:opacity 0.2s;display:flex;" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='0.4'" title="YouTube">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--theme-accent,#2ecc71)"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-    </a>
-    <a style="opacity:0.15;display:flex;pointer-events:none;" title="Instagram — bientôt">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--theme-accent,#2ecc71)"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
-    </a>
-</div>
 </body>
 </html>
