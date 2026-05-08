@@ -151,24 +151,18 @@
             <div class="ch-icon ci-math">📐</div>
             <div class="ch-title">Mathématiques</div>
         </div>
-        <div class="ch-actions" style="flex-direction:column;gap:8px;">
-            <div style="display:flex;flex-direction:column;gap:6px;background:rgba(0,0,0,0.15);border-radius:10px;padding:8px;">
-                <div style="font-size:10px;font-weight:700;color:rgba(46,204,113,0.5);text-transform:uppercase;letter-spacing:0.06em;padding:0 4px;">📚 Suivre un cours avec Stef</div>
-                <div style="display:flex;gap:6px;">
-                    <a href="https://calendly.com/laclassedestef" target="_blank" class="ch-btn" style="flex:1;justify-content:center;font-size:11px;">
-                        <span class="ch-btn-icon">📍</span>En présentiel
-                    </a>
-                    <a href="tableau.html" class="ch-btn" style="flex:1;justify-content:center;font-size:11px;border-color:rgba(52,152,219,0.3);background:rgba(52,152,219,0.06);">
-                        <span class="ch-btn-icon">💻</span>En ligne
-                    </a>
-                </div>
-            </div>
-            <a href="exercices-en-ligne.html" class="ch-btn" style="justify-content:center;">
-                <span class="ch-btn-icon">✏️</span>S'exercer en ligne
+        <div class="ch-actions" style="display:grid;grid-template-columns:1fr 1fr;gap:5px;">
+            <a href="https://calendly.com/laclassedestef" target="_blank" class="ch-btn" style="justify-content:center;padding:7px 4px;font-size:10px;flex-direction:column;gap:3px;text-align:center;min-height:52px;">
+                <span style="font-size:18px;">📍</span><span>Présentiel</span>
             </a>
-            <div class="ch-btn" style="justify-content:center;opacity:0.4;cursor:default;">
-                <span class="ch-btn-icon">🎮</span>Jouer en ligne
-                <span style="font-size:8px;margin-left:6px;">Bientôt</span>
+            <div id="btn-tableau-math" class="ch-btn" onclick="openTableauOrLock()" style="justify-content:center;padding:7px 4px;font-size:10px;flex-direction:column;gap:3px;text-align:center;min-height:52px;cursor:pointer;border-color:rgba(52,152,219,0.3);background:rgba(52,152,219,0.06);">
+                <span style="font-size:18px;">💻</span><span>En ligne</span>
+            </div>
+            <a href="exercices-en-ligne.html" class="ch-btn" style="justify-content:center;padding:7px 4px;font-size:10px;flex-direction:column;gap:3px;text-align:center;min-height:52px;">
+                <span style="font-size:18px;">✏️</span><span>S'exercer</span>
+            </a>
+            <div class="ch-btn" style="justify-content:center;padding:7px 4px;font-size:10px;flex-direction:column;gap:3px;text-align:center;min-height:52px;opacity:0.3;cursor:default;">
+                <span style="font-size:18px;">🎮</span><span>Jouer</span>
             </div>
         </div>
     </div>
@@ -489,6 +483,27 @@ requireAuth(async (user, profile) => {
     // Objectif semaine
     loadObjectif(user.uid);
 });
+
+function openTableauOrLock() {
+    // Vérifier si l'élève a un RDV reservé
+    db.collection('bookings').where('userId','==',currentUserData.user.uid).get().then(snap => {
+        if (!snap.empty) {
+            window.location.href = 'tableau.html';
+        } else {
+            // Afficher message
+            const btn = document.getElementById('btn-tableau-math');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span style="font-size:14px;">🔒</span><span style="font-size:9px;color:#f39c12;">Réserve un cours !</span>';
+            btn.style.borderColor = 'rgba(243,156,18,0.4)';
+            btn.style.background = 'rgba(243,156,18,0.06)';
+            setTimeout(() => {
+                btn.innerHTML = orig;
+                btn.style.borderColor = 'rgba(52,152,219,0.3)';
+                btn.style.background = 'rgba(52,152,219,0.06)';
+            }, 2500);
+        }
+    }).catch(() => { window.location.href = 'tableau.html'; });
+}
 
 async function loadNextRDV(uid) {
     const el = document.getElementById('rdv-value');
