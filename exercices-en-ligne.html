@@ -8,136 +8,114 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        html,body{font-family:'DM Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#040804,#061008,#081a0e,#0a2414,#040804);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
-        body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#040804,#061008,#081a0e,#0a2414,#040804);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;justify-content:center}
+        body{font-family:'DM Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#040804,#061008,#081a0e,#0a2414,#040804);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
         @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-        .page{width:100%;max-width:680px;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;gap:20px}
-        .nav{width:100%;display:flex;justify-content:flex-start}
-        .nav a{color:rgba(46,204,113,0.5);text-decoration:none;font-size:13px;font-weight:600;transition:color 0.15s}
-        .nav a:hover{color:#2ecc71}
+        .content{width:100%;max-width:680px;padding:20px 14px 60px;display:flex;flex-direction:column;gap:20px;align-items:center}
         .page-header{text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center}
         .page-icon{font-size:44px}
         .page-title{font-family:'Playfair Display',serif;font-style:italic;font-size:26px;font-weight:700;background:linear-gradient(135deg,#2ecc71,#a8f0c0,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
         .page-sub{font-size:12px;color:rgba(46,204,113,0.4);letter-spacing:0.1em;text-transform:uppercase;font-weight:600}
-        .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;width:100%}
-        .card{background:rgba(10,30,16,0.55);border:1px solid rgba(40,100,55,0.25);border-radius:20px;padding:28px 16px;text-decoration:none;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;transition:transform 0.2s,background 0.2s,border-color 0.2s,box-shadow 0.2s;backdrop-filter:blur(8px);position:relative;overflow-x:hidden;overflow-y:auto}
-        .card::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 50% 30%,rgba(46,204,113,0.03),transparent 60%);pointer-events:none}
-        .card:hover{transform:translateY(-4px);background:rgba(20,50,28,0.7);border-color:rgba(46,204,113,0.4);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
-        .card.disabled{opacity:0.4;pointer-events:none}
-        .card-icon{font-size:36px;width:60px;height:60px;display:flex;align-items:center;justify-content:center;border-radius:16px;background:rgba(46,204,113,0.1)}
-        .card-title{font-size:16px;font-weight:700}
-        .card-desc{font-size:11px;color:rgba(255,255,255,0.4);line-height:1.4}
-        .badge{display:inline-flex;padding:3px 8px;border-radius:100px;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase}
+
+        /* Sections niveaux */
+        .level-section{width:100%;background:rgba(10,30,16,0.55);border:2px solid rgba(40,100,55,0.25);border-radius:20px;padding:20px 16px;display:flex;flex-direction:column;gap:12px;backdrop-filter:blur(8px)}
+        .level-title{font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px}
+        .level-title-icon{font-size:28px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:12px;}
+        .li-primaire{background:rgba(243,156,18,0.1)}
+        .li-secondaire{background:rgba(46,204,113,0.1)}
+
+        /* Grille années */
+        .years-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
+        .year-card{background:rgba(10,30,16,0.5);border:1px solid rgba(40,100,55,0.2);border-radius:14px;padding:16px 10px;text-decoration:none;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;transition:transform 0.2s,background 0.2s,border-color 0.2s;position:relative;overflow:hidden}
+        .year-card:hover{transform:translateY(-3px);background:rgba(20,50,28,0.7);border-color:rgba(46,204,113,0.4);}
+        .year-card.disabled{opacity:0.35;pointer-events:none}
+        .year-icon{font-size:26px}
+        .year-name{font-size:13px;font-weight:700}
+        .year-desc{font-size:10px;color:rgba(255,255,255,0.35);line-height:1.3}
+        .badge{display:inline-flex;padding:2px 8px;border-radius:100px;font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase}
         .badge-ready{background:rgba(46,204,113,0.15);color:#2ecc71}
-        .badge-soon{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.3)}
-        @media(max-width:520px){.grid{grid-template-columns:1fr}.page-title{font-size:22px}}
-    
-        /* ── MOBILE RESPONSIVE ── */
-        @media (max-width: 600px) {
-            .grid-2, .grid-3, .grid { grid-template-columns: 1fr !important; }
-            .grid-2 { gap: 12px !important; }
-            .space-card { padding: 22px 16px !important; }
-            .space-icon { width: 60px !important; height: 60px !important; font-size: 36px !important; }
-            .space-title { font-size: 17px !important; }
-            .space-desc { font-size: 11px !important; }
-            .card { padding: 18px 14px !important; gap: 10px !important; }
-            .card-icon { width: 50px !important; height: 50px !important; font-size: 28px !important; }
-            .card-title { font-size: 14px !important; }
-            .card-desc { font-size: 11px !important; }
-            .p-card { padding: 18px 12px !important; }
-            .p-card-icon { width: 48px !important; height: 48px !important; font-size: 28px !important; }
-            .eleve-profile { padding: 10px 14px !important; gap: 10px !important; }
-            .ep-avatar { width: 44px !important; height: 44px !important; font-size: 28px !important; }
-            .ep-name { font-size: 14px !important; }
-            .section { padding: 16px 14px !important; }
-            .section-title { font-size: 13px !important; }
-            .welcome-title, .page-title { font-size: 20px !important; }
-            .logo-wrap { padding: 10px 24px !important; }
-            .logo-wrap img { max-height: 48px !important; }
-            #breadcrumb { font-size: 10px !important; padding: 6px 12px !important; }
-            body { padding-top: 32px !important; }
-            .stats-row { gap: 6px !important; }
-            .stat-box { padding: 10px 8px !important; }
-            .stat-val { font-size: 20px !important; }
-            .stat-label { font-size: 8px !important; }
-            .btn-save, .btn-submit, .id-btn, .add-btn { padding: 14px !important; font-size: 14px !important; }
-            .avis-wrap { height: 44px !important; }
-            .avis-text { font-size: 11px !important; }
-            .social-row { gap: 12px !important; }
-            .social-link { width: 40px !important; height: 40px !important; }
-            .footer { font-size: 8px !important; }
-            .stef-inline { width: 32px !important; height: 32px !important; font-size: 18px !important; }
-            .agenda-btn { width: 40px !important; height: 40px !important; font-size: 18px !important; }
-            .tab { padding: 6px 10px !important; font-size: 10px !important; }
-            .ans-input { width: 100% !important; font-size: 16px !important; }
-            .expr-display { font-size: 16px !important; padding: 12px !important; }
-            .qcm-grid { grid-template-columns: 1fr !important; }
-            .qcm-btn { padding: 12px !important; font-size: 14px !important; }
-            .profile-card { padding: 20px 16px !important; }
-            .avatar-big { width: 80px !important; height: 80px !important; font-size: 48px !important; }
-            .profile-name { font-size: 20px !important; }
-            .mindmap-svg { height: auto !important; }
-            .content { padding-left: 12px !important; padding-right: 12px !important; }
-            .id-box { padding: 20px 16px !important; }
-            .role-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
-            .role-btn { padding: 12px 10px !important; font-size: 13px !important; }
-            .role-icon { width: 34px !important; height: 34px !important; font-size: 20px !important; }
-            .add-row { flex-direction: column !important; }
-            .add-btn { width: 100% !important; }
-            .obj-card { padding: 10px 12px !important; }
-            .section-dashed { padding: 16px 14px !important; }
-        }
-        
-</style>
+        .badge-soon{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.25)}
+
+        @media(max-width:520px){.years-grid{grid-template-columns:repeat(2,1fr)}.page-title{font-size:22px}}
+    </style>
 </head>
 <body>
-<div class="page">
+<div class="content">
     <div class="page-header">
         <span class="page-icon">💻</span>
         <h1 class="page-title">Exercices en ligne</h1>
-        <p class="page-sub">Choisis ton année</p>
+        <p class="page-sub">Choisis ton niveau</p>
     </div>
-    <div class="grid">
-        <a href="1ere-annee.html" class="card">
-            <div class="card-icon">1️⃣</div>
-            <div class="card-title">1ère année</div>
-            <div class="card-desc">Mesure d'angles et bases géométriques.</div>
-            <span class="badge badge-ready">Disponible</span>
-        </a>
-        <a href="2eme-annee.html" class="card">
-            <div class="card-icon">2️⃣</div>
-            <div class="card-title">2ème année</div>
-            <div class="card-desc">Fractions, algèbre, angles et bien plus.</div>
-            <span class="badge badge-ready">Disponible</span>
-        </a>
-        <div class="card disabled">
-            <div class="card-icon">3️⃣</div>
-            <div class="card-title">3ème année</div>
-            <div class="card-desc">Contenu en préparation.</div>
-            <span class="badge badge-soon">Bientôt</span>
-        </div>
-        <div class="card disabled">
-            <div class="card-icon">4️⃣</div>
-            <div class="card-title">4ème année</div>
-            <div class="card-desc">Contenu en préparation.</div>
-            <span class="badge badge-soon">Bientôt</span>
-        </div>
 
-        <div class="card disabled">
-            <div class="card-icon">5️⃣</div>
-            <div class="card-title">5ème primaire</div>
-            <div class="card-desc">Contenu en préparation.</div>
-            <span class="badge badge-soon">Bientôt</span>
+    <!-- PRIMAIRE -->
+    <div class="level-section">
+        <div class="level-title">
+            <div class="level-title-icon li-primaire">🏫</div>
+            <div>
+                <div style="font-size:16px;font-weight:700;">Primaire</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.35);">Exercices adaptés au primaire</div>
+            </div>
         </div>
-
-        <div class="card disabled">
-            <div class="card-icon">6️⃣</div>
-            <div class="card-title">6ème primaire</div>
-            <div class="card-desc">Contenu en préparation.</div>
-            <span class="badge badge-soon">Bientôt</span>
+        <div class="years-grid" style="grid-template-columns:repeat(2,1fr);">
+            <div class="year-card disabled">
+                <span class="year-icon">5️⃣</span>
+                <div class="year-name">5ème primaire</div>
+                <div class="year-desc">Contenu en préparation</div>
+                <span class="badge badge-soon">Bientôt</span>
+            </div>
+            <a href="6eme-primaire.html" class="year-card">
+                <span class="year-icon">6️⃣</span>
+                <div class="year-name">6ème primaire</div>
+                <div class="year-desc">Opérations, fractions, géométrie</div>
+                <span class="badge badge-ready">Disponible</span>
+            </a>
         </div>
     </div>
+
+    <!-- SECONDAIRE -->
+    <div class="level-section">
+        <div class="level-title">
+            <div class="level-title-icon li-secondaire">🎓</div>
+            <div>
+                <div style="font-size:16px;font-weight:700;">Secondaire</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.35);">Exercices adaptés au secondaire</div>
+            </div>
+        </div>
+        <div class="years-grid">
+            <a href="1ere-annee.html" class="year-card">
+                <span class="year-icon">1️⃣</span>
+                <div class="year-name">1ère année</div>
+                <div class="year-desc">Angles</div>
+                <span class="badge badge-ready">Disponible</span>
+            </a>
+            <a href="2eme-annee.html" class="year-card">
+                <span class="year-icon">2️⃣</span>
+                <div class="year-name">2ème année</div>
+                <div class="year-desc">Fractions, algèbre, angles</div>
+                <span class="badge badge-ready">Disponible</span>
+            </a>
+            <div class="year-card disabled">
+                <span class="year-icon">3️⃣</span>
+                <div class="year-name">3ème année</div>
+                <div class="year-desc">Contenu en préparation</div>
+                <span class="badge badge-soon">Bientôt</span>
+            </div>
+            <div class="year-card disabled">
+                <span class="year-icon">4️⃣</span>
+                <div class="year-name">4ème année</div>
+                <div class="year-desc">Contenu en préparation</div>
+                <span class="badge badge-soon">Bientôt</span>
+            </div>
+            <div class="year-card disabled">
+                <span class="year-icon">5️⃣</span>
+                <div class="year-name">5ème année</div>
+                <div class="year-desc">Contenu en préparation</div>
+                <span class="badge badge-soon">Bientôt</span>
+            </div>
+        </div>
+    </div>
+
 </div>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -145,16 +123,5 @@
 <script src="theme.js"></script>
 <script src="breadcrumb.js"></script>
 <script>requireAuth((u,p)=>{});</script>
-<div style="display:flex;align-items:center;justify-content:center;gap:14px;padding:12px 0;margin-top:8px;">
-    <a href="https://www.facebook.com/people/Cours-de-maths-et-coaching-scolaire/100075848662147/" target="_blank" style="opacity:0.4;transition:opacity 0.2s;display:flex;" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='0.4'" title="Facebook">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--theme-accent,#2ecc71)"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-    </a>
-    <a href="https://www.youtube.com/@stefanigans" target="_blank" style="opacity:0.4;transition:opacity 0.2s;display:flex;" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='0.4'" title="YouTube">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--theme-accent,#2ecc71)"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-    </a>
-    <a style="opacity:0.15;display:flex;pointer-events:none;" title="Instagram — bientôt">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--theme-accent,#2ecc71)"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
-    </a>
-</div>
 </body>
 </html>
