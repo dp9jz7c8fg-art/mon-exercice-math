@@ -613,22 +613,36 @@ function renderPrint() {
             <div class="panel-title">Exercices à imprimer</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:14px;">
-            <div style="background:rgba(10,30,16,0.5);border:2px solid rgba(52,152,219,0.2);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px;">
-                <div style="font-size:14px;font-weight:700;color:#e8f5e9;display:flex;align-items:center;gap:8px;">📝 Feuille d'exercices</div>
-                <div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;">8 exercices dans le style du cours (niveaux C et A), espaces pour réponses, mémo formules en dernière page. <strong style="color:#e8f5e9;">Sans corrigé.</strong></div>
-                <a href="exercices-trig.pdf" target="_blank" download style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;background:rgba(52,152,219,0.12);border:1px solid rgba(52,152,219,0.3);border-radius:10px;color:#3498db;font-weight:700;font-size:14px;text-decoration:none;transition:all 0.15s;" onmouseenter="this.style.background='rgba(52,152,219,0.2)'" onmouseleave="this.style.background='rgba(52,152,219,0.12)'">
-                    📄 Télécharger les exercices
-                </a>
+
+            <div style="background:rgba(10,30,16,0.5);border:2px solid rgba(52,152,219,0.2);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px;">
+                <div style="font-size:13px;font-weight:700;color:#3498db;">📚 Série complète — Exercices 1 à 24</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;">Tous les exercices du chapitre (niveaux C et A), dans le style du cours. Espace de réponse + aide-mémoire inclus.</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <a href="exercices-trig-complet.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:rgba(52,152,219,0.1);border:1px solid rgba(52,152,219,0.3);border-radius:8px;color:#3498db;font-weight:700;font-size:12px;text-decoration:none;min-width:120px;">
+                        📄 Exercices
+                    </a>
+                    <a href="exercices-trig-complet-corrige.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.25);border-radius:8px;color:#2ecc71;font-weight:700;font-size:12px;text-decoration:none;min-width:120px;">
+                        ✅ Avec solutions
+                    </a>
+                </div>
+                <div style="font-size:10px;color:rgba(255,255,255,0.25);font-style:italic;">Solutions affichées à côté de chaque question dans la version corrigée.</div>
             </div>
-            <div style="background:rgba(10,30,16,0.5);border:2px solid rgba(46,204,113,0.2);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px;">
-                <div style="font-size:14px;font-weight:700;color:#e8f5e9;display:flex;align-items:center;gap:8px;">✅ Corrigé complet</div>
-                <div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;">Les mêmes exercices avec toutes les solutions détaillées. Mémo formules inclus.</div>
-                <a href="exercices-trig-corrige.pdf" target="_blank" download style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.3);border-radius:10px;color:#2ecc71;font-weight:700;font-size:14px;text-decoration:none;transition:all 0.15s;" onmouseenter="this.style.background='rgba(46,204,113,0.2)'" onmouseleave="this.style.background='rgba(46,204,113,0.12)'">
-                    📄 Télécharger le corrigé
-                </a>
+
+            <div style="background:rgba(10,30,16,0.5);border:2px solid rgba(243,156,18,0.25);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px;">
+                <div style="font-size:13px;font-weight:700;color:#f39c12;">🎯 Me préparer pour l'interro</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;">Sélection d'exercices représentatifs de tout le chapitre. Durée indicative : 50 minutes. Conditions similaires à l'interrogation.</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <a href="prep-interro-trig.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:rgba(243,156,18,0.08);border:1px solid rgba(243,156,18,0.3);border-radius:8px;color:#f39c12;font-weight:700;font-size:12px;text-decoration:none;min-width:120px;">
+                        📋 Simulation interro
+                    </a>
+                    <a href="prep-interro-trig-corrige.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.25);border-radius:8px;color:#2ecc71;font-weight:700;font-size:12px;text-decoration:none;min-width:120px;">
+                        ✅ Avec solutions
+                    </a>
+                </div>
             </div>
-            <div style="background:rgba(243,156,18,0.05);border:1px solid rgba(243,156,18,0.15);border-radius:12px;padding:14px;font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;">
-                💡 <strong style="color:rgba(243,156,18,0.7);">Conseil :</strong> Imprime d'abord la feuille d'exercices, fais-les sans regarder le corrigé, puis vérifie tes réponses !
+
+            <div style="background:rgba(243,156,18,0.04);border:1px solid rgba(243,156,18,0.12);border-radius:10px;padding:12px;font-size:11px;color:rgba(255,255,255,0.35);line-height:1.7;">
+                💡 <strong style="color:rgba(243,156,18,0.6);">Conseil :</strong> Fais d'abord les exercices sans regarder les solutions, puis compare. Pour l'interro : chronomètre-toi !
             </div>
         </div>`;
 }
