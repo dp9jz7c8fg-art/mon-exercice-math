@@ -114,8 +114,12 @@
         <button class="obj-btn" onclick="showObj(9)"><span class="obj-num">10</span>Notion de radian</button>
         <button class="obj-btn" onclick="showObj(10)"><span class="obj-num">11</span>Conversion degrés ↔ radians</button>
         <button class="obj-btn" onclick="showObj(11)"><span class="obj-num">12</span>Arc, rayon, aire de secteur</button>
+        <button class="obj-btn" onclick="showObj(12)"><span class="obj-num">13</span>Solutions générales (k·360°)</button>
+        <button class="obj-btn" onclick="showObj(13)"><span class="obj-num">14</span>Vrai ou Faux — identités</button>
+        <button class="obj-btn" onclick="showObj(14)"><span class="obj-num">15</span>Angles associés — simplifier</button>
+        <button class="obj-btn" onclick="showObj(15)"><span class="obj-num">16</span>Classer par ordre croissant</button>
         <div style="height:1px;background:rgba(243,156,18,0.2);margin:4px 0;"></div>
-        <button class="obj-btn special" onclick="showObj(12)"><span class="obj-num">★</span>Mémo : définitions & notations</button>
+        <button class="obj-btn special" onclick="showObj(16)"><span class="obj-num">★</span>Mémo : définitions & notations</button>
     </div>
 
     <!-- PANEL PRINCIPAL -->
@@ -140,6 +144,97 @@ requireAuth((user, profile) => {
     scores = profile.scores || {};
     showObj(0);
 });
+
+
+// Obj 12 : solutions générales (cosα = val → α = ?+k·360°)
+function genObj12() {
+    const cases = [
+        { q: "cos α = 0,5", a1: 60, a2: 300, per: 360, type: 'cos' },
+        { q: "sin α = 0,5", a1: 30, a2: 150, per: 360, type: 'sin' },
+        { q: "cos α = −0,5", a1: 120, a2: 240, per: 360, type: 'cos' },
+        { q: "sin α = −0,5", a1: 210, a2: 330, per: 360, type: 'sin' },
+        { q: "tan α = 1", a1: 45, a2: null, per: 180, type: 'tan' },
+        { q: "tan α = −1", a1: 135, a2: null, per: 180, type: 'tan' },
+        { q: "cos α = 0", a1: 90, a2: 270, per: 360, type: 'cos' },
+        { q: "sin α = 1", a1: 90, a2: null, per: 360, type: 'sin' },
+    ];
+    const c = cases[r(0, cases.length-1)];
+    let correctAns, wrongs;
+    if (c.a2) {
+        correctAns = `${c.a1}°+k·${c.per}° et ${c.a2}°+k·${c.per}°`;
+        wrongs = [
+            `${c.a1}°+k·180° seulement`,
+            `${c.a1}° seulement`,
+            `${c.a2}°+k·${c.per}° seulement`,
+        ];
+    } else {
+        correctAns = `${c.a1}°+k·${c.per}°`;
+        wrongs = [
+            `${c.a1}°+k·360°`,
+            `${c.a1}° et ${c.a1+180}°+k·360°`,
+            `${c.a1}°+k·90°`,
+        ];
+    }
+    const opts = [correctAns, ...wrongs].sort(() => Math.random()-0.5);
+    return { q: `Trouve l'ensemble des solutions de <strong>${c.q}</strong><br><small style="color:rgba(255,255,255,0.35);">k ∈ ℤ</small>`, opts, correct: opts.indexOf(correctAns) };
+}
+
+// Obj 13 : Vrai ou Faux
+function genObj13() {
+    const items = [
+        { q: "sin²α + cos²α = 1", correct: 0, expl: "C'est la relation fondamentale de la trigonométrie." },
+        { q: "sin²(2α) + cos²(2α) = 2", correct: 1, expl: "Faux. sin²(2α)+cos²(2α) = 1 quelle que soit la valeur de l'angle." },
+        { q: "cos(−α) = −cos α", correct: 1, expl: "Faux. cos(−α) = cos α (cosinus est pair)." },
+        { q: "sin(−α) = −sin α", correct: 0, expl: "Vrai. Sinus est une fonction impaire." },
+        { q: "tan α = sin α / cos α", correct: 0, expl: "Vrai. C'est la définition de la tangente." },
+        { q: "1/sin²α − 1 = cot²α", correct: 0, expl: "Vrai. Découle de sin²α + cos²α = 1." },
+        { q: "Si α ∈ Q2, alors tan α > 0", correct: 1, expl: "Faux. Dans le 2ème quadrant, sin > 0 et cos < 0, donc tan < 0." },
+        { q: "sin²60° + cos²120° = 1", correct: 0, expl: "Vrai. (√3/2)² + (−1/2)² = 3/4 + 1/4 = 1." },
+    ];
+    const item = items[r(0, items.length-1)];
+    const opts = ["Vrai", "Faux"];
+    return {
+        q: `Vrai ou Faux ? <br><strong style="font-size:16px;font-family:'JetBrains Mono',monospace;">${item.q}</strong>`,
+        opts, correct: item.correct,
+        expl: item.expl
+    };
+}
+
+// Obj 14 : angles associés
+function genObj14() {
+    const items = [
+        { q: "sin(180° + α) =", correct: 0, opts: ["−sin α", "sin α", "−cos α", "cos α"] },
+        { q: "cos(180° − α) =", correct: 0, opts: ["−cos α", "cos α", "sin α", "−sin α"] },
+        { q: "sin(180° − α) =", correct: 0, opts: ["sin α", "−sin α", "cos α", "−cos α"] },
+        { q: "cos(−α) =", correct: 0, opts: ["cos α", "−cos α", "sin α", "−sin α"] },
+        { q: "sin(360° − α) =", correct: 0, opts: ["−sin α", "sin α", "cos α", "−cos α"] },
+        { q: "cos(90° + α) =", correct: 0, opts: ["−sin α", "sin α", "cos α", "−cos α"] },
+        { q: "sin(270° + α) =", correct: 0, opts: ["−cos α", "cos α", "sin α", "−sin α"] },
+        { q: "tan(180° + α) =", correct: 0, opts: ["tan α", "−tan α", "cot α", "−cot α"] },
+        { q: "cos(α + 180°) =", correct: 0, opts: ["−cos α", "cos α", "−sin α", "sin α"] },
+    ];
+    const item = items[r(0, items.length-1)];
+    const opts = [...item.opts].sort(() => Math.random()-0.5);
+    return { q: `Angles associés — Simplifie :<br><strong style="font-size:16px;font-family:'JetBrains Mono',monospace;">${item.q}</strong>`, opts, correct: opts.indexOf(item.opts[0]) };
+}
+
+// Obj 15 : ordre croissant — QCM
+function genObj15() {
+    const items = [
+        { q: "Classe par ordre croissant :<br><strong>cos 40° ◇ cos 25° ◇ 0 ◇ −1 ◇ 1</strong>", correct: 1,
+          opts: ["−1 < 0 < cos 40° < cos 25° < 1", "−1 < 0 < cos 40° < cos 25° < 1", "0 < cos 25° < cos 40° < 1 > −1", "cos 25° < cos 40° < 0 < 1 < −1"] },
+        { q: "Parmi ces valeurs, laquelle est la plus grande ?<br><strong>sin 80° ◇ sin 170° ◇ sin 250° ◇ sin(−10°)</strong>", correct: 0,
+          opts: ["sin 80°", "sin 170°", "sin 250°", "sin(−10°)"] },
+        { q: "Lequel est négatif ?<br><strong>sin 30° ◇ cos 120° ◇ tan 45° ◇ sin 90°</strong>", correct: 1,
+          opts: ["sin 30°", "cos 120°", "tan 45°", "sin 90°"] },
+        { q: "Dans quel ordre croissant ?<br><strong>sin 250° ◇ sin(−10°) ◇ 0 ◇ sin 170° ◇ sin 80°</strong>", correct: 0,
+          opts: ["sin 250° < sin(−10°) < 0 < sin 170° < sin 80°", "sin(−10°) < sin 250° < 0 < sin 80° < sin 170°", "0 < sin 170° < sin 80° < sin(−10°) < sin 250°", "sin 80° > sin 170° > 0 > sin(−10°) > sin 250°"] },
+    ];
+    const item = items[r(0, items.length-1)];
+    const opts = [...item.opts].sort(() => Math.random()-0.5);
+    const correctOpt = item.opts[item.correct];
+    return { q: item.q, opts, correct: opts.indexOf(correctOpt) };
+}
 
 // ═══════════════════════════════════════
 //  DONNÉES EXERCICES
@@ -392,7 +487,7 @@ function showObj(idx) {
     document.querySelectorAll('.obj-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
     sessionCorrect = 0; sessionTotal = 0;
 
-    if (idx === 12) { renderMemo(); return; }
+    if (idx === 16) { renderMemo(); return; }
     renderExercice();
 }
 
