@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trigonométrie 5ème – La Classe de Stef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'DM Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#040804,#061008,#081a0e,#0a2414,#040804);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;overflow-x:hidden}
+        @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+        /* Layout principal */
+        .app{display:flex;flex:1;min-height:100vh;max-width:1100px;margin:0 auto;width:100%;gap:0;padding:16px 12px 60px;}
+
+        /* Colonne gauche */
+        .sidebar{width:240px;flex-shrink:0;display:flex;flex-direction:column;gap:6px;padding-top:4px;}
+        .sidebar-title{font-size:11px;font-weight:700;color:rgba(46,204,113,0.4);text-transform:uppercase;letter-spacing:0.08em;padding:8px 12px 4px;}
+        .obj-btn{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border-radius:12px;border:1px solid rgba(40,100,55,0.15);background:rgba(10,30,16,0.3);cursor:pointer;transition:all 0.15s;text-align:left;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.5);font-size:11px;line-height:1.4;width:100%;}
+        .obj-btn:hover{border-color:rgba(46,204,113,0.3);background:rgba(20,50,28,0.5);color:#e8f5e9;}
+        .obj-btn.active{border-color:#2ecc71;background:rgba(46,204,113,0.12);color:#2ecc71;font-weight:600;}
+        .obj-btn.special{border-color:rgba(243,156,18,0.3);background:rgba(243,156,18,0.06);color:rgba(243,156,18,0.7);}
+        .obj-btn.special.active{border-color:#f39c12;background:rgba(243,156,18,0.15);color:#f39c12;}
+        .obj-num{font-size:9px;font-weight:800;min-width:18px;height:18px;border-radius:50%;background:rgba(46,204,113,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+        .obj-btn.active .obj-num{background:rgba(46,204,113,0.2);color:#2ecc71;}
+        .obj-btn.special .obj-num{background:rgba(243,156,18,0.1);color:#f39c12;}
+
+        /* Colonne droite */
+        .main-panel{flex:1;padding-left:20px;display:flex;flex-direction:column;gap:16px;min-width:0;}
+
+        /* En-tête */
+        .panel-header{background:rgba(10,30,16,0.55);border:2px solid rgba(40,100,55,0.25);border-radius:16px;padding:16px 20px;display:flex;flex-direction:column;gap:4px;}
+        .panel-obj-num{font-size:10px;color:rgba(46,204,113,0.4);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+        .panel-title{font-size:17px;font-weight:800;color:#e8f5e9;line-height:1.4;}
+
+        /* Score */
+        .score-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+        .score-box{background:rgba(0,0,0,0.2);border-radius:8px;padding:6px 12px;font-family:'JetBrains Mono',monospace;font-size:13px;display:flex;align-items:center;gap:6px;}
+        .score-val{font-size:18px;font-weight:700;color:#2ecc71;}
+        .score-label{font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;}
+
+        /* Exercice */
+        .exercice-card{background:rgba(10,30,16,0.55);border:2px solid rgba(40,100,55,0.2);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px;}
+        .question-text{font-size:15px;color:#e8f5e9;line-height:1.7;}
+        .question-text strong{color:#2ecc71;}
+        .svg-wrap{display:flex;justify-content:center;padding:8px 0;}
+        .svg-wrap svg{max-width:280px;width:100%;}
+
+        /* QCM */
+        .qcm-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+        .qcm-btn{background:rgba(0,0,0,0.2);border:1px solid rgba(40,100,55,0.2);border-radius:10px;padding:12px;font-size:13px;font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.15s;text-align:center;font-weight:600;}
+        .qcm-btn:hover{border-color:rgba(46,204,113,0.35);background:rgba(46,204,113,0.06);}
+        .qcm-btn.correct{border-color:#2ecc71;background:rgba(46,204,113,0.15);color:#2ecc71;}
+        .qcm-btn.wrong{border-color:#e74c3c;background:rgba(231,76,60,0.1);color:#e74c3c;}
+        .qcm-btn.disabled{pointer-events:none;opacity:0.5;}
+
+        /* Input réponse */
+        .ans-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+        .ans-input{background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:8px;padding:10px 14px;font-size:16px;font-family:'JetBrains Mono',monospace;color:#e8f5e9;outline:none;width:140px;}
+        .ans-input:focus{border-color:rgba(46,204,113,0.4);}
+        .ans-unit{font-size:13px;color:rgba(255,255,255,0.4);}
+        .btn-check{background:#2ecc71;color:#040804;border:none;border-radius:8px;padding:10px 20px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;transition:opacity 0.15s;}
+        .btn-check:hover{opacity:0.85;}
+        .btn-next{background:rgba(46,204,113,0.08);color:#2ecc71;border:1px solid rgba(46,204,113,0.3);border-radius:8px;padding:10px 20px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;display:none;}
+        .btn-next:hover{background:rgba(46,204,113,0.15);}
+        .feedback{font-size:13px;min-height:18px;font-weight:600;}
+        .feedback.ok{color:#2ecc71;} .feedback.err{color:#e74c3c;}
+
+        /* Mémo */
+        .memo-section{background:rgba(10,30,16,0.55);border:2px solid rgba(243,156,18,0.2);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:16px;}
+        .memo-title{font-size:14px;font-weight:700;color:#f39c12;display:flex;align-items:center;gap:8px;}
+        .memo-card{background:rgba(0,0,0,0.2);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;}
+        .memo-term{font-size:14px;font-weight:700;color:#e8f5e9;}
+        .memo-def{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.6;}
+        .memo-nota{font-family:'JetBrains Mono',monospace;font-size:13px;color:#f39c12;margin-top:4px;}
+        .memo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+        .memo-trig{background:rgba(46,204,113,0.06);border:1px solid rgba(46,204,113,0.15);border-radius:10px;padding:12px;text-align:center;}
+        .memo-trig-name{font-size:16px;font-weight:800;color:#2ecc71;font-family:'JetBrains Mono',monospace;}
+        .memo-trig-def{font-size:10px;color:rgba(255,255,255,0.4);margin-top:4px;line-height:1.4;}
+        .memo-trig-nota{font-size:11px;color:rgba(243,156,18,0.7);margin-top:4px;font-family:'JetBrains Mono',monospace;}
+        .angles-table{width:100%;border-collapse:collapse;font-size:12px;}
+        .angles-table th{background:rgba(46,204,113,0.1);color:#2ecc71;font-weight:700;padding:8px;text-align:center;border:1px solid rgba(40,100,55,0.2);}
+        .angles-table td{padding:8px;text-align:center;border:1px solid rgba(40,100,55,0.1);color:rgba(255,255,255,0.6);font-family:'JetBrains Mono',monospace;}
+        .angles-table tr:hover td{background:rgba(46,204,113,0.04);}
+
+        /* Mobile */
+        @media(max-width:680px){
+            .app{flex-direction:column;padding:12px 10px 60px;}
+            .sidebar{width:100%;flex-direction:row;overflow-x:auto;padding-bottom:4px;gap:6px;}
+            .sidebar-title{display:none;}
+            .obj-btn{min-width:120px;flex-shrink:0;font-size:10px;padding:8px 10px;}
+            .main-panel{padding-left:0;}
+            .qcm-grid{grid-template-columns:1fr;}
+            .memo-grid{grid-template-columns:1fr 1fr;}
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-title">Objectifs</div>
+        <button class="obj-btn active" onclick="showObj(0)"><span class="obj-num">1</span>Pythagore & nombres trigonométriques</button>
+        <button class="obj-btn" onclick="showObj(1)"><span class="obj-num">2</span>Définition des nombres trigonométriques</button>
+        <button class="obj-btn" onclick="showObj(2)"><span class="obj-num">3</span>Cercle trigonométrique</button>
+        <button class="obj-btn" onclick="showObj(3)"><span class="obj-num">4</span>Placer des angles sur le cercle</button>
+        <button class="obj-btn" onclick="showObj(4)"><span class="obj-num">5</span>Mesure principale d'un angle</button>
+        <button class="obj-btn" onclick="showObj(5)"><span class="obj-num">6</span>Nombres trig. sur le cercle</button>
+        <button class="obj-btn" onclick="showObj(6)"><span class="obj-num">7</span>Signe des nombres trigonométriques</button>
+        <button class="obj-btn" onclick="showObj(7)"><span class="obj-num">8</span>Angles remarquables</button>
+        <button class="obj-btn" onclick="showObj(8)"><span class="obj-num">9</span>Angles associés</button>
+        <button class="obj-btn" onclick="showObj(9)"><span class="obj-num">10</span>Notion de radian</button>
+        <button class="obj-btn" onclick="showObj(10)"><span class="obj-num">11</span>Conversion degrés ↔ radians</button>
+        <button class="obj-btn" onclick="showObj(11)"><span class="obj-num">12</span>Arc, rayon, aire de secteur</button>
+        <div style="height:1px;background:rgba(243,156,18,0.2);margin:4px 0;"></div>
+        <button class="obj-btn special" onclick="showObj(12)"><span class="obj-num">★</span>Mémo : définitions & notations</button>
+    </div>
+
+    <!-- PANEL PRINCIPAL -->
+    <div class="main-panel" id="main-panel">
+        <!-- Rempli par JS -->
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+<script src="theme.js"></script>
+<script src="breadcrumb.js"></script>
+<script>
+let currentUser = null;
+let scores = {};
+let currentObj = 0;
+
+requireAuth((user, profile) => {
+    currentUser = user;
+    scores = profile.scores || {};
+    showObj(0);
+});
+
+// ═══════════════════════════════════════
+//  DONNÉES EXERCICES
+// ═══════════════════════════════════════
+
+function r(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function round2(x) { return Math.round(x * 100) / 100; }
+function degToRad(d) { return d * Math.PI / 180; }
+
+// Obj 0 : Pythagore & trig dans triangle rectangle
+function genObj0() {
+    const angles = [30, 37, 45, 53, 60];
+    const angle = angles[r(0, angles.length-1)];
+    const hyp = r(5, 15);
+    const rad = degToRad(angle);
+    const adj = round2(hyp * Math.cos(rad));
+    const opp = round2(hyp * Math.sin(rad));
+    const type = r(0, 2);
+
+    if (type === 0) {
+        return {
+            q: `Dans un triangle rectangle, l'angle α = <strong>${angle}°</strong> et l'hypoténuse = <strong>${hyp}</strong>.<br>Calcule le côté adjacent (arrondi à 0.01).`,
+            answer: adj, unit: '', tolerance: 0.05,
+            svg: triangleSVG(angle, hyp, adj, opp, 'adj')
+        };
+    } else if (type === 1) {
+        return {
+            q: `Dans un triangle rectangle, l'angle α = <strong>${angle}°</strong> et l'hypoténuse = <strong>${hyp}</strong>.<br>Calcule le côté opposé (arrondi à 0.01).`,
+            answer: opp, unit: '', tolerance: 0.05,
+            svg: triangleSVG(angle, hyp, adj, opp, 'opp')
+        };
+    } else {
+        const a = r(3, 8), b = r(3, 8);
+        const hypo = round2(Math.sqrt(a*a + b*b));
+        return {
+            q: `Dans un triangle rectangle, les deux cathètes mesurent <strong>${a}</strong> et <strong>${b}</strong>.<br>Calcule l'hypoténuse (arrondi à 0.01).`,
+            answer: hypo, unit: '', tolerance: 0.05,
+            svg: null
+        };
+    }
+}
+
+// Obj 1 : définitions sin/cos/tan — QCM
+function genObj1() {
+    const defs = [
+        { q: "Dans un triangle rectangle, sin(α) = ?", opts: ["opp/hyp","adj/hyp","opp/adj","hyp/opp"], correct: 0 },
+        { q: "Dans un triangle rectangle, cos(α) = ?", opts: ["opp/hyp","adj/hyp","opp/adj","hyp/adj"], correct: 1 },
+        { q: "Dans un triangle rectangle, tan(α) = ?", opts: ["adj/opp","hyp/opp","opp/adj","adj/hyp"], correct: 2 },
+        { q: "Si sin(α) = 0.6 et hyp = 10, le côté opposé vaut :", opts: ["4","6","8","10"], correct: 1 },
+        { q: "Si cos(α) = 0.8 et hyp = 15, le côté adjacent vaut :", opts: ["9","10","12","15"], correct: 2 },
+        { q: "tan(α) = sin(α) / cos(α). C'est :", opts: ["Faux","Vrai","Ça dépend de l'angle","Jamais vrai"], correct: 1 },
+    ];
+    return defs[r(0, defs.length-1)];
+}
+
+// Obj 2 & 3 : cercle trigonométrique — QCM
+function genObj2() {
+    const qs = [
+        { q: "Le rayon du cercle trigonométrique vaut :", opts: ["π","2","1","360"], correct: 2 },
+        { q: "Le centre du cercle trigonométrique est :", opts: ["(1,0)","(0,1)","(0,0)","(π,0)"], correct: 2 },
+        { q: "L'angle 0° correspond au point :", opts: ["(0,1)","(-1,0)","(0,-1)","(1,0)"], correct: 3 },
+        { q: "L'angle 90° correspond au point :", opts: ["(1,0)","(0,1)","(-1,0)","(0,-1)"], correct: 1 },
+        { q: "L'angle 180° correspond au point :", opts: ["(0,1)","(1,0)","(-1,0)","(0,-1)"], correct: 2 },
+        { q: "L'angle 270° correspond au point :", opts: ["(-1,0)","(0,1)","(1,0)","(0,-1)"], correct: 3 },
+        { q: "Sur le cercle trigonométrique, cos(α) correspond à :", opts: ["l'ordonnée du point","l'abscisse du point","la pente","le rayon"], correct: 1 },
+        { q: "Sur le cercle trigonométrique, sin(α) correspond à :", opts: ["l'abscisse du point","la pente","l'ordonnée du point","le rayon"], correct: 2 },
+    ];
+    return qs[r(0, qs.length-1)];
+}
+
+// Obj 4 : placer angles — QCM
+function genObj4() {
+    const angles = [
+        { deg: 30, quad: "1er" }, { deg: 120, quad: "2ème" },
+        { deg: 210, quad: "3ème" }, { deg: 315, quad: "4ème" },
+        { deg: 150, quad: "2ème" }, { deg: 240, quad: "3ème" },
+    ];
+    const a = angles[r(0, angles.length-1)];
+    const quads = ["1er","2ème","3ème","4ème"];
+    const wrongQuads = quads.filter(q => q !== a.quad);
+    const opts = [a.quad, ...wrongQuads.slice(0,3)].sort(() => Math.random()-0.5);
+    return {
+        q: `L'angle de <strong>${a.deg}°</strong> se trouve dans le <strong>_</strong> quadrant du cercle trigonométrique.`,
+        opts, correct: opts.indexOf(a.quad)
+    };
+}
+
+// Obj 5 : mesure principale
+function genObj5() {
+    const base = r(0, 3) * 90 + r(10, 80);
+    const k = r(1, 3) * (r(0,1) ? 1 : -1);
+    const angle = base + 360 * k;
+    return {
+        q: `Donne la mesure principale de l'angle <strong>${angle}°</strong><br><small style="color:rgba(255,255,255,0.4);">La mesure principale est dans ]-180°; 180°]</small>`,
+        answer: ((base + 180) % 360) - 180, unit: '°', tolerance: 0.5
+    };
+}
+
+// Obj 6 : signe des trig
+function genObj6() {
+    const quads = [
+        { name: "1er quadrant (0° à 90°)", sin: "+", cos: "+", tan: "+" },
+        { name: "2ème quadrant (90° à 180°)", sin: "+", cos: "-", tan: "-" },
+        { name: "3ème quadrant (180° à 270°)", sin: "-", cos: "-", tan: "+" },
+        { name: "4ème quadrant (270° à 360°)", sin: "-", cos: "+", tan: "-" },
+    ];
+    const q = quads[r(0, 3)];
+    const fns = ["sin","cos","tan"];
+    const fn = fns[r(0, 2)];
+    const sign = q[fn];
+    return {
+        q: `Dans le <strong>${q.name}</strong>, le signe de <strong>${fn}(α)</strong> est :`,
+        opts: ["+", "-", "0", "Impossible à déterminer"],
+        correct: sign === "+" ? 0 : 1
+    };
+}
+
+// Obj 7 : valeurs remarquables
+const REMQ = {
+    0:   { sin: 0, cos: 1, tan: 0 },
+    30:  { sin: "1/2", cos: "√3/2", tan: "1/√3" },
+    45:  { sin: "√2/2", cos: "√2/2", tan: 1 },
+    60:  { sin: "√3/2", cos: "1/2", tan: "√3" },
+    90:  { sin: 1, cos: 0, tan: "indéfinie" },
+};
+function genObj7() {
+    const anglesRem = [0, 30, 45, 60, 90];
+    const angle = anglesRem[r(0, anglesRem.length-1)];
+    const fns = ["sin","cos","tan"];
+    const fn = fns[r(0, 2)];
+    const val = String(REMQ[angle][fn]);
+    const wrongs = ["1/2","√3/2","√2/2","0","1","√3","1/√3"].filter(v => v !== val).slice(0,3);
+    const opts = [val, ...wrongs].sort(() => Math.random()-0.5);
+    return {
+        q: `Donne la valeur exacte de <strong>${fn}(${angle}°)</strong>`,
+        opts, correct: opts.indexOf(val)
+    };
+}
+
+// Obj 8 : angles associés
+function genObj8() {
+    const base = [30, 45, 60];
+    const ang = base[r(0, base.length-1)];
+    const assoc = [180 - ang, 180 + ang, 360 - ang];
+    const target = assoc[r(0, 2)];
+    const fns = ["sin","cos"];
+    const fn = fns[r(0, 1)];
+    let answer;
+    if (target === 180 - ang) answer = fn === "sin" ? `sin(${ang}°)` : `-cos(${ang}°)`;
+    else if (target === 180 + ang) answer = fn === "sin" ? `-sin(${ang}°)` : `-cos(${ang}°)`;
+    else answer = fn === "sin" ? `-sin(${ang}°)` : `cos(${ang}°)`;
+    const wrong1 = fn === "sin" ? `cos(${ang}°)` : `sin(${ang}°)`;
+    const wrong2 = fn === "sin" ? `-cos(${ang}°)` : `-sin(${ang}°)`;
+    const wrong3 = `${fn}(${180-ang}°)`;
+    const opts = [answer, wrong1, wrong2, wrong3].sort(() => Math.random()-0.5);
+    return {
+        q: `Exprime <strong>${fn}(${target}°)</strong> en fonction d'un angle entre 0° et 90°.`,
+        opts, correct: opts.indexOf(answer)
+    };
+}
+
+// Obj 9 : radian
+function genObj9() {
+    const qs = [
+        { q: "1 radian correspond à :", opts: ["57.3°","90°","180°","π°"], correct: 0 },
+        { q: "π radians correspondent à :", opts: ["90°","180°","270°","360°"], correct: 1 },
+        { q: "2π radians correspondent à :", opts: ["180°","270°","360°","720°"], correct: 2 },
+        { q: "π/2 radians correspondent à :", opts: ["45°","60°","90°","120°"], correct: 2 },
+        { q: "π/4 radians correspondent à :", opts: ["30°","45°","60°","90°"], correct: 1 },
+        { q: "π/6 radians correspondent à :", opts: ["30°","45°","60°","90°"], correct: 0 },
+    ];
+    return qs[r(0, qs.length-1)];
+}
+
+// Obj 10 : conversions
+function genObj10() {
+    const type = r(0, 1);
+    if (type === 0) {
+        const degs = [30, 45, 60, 90, 120, 135, 150, 180, 270, 360];
+        const deg = degs[r(0, degs.length-1)];
+        const rad = round2(deg * Math.PI / 180);
+        return {
+            q: `Convertis <strong>${deg}°</strong> en radians (arrondi à 0.01).`,
+            answer: rad, unit: ' rad', tolerance: 0.02
+        };
+    } else {
+        const rads = [Math.PI/6, Math.PI/4, Math.PI/3, Math.PI/2, Math.PI, 2*Math.PI/3, 3*Math.PI/4];
+        const rad = rads[r(0, rads.length-1)];
+        const deg = round2(rad * 180 / Math.PI);
+        return {
+            q: `Convertis <strong>${round2(rad)}</strong> rad en degrés (arrondi à 0.01).`,
+            answer: deg, unit: '°', tolerance: 0.5
+        };
+    }
+}
+
+// Obj 11 : arc, rayon, aire
+function genObj11() {
+    const type = r(0, 2);
+    const radius = r(2, 10);
+    const angleDeg = r(30, 270);
+    const angleRad = round2(angleDeg * Math.PI / 180);
+    const arc = round2(radius * angleRad);
+    const area = round2(0.5 * radius * radius * angleRad);
+    if (type === 0) {
+        return { q: `Un secteur angulaire a un rayon de <strong>${radius}</strong> cm et un angle de <strong>${angleDeg}°</strong>.<br>Calcule la longueur de l'arc (arrondi à 0.01).`, answer: arc, unit: ' cm', tolerance: 0.05 };
+    } else if (type === 1) {
+        return { q: `Un arc mesure <strong>${arc}</strong> cm pour un rayon de <strong>${radius}</strong> cm.<br>Calcule l'angle en radians (arrondi à 0.01).`, answer: angleRad, unit: ' rad', tolerance: 0.05 };
+    } else {
+        return { q: `Un secteur angulaire a un rayon de <strong>${radius}</strong> cm et un angle de <strong>${angleDeg}°</strong>.<br>Calcule l'aire du secteur (arrondi à 0.01).`, answer: area, unit: ' cm²', tolerance: 0.1 };
+    }
+}
+
+// SVG triangle rectangle
+function triangleSVG(angle, hyp, adj, opp, highlight) {
+    return `<svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="20,130 160,130 160,30" stroke="rgba(46,204,113,0.6)" stroke-width="2" fill="rgba(46,204,113,0.03)"/>
+        <rect x="150" y="120" width="10" height="10" stroke="rgba(46,204,113,0.4)" stroke-width="1.5"/>
+        <text x="12" y="148" fill="${highlight==='adj'?'#2ecc71':'rgba(255,255,255,0.4)'}" font-size="11" font-family="JetBrains Mono">adj≈${adj}</text>
+        <text x="165" y="80" fill="${highlight==='opp'?'#2ecc71':'rgba(255,255,255,0.4)'}" font-size="11" font-family="JetBrains Mono">opp≈${opp}</text>
+        <text x="75" y="65" fill="rgba(255,255,255,0.5)" font-size="11" font-family="JetBrains Mono">hyp=${hyp}</text>
+        <text x="38" y="125" fill="#f39c12" font-size="13" font-family="JetBrains Mono">α=${angle}°</text>
+        <path d="M 40,130 A 20,20 0 0,0 ${20+20*Math.cos(degToRad(-angle+180))},${130-20*Math.sin(degToRad(-angle+180))}" stroke="#f39c12" stroke-width="1.5" fill="none"/>
+    </svg>`;
+}
+
+// ═══════════════════════════════════════
+//  RENDU
+// ═══════════════════════════════════════
+const OBJECTIVES = [
+    { title: "Pythagore & nombres trigonométriques", gen: genObj0, type: 'input' },
+    { title: "Définition des nombres trigonométriques", gen: genObj1, type: 'qcm' },
+    { title: "Cercle trigonométrique — définition", gen: genObj2, type: 'qcm' },
+    { title: "Placer des angles sur le cercle", gen: genObj4, type: 'qcm' },
+    { title: "Mesure principale d'un angle", gen: genObj5, type: 'input' },
+    { title: "Nombres trig. sur le cercle trigonométrique", gen: genObj2, type: 'qcm' },
+    { title: "Signe des nombres trigonométriques", gen: genObj6, type: 'qcm' },
+    { title: "Valeurs des angles remarquables", gen: genObj7, type: 'qcm' },
+    { title: "Angles associés aux angles remarquables", gen: genObj8, type: 'qcm' },
+    { title: "Notion de radian", gen: genObj9, type: 'qcm' },
+    { title: "Conversion degrés ↔ radians", gen: genObj10, type: 'input' },
+    { title: "Arc, rayon et aire de secteur angulaire", gen: genObj11, type: 'input' },
+];
+
+let currentExercice = null;
+let sessionCorrect = 0, sessionTotal = 0;
+
+function showObj(idx) {
+    currentObj = idx;
+    document.querySelectorAll('.obj-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+    sessionCorrect = 0; sessionTotal = 0;
+
+    if (idx === 12) { renderMemo(); return; }
+    renderExercice();
+}
+
+function renderExercice() {
+    const obj = OBJECTIVES[currentObj];
+    const ex = obj.gen();
+    currentExercice = ex;
+
+    const panel = document.getElementById('main-panel');
+    const scoreKey = `trig_obj${currentObj}`;
+    const best = scores[scoreKey] || 0;
+
+    let exHTML = '';
+    if (obj.type === 'qcm' || ex.opts) {
+        exHTML = `<div class="qcm-grid">${ex.opts.map((o,i) =>
+            `<button class="qcm-btn" onclick="checkQCM(${i})">${o}</button>`
+        ).join('')}</div>`;
+    } else {
+        exHTML = `<div class="ans-row">
+            <input type="number" step="0.01" class="ans-input" id="ans-input" placeholder="Réponse" onkeydown="if(event.key==='Enter')checkInput()">
+            <span class="ans-unit">${ex.unit||''}</span>
+            <button class="btn-check" onclick="checkInput()">Vérifier</button>
+        </div>`;
+    }
+
+    panel.innerHTML = `
+        <div class="panel-header">
+            <div class="panel-obj-num">Objectif ${currentObj+1} / ${OBJECTIVES.length}</div>
+            <div class="panel-title">${obj.title}</div>
+        </div>
+        <div class="score-bar">
+            <div class="score-box"><span class="score-val">${sessionCorrect}</span><span class="score-label">Session</span></div>
+            <div class="score-box"><span class="score-val">${sessionTotal}</span><span class="score-label">Tentatives</span></div>
+            <div class="score-box"><span class="score-val">${best}</span><span class="score-label">Record</span></div>
+        </div>
+        <div class="exercice-card">
+            <div class="question-text">${ex.q}</div>
+            ${ex.svg ? `<div class="svg-wrap">${ex.svg}</div>` : ''}
+            ${exHTML}
+            <div class="feedback" id="feedback"></div>
+            <button class="btn-next" id="btn-next" onclick="renderExercice()">Exercice suivant →</button>
+        </div>`;
+
+    if (obj.type === 'input' && !ex.opts) {
+        setTimeout(() => document.getElementById('ans-input')?.focus(), 100);
+    }
+}
+
+function checkQCM(idx) {
+    const ex = currentExercice;
+    const btns = document.querySelectorAll('.qcm-btn');
+    btns.forEach((b,i) => {
+        b.classList.add('disabled');
+        if (i === ex.correct) b.classList.add('correct');
+        else if (i === idx && idx !== ex.correct) b.classList.add('wrong');
+    });
+    sessionTotal++;
+    const fb = document.getElementById('feedback');
+    if (idx === ex.correct) {
+        sessionCorrect++;
+        fb.textContent = '✓ Bonne réponse !'; fb.className = 'feedback ok';
+        saveScore();
+    } else {
+        fb.textContent = `✗ La bonne réponse était : ${ex.opts[ex.correct]}`; fb.className = 'feedback err';
+    }
+    document.getElementById('btn-next').style.display = 'inline-flex';
+    updateScoreDisplay();
+}
+
+function checkInput() {
+    const ex = currentExercice;
+    const val = parseFloat(document.getElementById('ans-input').value);
+    const fb = document.getElementById('feedback');
+    if (isNaN(val)) { fb.textContent = 'Entre une valeur numérique.'; fb.className = 'feedback err'; return; }
+    sessionTotal++;
+    const tol = ex.tolerance || 0.01;
+    if (Math.abs(val - ex.answer) <= tol) {
+        sessionCorrect++;
+        fb.textContent = `✓ Bonne réponse ! (${ex.answer}${ex.unit||''})`; fb.className = 'feedback ok';
+        saveScore();
+    } else {
+        fb.textContent = `✗ Réponse incorrecte. La bonne réponse était ${ex.answer}${ex.unit||''}`; fb.className = 'feedback err';
+    }
+    document.getElementById('btn-next').style.display = 'inline-flex';
+    updateScoreDisplay();
+}
+
+function updateScoreDisplay() {
+    const best = scores[`trig_obj${currentObj}`] || 0;
+    document.querySelector('.score-bar').innerHTML = `
+        <div class="score-box"><span class="score-val">${sessionCorrect}</span><span class="score-label">Session</span></div>
+        <div class="score-box"><span class="score-val">${sessionTotal}</span><span class="score-label">Tentatives</span></div>
+        <div class="score-box"><span class="score-val">${best}</span><span class="score-label">Record</span></div>`;
+}
+
+async function saveScore() {
+    if (!currentUser) return;
+    const key = `trig_obj${currentObj}`;
+    const prev = scores[key] || 0;
+    if (sessionCorrect > prev) {
+        scores[key] = sessionCorrect;
+        try { await db.collection('users').doc(currentUser.uid).update({[`scores.${key}`]: sessionCorrect}); }
+        catch(e) {}
+    }
+}
+
+// ═══════════════════════════════════════
+//  MÉMO
+// ═══════════════════════════════════════
+function renderMemo() {
+    document.getElementById('main-panel').innerHTML = `
+        <div class="panel-header" style="border-color:rgba(243,156,18,0.3);">
+            <div class="panel-obj-num" style="color:#f39c12;">★ Onglet spécial</div>
+            <div class="panel-title">Mémo — Définitions, Vocabulaire & Notations</div>
+        </div>
+
+        <div class="memo-section">
+            <div class="memo-title">📐 Les 3 nombres trigonométriques</div>
+            <div class="memo-grid">
+                <div class="memo-trig">
+                    <div class="memo-trig-name">sin</div>
+                    <div class="memo-trig-def">côté opposé / hypoténuse</div>
+                    <div class="memo-trig-nota">sin(α) = opp/hyp</div>
+                </div>
+                <div class="memo-trig">
+                    <div class="memo-trig-name">cos</div>
+                    <div class="memo-trig-def">côté adjacent / hypoténuse</div>
+                    <div class="memo-trig-nota">cos(α) = adj/hyp</div>
+                </div>
+                <div class="memo-trig">
+                    <div class="memo-trig-name">tan</div>
+                    <div class="memo-trig-def">côté opposé / côté adjacent</div>
+                    <div class="memo-trig-nota">tan(α) = opp/adj = sin/cos</div>
+                </div>
+            </div>
+            <div class="memo-card" style="background:rgba(243,156,18,0.05);border:1px solid rgba(243,156,18,0.15);">
+                <div class="memo-term" style="color:#f39c12;">🧠 Moyen mnémotechnique</div>
+                <div class="memo-def"><strong style="color:#e8f5e9;">SOH-CAH-TOA</strong><br>
+                <strong>S</strong>in = <strong>O</strong>pp / <strong>H</strong>yp &nbsp;|&nbsp; 
+                <strong>C</strong>os = <strong>A</strong>dj / <strong>H</strong>yp &nbsp;|&nbsp; 
+                <strong>T</strong>an = <strong>O</strong>pp / <strong>A</strong>dj</div>
+            </div>
+        </div>
+
+        <div class="memo-section">
+            <div class="memo-title">🔵 Cercle trigonométrique</div>
+            <div class="memo-card">
+                <div class="memo-term">Définition</div>
+                <div class="memo-def">Cercle de <strong style="color:#e8f5e9;">rayon 1</strong> centré à l'<strong style="color:#e8f5e9;">origine (0,0)</strong>. Pour un angle α, le point P(cos α, sin α) est sur le cercle.</div>
+            </div>
+            <div class="memo-card">
+                <div class="memo-term">Points remarquables</div>
+                <div class="memo-def">
+                    0° → (1, 0) &nbsp;|&nbsp; 90° → (0, 1) &nbsp;|&nbsp; 180° → (-1, 0) &nbsp;|&nbsp; 270° → (0, -1)
+                </div>
+            </div>
+            <div class="memo-card">
+                <div class="memo-term">Signes par quadrant</div>
+                <table class="angles-table" style="margin-top:4px;">
+                    <tr><th>Quadrant</th><th>sin</th><th>cos</th><th>tan</th></tr>
+                    <tr><td>I (0°–90°)</td><td style="color:#2ecc71;">+</td><td style="color:#2ecc71;">+</td><td style="color:#2ecc71;">+</td></tr>
+                    <tr><td>II (90°–180°)</td><td style="color:#2ecc71;">+</td><td style="color:#e74c3c;">−</td><td style="color:#e74c3c;">−</td></tr>
+                    <tr><td>III (180°–270°)</td><td style="color:#e74c3c;">−</td><td style="color:#e74c3c;">−</td><td style="color:#2ecc71;">+</td></tr>
+                    <tr><td>IV (270°–360°)</td><td style="color:#e74c3c;">−</td><td style="color:#2ecc71;">+</td><td style="color:#e74c3c;">−</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="memo-section">
+            <div class="memo-title">⭐ Valeurs remarquables</div>
+            <table class="angles-table">
+                <tr><th>α</th><th>0°</th><th>30°</th><th>45°</th><th>60°</th><th>90°</th></tr>
+                <tr><td>sin(α)</td><td>0</td><td>1/2</td><td>√2/2</td><td>√3/2</td><td>1</td></tr>
+                <tr><td>cos(α)</td><td>1</td><td>√3/2</td><td>√2/2</td><td>1/2</td><td>0</td></tr>
+                <tr><td>tan(α)</td><td>0</td><td>1/√3</td><td>1</td><td>√3</td><td>∞</td></tr>
+                <tr><td>en rad</td><td>0</td><td>π/6</td><td>π/4</td><td>π/3</td><td>π/2</td></tr>
+            </table>
+        </div>
+
+        <div class="memo-section">
+            <div class="memo-title">🔄 Radian & conversions</div>
+            <div class="memo-card">
+                <div class="memo-term">Définition du radian</div>
+                <div class="memo-def">Le radian est l'angle dont l'arc correspondant sur le cercle unité est égal au rayon. <strong style="color:#e8f5e9;">1 rad ≈ 57,3°</strong></div>
+                <div class="memo-nota">π rad = 180° &nbsp;|&nbsp; 2π rad = 360°</div>
+            </div>
+            <div class="memo-card">
+                <div class="memo-term">Formules de conversion</div>
+                <div class="memo-nota">
+                    deg → rad : α(rad) = α(deg) × π/180<br>
+                    rad → deg : α(deg) = α(rad) × 180/π
+                </div>
+            </div>
+            <div class="memo-card">
+                <div class="memo-term">Secteur angulaire</div>
+                <div class="memo-nota">
+                    Arc = r × α(rad)<br>
+                    Aire = ½ × r² × α(rad)
+                </div>
+                <div class="memo-def" style="margin-top:4px;">r = rayon, α = angle en radians</div>
+            </div>
+        </div>
+
+        <div class="memo-section">
+            <div class="memo-title">🔗 Angles associés</div>
+            <table class="angles-table">
+                <tr><th>Angle</th><th>sin</th><th>cos</th></tr>
+                <tr><td>180° − α</td><td>sin(α)</td><td>−cos(α)</td></tr>
+                <tr><td>180° + α</td><td>−sin(α)</td><td>−cos(α)</td></tr>
+                <tr><td>360° − α</td><td>−sin(α)</td><td>cos(α)</td></tr>
+                <tr><td>−α</td><td>−sin(α)</td><td>cos(α)</td></tr>
+            </table>
+        </div>`;
+}
+</script>
+</body>
+</html>

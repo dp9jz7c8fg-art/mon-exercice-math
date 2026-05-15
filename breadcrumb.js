@@ -28,6 +28,8 @@ const SITEMAP = {
     'atelier-profil.html':     { label: '🔍 Profil apprentissage', parent: 'dev-soi.html' },
     'exercices-en-ligne.html': { label: '💻 Exercices', parent: 'eleve.html' },
     '6eme-primaire.html':      { label: '6️⃣ 6ème primaire', parent: 'exercices-en-ligne.html' },
+    '5eme-annee.html':         { label: '5️⃣ 5ème année', parent: 'exercices-en-ligne.html' },
+    'trigonometrie.html':      { label: '📐 Trigonométrie', parent: '5eme-annee.html' },
     '1ere-annee.html':         { label: '1️⃣ 1ère année', parent: 'exercices-en-ligne.html' },
     '2eme-annee.html':         { label: '2️⃣ 2ème année', parent: 'exercices-en-ligne.html' },
     'exercices.html':          { label: '📐 Angles', parent: '2eme-annee.html' },
