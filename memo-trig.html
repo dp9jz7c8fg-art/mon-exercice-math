@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mémorisation Trigonométrie – La Classe de Stef</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'DM Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#040804,#061008,#081a0e,#0a2414,#040804);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
+        @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .app{width:100%;max-width:700px;padding:16px 14px 60px;display:flex;flex-direction:column;gap:16px}
+
+        /* Header */
+        .page-header{text-align:center}
+        .page-title{font-family:'Playfair Display',serif;font-style:italic;font-size:26px;font-weight:700;background:linear-gradient(135deg,#2ecc71,#a8f0c0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .page-sub{font-size:11px;color:rgba(46,204,113,0.4);text-transform:uppercase;letter-spacing:0.1em;font-weight:600;margin-top:4px}
+
+        /* Tabs modes */
+        .mode-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+        .mode-tab{padding:8px 16px;border-radius:100px;border:1px solid rgba(40,100,55,0.25);background:rgba(10,30,16,0.4);font-size:12px;font-weight:600;color:rgba(255,255,255,0.4);cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+        .mode-tab:hover{border-color:rgba(46,204,113,0.3);color:#e8f5e9}
+        .mode-tab.active{border-color:#2ecc71;background:rgba(46,204,113,0.15);color:#2ecc71}
+
+        /* Thèmes */
+        .theme-tabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+        .theme-tab{padding:5px 12px;border-radius:100px;border:1px solid rgba(40,100,55,0.15);background:rgba(0,0,0,0.2);font-size:10px;font-weight:600;color:rgba(255,255,255,0.3);cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+        .theme-tab:hover{color:#e8f5e9;border-color:rgba(46,204,113,0.25)}
+        .theme-tab.active{border-color:rgba(46,204,113,0.4);background:rgba(46,204,113,0.08);color:#2ecc71}
+
+        /* Score bar */
+        .score-bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+        .score-pill{background:rgba(0,0,0,0.25);border-radius:100px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(255,255,255,0.4);display:flex;align-items:center;gap:6px}
+        .score-pill span{color:#2ecc71;font-weight:700;font-size:15px}
+
+        /* ─── FLASHCARD ─── */
+        .flashcard-wrap{perspective:1000px;width:100%;height:200px;cursor:pointer}
+        .flashcard{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.5s}
+        .flashcard.flipped{transform:rotateY(180deg)}
+        .fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;text-align:center}
+        .fc-front{background:rgba(10,30,16,0.6);border:2px solid rgba(40,100,55,0.3)}
+        .fc-back{background:rgba(20,50,28,0.8);border:2px solid rgba(46,204,113,0.4);transform:rotateY(180deg)}
+        .fc-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(46,204,113,0.4)}
+        .fc-question{font-size:18px;font-weight:700;color:#e8f5e9;line-height:1.4}
+        .fc-formula{font-family:'JetBrains Mono',monospace;font-size:16px;color:#2ecc71;font-weight:600}
+        .fc-answer{font-size:15px;color:#e8f5e9;line-height:1.6}
+        .fc-hint{font-size:10px;color:rgba(255,255,255,0.25);margin-top:8px}
+        .fc-nav{display:flex;align-items:center;justify-content:space-between;gap:12px}
+        .fc-btn{background:rgba(10,30,16,0.5);border:1px solid rgba(40,100,55,0.25);border-radius:10px;padding:10px 18px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700;color:rgba(255,255,255,0.5);cursor:pointer;transition:all 0.15s}
+        .fc-btn:hover{border-color:rgba(46,204,113,0.4);color:#2ecc71}
+        .fc-btn.ok{border-color:rgba(46,204,113,0.4);background:rgba(46,204,113,0.1);color:#2ecc71}
+        .fc-btn.nok{border-color:rgba(231,76,60,0.4);background:rgba(231,76,60,0.08);color:#e74c3c}
+        .fc-progress{font-size:11px;color:rgba(255,255,255,0.3);font-family:'JetBrains Mono',monospace}
+
+        /* ─── QCM ─── */
+        .qcm-card{background:rgba(10,30,16,0.55);border:2px solid rgba(40,100,55,0.25);border-radius:18px;padding:22px 20px;display:flex;flex-direction:column;gap:14px}
+        .qcm-q{font-size:16px;font-weight:700;color:#e8f5e9;line-height:1.5}
+        .qcm-formula{font-family:'JetBrains Mono',monospace;font-size:14px;color:rgba(255,255,255,0.5);margin-top:-6px}
+        .qcm-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+        .qcm-opt{background:rgba(0,0,0,0.2);border:1px solid rgba(40,100,55,0.2);border-radius:10px;padding:12px;font-size:13px;font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.15s;text-align:center;font-weight:600}
+        .qcm-opt:hover:not(.disabled){border-color:rgba(46,204,113,0.35);background:rgba(46,204,113,0.06)}
+        .qcm-opt.correct{border-color:#2ecc71;background:rgba(46,204,113,0.15);color:#2ecc71}
+        .qcm-opt.wrong{border-color:#e74c3c;background:rgba(231,76,60,0.1);color:#e74c3c}
+        .qcm-opt.disabled{pointer-events:none;opacity:0.5}
+        .qcm-expl{font-size:12px;color:rgba(255,255,255,0.4);background:rgba(0,0,0,0.2);border-radius:8px;padding:10px 12px;line-height:1.6;display:none}
+        .qcm-expl.show{display:block}
+        .btn-next-q{background:#2ecc71;color:#040804;border:none;border-radius:10px;padding:11px 22px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;display:none;align-self:flex-end}
+        .btn-next-q:hover{opacity:0.85}
+        .feedback-qcm{font-size:13px;font-weight:700;min-height:18px;display:none}
+        .feedback-qcm.ok{color:#2ecc71} .feedback-qcm.err{color:#e74c3c}
+
+        /* ─── QUIZ SAISIE ─── */
+        .quiz-card{background:rgba(10,30,16,0.55);border:2px solid rgba(40,100,55,0.25);border-radius:18px;padding:22px 20px;display:flex;flex-direction:column;gap:14px}
+        .quiz-q{font-size:16px;font-weight:700;color:#e8f5e9;line-height:1.4}
+        .quiz-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+        .quiz-input{background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:8px;padding:10px 14px;font-size:15px;font-family:'JetBrains Mono',monospace;color:#e8f5e9;outline:none;width:160px}
+        .quiz-input:focus{border-color:rgba(46,204,113,0.4)}
+        .btn-check{background:#2ecc71;color:#040804;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer}
+        .btn-check:hover{opacity:0.85}
+        .btn-skip{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 14px;font-size:12px;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.3);cursor:pointer}
+        .quiz-fb{font-size:13px;font-weight:700;min-height:18px}
+        .quiz-fb.ok{color:#2ecc71} .quiz-fb.err{color:#e74c3c}
+
+        /* Progress bar */
+        .prog-wrap{background:rgba(0,0,0,0.2);border-radius:100px;height:4px;width:100%}
+        .prog-bar{background:#2ecc71;border-radius:100px;height:4px;transition:width 0.3s}
+
+        /* Section vide */
+        .empty-state{text-align:center;padding:40px 20px;color:rgba(255,255,255,0.2);font-size:14px}
+
+        @media(max-width:480px){
+            .qcm-opts{grid-template-columns:1fr}
+            .fc-question{font-size:15px}
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+
+    <div class="page-header">
+        <h1 class="page-title">🧠 Mémorisation</h1>
+        <p class="page-sub">Compétence 1 — Connaître & Expliciter</p>
+    </div>
+
+    <!-- Score -->
+    <div class="score-bar">
+        <div class="score-pill">✅ Correct <span id="sc-ok">0</span></div>
+        <div class="score-pill">❌ Faux <span id="sc-err">0</span></div>
+        <div class="score-pill">🃏 Total <span id="sc-tot">0</span></div>
+    </div>
+
+    <!-- Modes -->
+    <div class="mode-tabs">
+        <button class="mode-tab active" onclick="setMode('flash')">🃏 Flashcards</button>
+        <button class="mode-tab" onclick="setMode('qcm')">🎯 QCM</button>
+        <button class="mode-tab" onclick="setMode('quiz')">✍️ Quiz saisie</button>
+    </div>
+
+    <!-- Thèmes -->
+    <div class="theme-tabs">
+        <button class="theme-tab active" onclick="setTheme('all')">Tout</button>
+        <button class="theme-tab" onclick="setTheme('definitions')">Définitions</button>
+        <button class="theme-tab" onclick="setTheme('formules')">Formules</button>
+        <button class="theme-tab" onclick="setTheme('valeurs')">Valeurs remarquables</button>
+        <button class="theme-tab" onclick="setTheme('angles')">Angles associés</button>
+        <button class="theme-tab" onclick="setTheme('radians')">Radians</button>
+        <button class="theme-tab" onclick="setTheme('arcs')">Arcs & secteurs</button>
+    </div>
+
+    <!-- Progress -->
+    <div class="prog-wrap"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+
+    <!-- Zone principale -->
+    <div id="main-zone"></div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+<script src="theme.js"></script>
+<script src="breadcrumb.js"></script>
+<script>
+// ════════════════════════════════════════════════════════
+//  BASE DE CONNAISSANCES — tirée du cours da Vinci
+// ════════════════════════════════════════════════════════
+const CARDS = [
+
+  // ── DÉFINITIONS ──
+  { theme:'definitions', q:'Qu\'est-ce que le cercle trigonométrique ?',
+    a:'Un cercle centré en O, de rayon 1, orienté dans le sens anti-horloger dans un repère orthonormé.',
+    expl:'Le point P(α) a pour coordonnées (cos α ; sin α).' },
+  { theme:'definitions', q:'Le cosinus d\'un angle α sur le cercle trigonométrique, c\'est quoi ?',
+    a:'L\'abscisse (coordonnée x) du point A représentant l\'angle α sur le cercle trigonométrique.',
+    expl:'cos α = OA\' où A\' est la projection de A sur l\'axe des x.' },
+  { theme:'definitions', q:'Le sinus d\'un angle α sur le cercle trigonométrique, c\'est quoi ?',
+    a:'L\'ordonnée (coordonnée y) du point A représentant l\'angle α sur le cercle trigonométrique.',
+    expl:'sin α = AA\' où A\' est la projection de A sur l\'axe des x.' },
+  { theme:'definitions', q:'La tangente d\'un angle α, c\'est quoi ?',
+    a:'L\'ordonnée du point d\'intersection de l\'axe des tangentes (x=1) et de la droite OA.',
+    expl:'tg α = sin α / cos α. Non définie si cos α = 0 (α = 90° + k·180°).' },
+  { theme:'definitions', q:'La cotangente d\'un angle α, c\'est quoi ?',
+    a:'L\'abscisse du point d\'intersection de l\'axe des cotangentes (y=1) et de la droite OA.',
+    expl:'cotg α = cos α / sin α = 1/tg α. Non définie si sin α = 0 (α = k·180°).' },
+  { theme:'definitions', q:'Qu\'est-ce que la mesure principale d\'un angle ?',
+    a:'Le réel mesurant l\'amplitude de l\'angle qui appartient à [0°, 360°[ (ou [0, 2π[ en radians).',
+    expl:'Les angles α + k·360° (k ∈ ℤ) définissent le même point sur le cercle.' },
+  { theme:'definitions', q:'Qu\'est-ce que deux angles équivalents ?',
+    a:'Deux angles α et β sont équivalents si β = α + k·360° avec k ∈ ℤ.',
+    expl:'Ils correspondent au même point sur le cercle trigonométrique.' },
+  { theme:'definitions', q:'Qu\'est-ce qu\'un radian ?',
+    a:'L\'amplitude d\'un angle au centre d\'un cercle qui intercepte un arc de longueur égale au rayon.',
+    expl:'1 radian ≈ 57,3°. Un tour complet = 2π rad = 360°.' },
+  { theme:'definitions', q:'Qu\'est-ce qu\'un secteur circulaire ?',
+    a:'La partie d\'un secteur angulaire intérieure à un cercle centré en son sommet (quartier de tarte).',
+    expl:'Noté AOB̂ — délimité par deux rayons et un arc.' },
+  { theme:'definitions', q:'Dans le triangle rectangle, sin β = ?',
+    a:'côté opposé à β / hypoténuse (SOH)',
+    expl:'Moyen mnémotechnique : SOH-CAH-TOA' },
+  { theme:'definitions', q:'Dans le triangle rectangle, cos β = ?',
+    a:'côté adjacent à β / hypoténuse (CAH)',
+    expl:'Moyen mnémotechnique : SOH-CAH-TOA' },
+  { theme:'definitions', q:'Dans le triangle rectangle, tg β = ?',
+    a:'côté opposé à β / côté adjacent à β (TOA)',
+    expl:'tg β = sin β / cos β' },
+
+  // ── FORMULES ──
+  { theme:'formules', q:'Formule fondamentale (relation de Pythagore) :',
+    a:'sin²α + cos²α = 1',
+    expl:'Valable pour tout angle α. Démonstration : Pythagore dans le triangle OA\'A.' },
+  { theme:'formules', q:'Relation fondamentale (1) liant tg et cos :',
+    a:'1 + tg²α = 1/cos²α',
+    expl:'Valable pour α ≠ 90° + k·180°. Se démontre à partir de sin²+cos²=1.' },
+  { theme:'formules', q:'Relation fondamentale (2) liant cotg et sin :',
+    a:'1 + cotg²α = 1/sin²α',
+    expl:'Valable pour α ≠ k·180°. Se démontre à partir de sin²+cos²=1.' },
+  { theme:'formules', q:'tg α en fonction de sin et cos :',
+    a:'tg α = sin α / cos α',
+    expl:'Définie seulement si cos α ≠ 0.' },
+  { theme:'formules', q:'cotg α en fonction de sin et cos :',
+    a:'cotg α = cos α / sin α = 1/tg α',
+    expl:'Définie seulement si sin α ≠ 0.' },
+  { theme:'formules', q:'Valeurs extrêmes du sinus et cosinus :',
+    a:'−1 ≤ cos α ≤ 1 et −1 ≤ sin α ≤ 1 pour tout α',
+    expl:'Car ce sont des coordonnées sur un cercle de rayon 1.' },
+  { theme:'formules', q:'La tangente peut-elle prendre toutes les valeurs réelles ?',
+    a:'Oui : tg α ∈ ℝ — pour tout réel r, il existe α tel que tg α = r.',
+    expl:'Contrairement à sin et cos qui sont bornés entre -1 et 1.' },
+  { theme:'formules', q:'Propriété de périodicité du cos :',
+    a:'cos(x + k·2π) = cos(x) pour tout k ∈ ℤ',
+    expl:'Le cosinus est périodique de période 2π (ou 360°).' },
+  { theme:'formules', q:'Propriété de périodicité du sin :',
+    a:'sin(x + k·2π) = sin(x) pour tout k ∈ ℤ',
+    expl:'Le sinus est périodique de période 2π (ou 360°).' },
+  { theme:'formules', q:'Longueur d\'un arc de cercle de rayon R et angle α (en rad) :',
+    a:'L = α · R',
+    expl:'Dans un cercle de rayon 1, L = α (la longueur = la mesure en radians).' },
+  { theme:'formules', q:'Aire d\'un secteur circulaire de rayon R et angle α (en rad) :',
+    a:'A = αR²/2',
+    expl:'Proportion de l\'aire totale : (α/2π) × πR² = αR²/2.' },
+  { theme:'formules', q:'Conversion : d degrés en radians',
+    a:'r = d × π/180',
+    expl:'Équivalence : 180° = π rad → 1° = π/180 rad.' },
+  { theme:'formules', q:'Conversion : r radians en degrés',
+    a:'d = r × 180/π',
+    expl:'Équivalence : π rad = 180° → 1 rad = 180/π ≈ 57,3°.' },
+
+  // ── VALEURS REMARQUABLES ──
+  { theme:'valeurs', q:'sin 0° = ?', a:'0', expl:'Point (1,0) sur le cercle → ordonnée = 0' },
+  { theme:'valeurs', q:'cos 0° = ?', a:'1', expl:'Point (1,0) → abscisse = 1' },
+  { theme:'valeurs', q:'tg 0° = ?', a:'0', expl:'sin0/cos0 = 0/1 = 0' },
+  { theme:'valeurs', q:'sin 30° = ?', a:'1/2', expl:'Triangle équilatéral divisé en deux.' },
+  { theme:'valeurs', q:'cos 30° = ?', a:'√3/2', expl:'Triangle équilatéral divisé en deux.' },
+  { theme:'valeurs', q:'tg 30° = ?', a:'1/√3 = √3/3', expl:'(1/2)/(√3/2) = 1/√3' },
+  { theme:'valeurs', q:'sin 45° = ?', a:'√2/2', expl:'Triangle rectangle isocèle de côté 1.' },
+  { theme:'valeurs', q:'cos 45° = ?', a:'√2/2', expl:'Triangle rectangle isocèle : sin = cos.' },
+  { theme:'valeurs', q:'tg 45° = ?', a:'1', expl:'sin45/cos45 = (√2/2)/(√2/2) = 1' },
+  { theme:'valeurs', q:'sin 60° = ?', a:'√3/2', expl:'Triangle équilatéral divisé en deux.' },
+  { theme:'valeurs', q:'cos 60° = ?', a:'1/2', expl:'Triangle équilatéral divisé en deux.' },
+  { theme:'valeurs', q:'tg 60° = ?', a:'√3', expl:'(√3/2)/(1/2) = √3' },
+  { theme:'valeurs', q:'sin 90° = ?', a:'1', expl:'Point (0,1) → ordonnée = 1' },
+  { theme:'valeurs', q:'cos 90° = ?', a:'0', expl:'Point (0,1) → abscisse = 0' },
+  { theme:'valeurs', q:'tg 90° = ?', a:'Non définie (∞)', expl:'cos 90° = 0 → division par 0' },
+  { theme:'valeurs', q:'sin 180° = ?', a:'0', expl:'Point (−1, 0) → ordonnée = 0' },
+  { theme:'valeurs', q:'cos 180° = ?', a:'−1', expl:'Point (−1, 0) → abscisse = −1' },
+  { theme:'valeurs', q:'sin 270° = ?', a:'−1', expl:'Point (0, −1) → ordonnée = −1' },
+  { theme:'valeurs', q:'cos 270° = ?', a:'0', expl:'Point (0, −1) → abscisse = 0' },
+  { theme:'valeurs', q:'30° en radians = ?', a:'π/6', expl:'30 × π/180 = π/6' },
+  { theme:'valeurs', q:'45° en radians = ?', a:'π/4', expl:'45 × π/180 = π/4' },
+  { theme:'valeurs', q:'60° en radians = ?', a:'π/3', expl:'60 × π/180 = π/3' },
+  { theme:'valeurs', q:'90° en radians = ?', a:'π/2', expl:'90 × π/180 = π/2' },
+  { theme:'valeurs', q:'180° en radians = ?', a:'π', expl:'180 × π/180 = π' },
+  { theme:'valeurs', q:'270° en radians = ?', a:'3π/2', expl:'270 × π/180 = 3π/2' },
+  { theme:'valeurs', q:'360° en radians = ?', a:'2π', expl:'360 × π/180 = 2π' },
+
+  // ── ANGLES ASSOCIÉS ──
+  { theme:'angles', q:'sin(−α) = ?', a:'−sin α', expl:'Symétrie par rapport à l\'axe des x.' },
+  { theme:'angles', q:'cos(−α) = ?', a:'cos α', expl:'Symétrie par rapport à l\'axe des x.' },
+  { theme:'angles', q:'tg(−α) = ?', a:'−tg α', expl:'Rapport de −sin/cos.' },
+  { theme:'angles', q:'sin(180° − α) = ?', a:'sin α', expl:'Angles supplémentaires : même sin.' },
+  { theme:'angles', q:'cos(180° − α) = ?', a:'−cos α', expl:'Angles supplémentaires : cos opposé.' },
+  { theme:'angles', q:'tg(180° − α) = ?', a:'−tg α', expl:'sin/cos = sin α/(−cos α) = −tg α.' },
+  { theme:'angles', q:'sin(180° + α) = ?', a:'−sin α', expl:'Angles antisupplémentaires.' },
+  { theme:'angles', q:'cos(180° + α) = ?', a:'−cos α', expl:'Angles antisupplémentaires.' },
+  { theme:'angles', q:'tg(180° + α) = ?', a:'tg α', expl:'−sin/(−cos) = tg α. Même tg !' },
+  { theme:'angles', q:'sin(90° − α) = ?', a:'cos α', expl:'Angles complémentaires : sin ↔ cos.' },
+  { theme:'angles', q:'cos(90° − α) = ?', a:'sin α', expl:'Angles complémentaires : sin ↔ cos.' },
+  { theme:'angles', q:'sin(90° + α) = ?', a:'cos α', expl:'Angles anticomplémentaires.' },
+  { theme:'angles', q:'cos(90° + α) = ?', a:'−sin α', expl:'Angles anticomplémentaires.' },
+  { theme:'angles', q:'Dans quel quadrant sin > 0 et cos < 0 ?', a:'Quadrant II (90° à 180°)',
+    expl:'Q1: +,+ | Q2: +,− | Q3: −,− | Q4: −,+' },
+  { theme:'angles', q:'Dans quel quadrant sin < 0 et tg > 0 ?', a:'Quadrant III (180° à 270°)',
+    expl:'Dans Q3 : sin < 0 et cos < 0 donc tg = sin/cos > 0' },
+  { theme:'angles', q:'tg(360° − α) = ?', a:'−tg α', expl:'sin(360°−α) = −sin α, cos(360°−α) = cos α' },
+
+  // ── RADIANS ──
+  { theme:'radians', q:'1 radian ≈ combien de degrés ?', a:'≈ 57,3°', expl:'180/π ≈ 57,296°' },
+  { theme:'radians', q:'360° = ? radians', a:'2π rad', expl:'Un tour complet = 2π rad.' },
+  { theme:'radians', q:'180° = ? radians', a:'π rad', expl:'Un demi-tour = π rad.' },
+  { theme:'radians', q:'π/6 rad = ? degrés', a:'30°', expl:'π/6 × 180/π = 30°' },
+  { theme:'radians', q:'π/4 rad = ? degrés', a:'45°', expl:'π/4 × 180/π = 45°' },
+  { theme:'radians', q:'π/3 rad = ? degrés', a:'60°', expl:'π/3 × 180/π = 60°' },
+  { theme:'radians', q:'π/2 rad = ? degrés', a:'90°', expl:'π/2 × 180/π = 90°' },
+  { theme:'radians', q:'3π/2 rad = ? degrés', a:'270°', expl:'3π/2 × 180/π = 270°' },
+  { theme:'radians', q:'Mesure principale en radians : dans quel intervalle ?', a:'[0, 2π[',
+    expl:'Ou ]−π, π] selon la convention. Le cours da Vinci utilise [0, 2π[.' },
+  { theme:'radians', q:'Le nombre π est rationnel ou irrationnel ?', a:'Irrationnel',
+    expl:'Son écriture décimale est infinie et non périodique : 3,14159265...' },
+
+  // ── ARCS & SECTEURS ──
+  { theme:'arcs', q:'Formule : longueur d\'un arc de cercle', a:'L = α × R (α en radians)',
+    expl:'α = angle en radians, R = rayon. Pour α en degrés : L = (α×π/180) × R.' },
+  { theme:'arcs', q:'Formule : aire d\'un secteur circulaire', a:'A = αR²/2 (α en radians)',
+    expl:'Proportion du cercle : A = (α/2π) × πR² = αR²/2.' },
+  { theme:'arcs', q:'Dans un cercle de rayon 1, longueur d\'arc = ?', a:'Longueur = α (mesure en radians)',
+    expl:'Car L = α × R = α × 1 = α.' },
+  { theme:'arcs', q:'Longueur de l\'arc pour α = 2 rad et R = 6 cm', a:'L = 2 × 6 = 12 cm',
+    expl:'L = α × R = 2 × 6 = 12 cm.' },
+  { theme:'arcs', q:'Aire du secteur pour α = 2 rad et R = 6 cm', a:'A = 2×36/2 = 36 cm²',
+    expl:'A = αR²/2 = 2×36/2 = 36 cm².' },
+];
+
+// ════════════════════════════════════════
+//  QCM — générés depuis les flashcards
+// ════════════════════════════════════════
+function genQCM(card, pool) {
+  const wrong = pool.filter(c => c.a !== card.a).sort(() => Math.random()-0.5).slice(0,3);
+  const opts = [card.a, ...wrong.map(c=>c.a)].sort(() => Math.random()-0.5);
+  return { q: card.q, opts, correct: opts.indexOf(card.a), expl: card.expl };
+}
+
+// ════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════
+let mode = 'flash';
+let theme = 'all';
+let deck = [];
+let idx = 0;
+let scores = { ok: 0, err: 0 };
+let flipped = false;
+let currentUser = null;
+
+requireAuth((user, profile) => { currentUser = user; });
+
+function getPool() {
+  return theme === 'all' ? CARDS : CARDS.filter(c => c.theme === theme);
+}
+
+function shuffle(arr) { return [...arr].sort(() => Math.random()-0.5); }
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-tab').forEach((t,i) => t.classList.toggle('active', ['flash','qcm','quiz'][i]===m));
+  resetDeck();
+}
+
+function setTheme(t) {
+  theme = t;
+  document.querySelectorAll('.theme-tab').forEach(bt => bt.classList.toggle('active', bt.textContent.toLowerCase().includes(t==='all'?'tout':t.substring(0,4))));
+  resetDeck();
+}
+
+function resetDeck() {
+  deck = shuffle(getPool());
+  idx = 0; scores = {ok:0,err:0};
+  updateScore(); updateProgress();
+  render();
+}
+
+function updateScore() {
+  document.getElementById('sc-ok').textContent = scores.ok;
+  document.getElementById('sc-err').textContent = scores.err;
+  document.getElementById('sc-tot').textContent = deck.length;
+}
+
+function updateProgress() {
+  const pct = deck.length ? (idx/deck.length)*100 : 0;
+  document.getElementById('prog-bar').style.width = pct+'%';
+}
+
+// ════════════════════════════════════════
+//  RENDER
+// ════════════════════════════════════════
+function render() {
+  const zone = document.getElementById('main-zone');
+  if (!deck.length) { zone.innerHTML = '<div class="empty-state">Aucune carte dans ce thème.</div>'; return; }
+  if (idx >= deck.length) { renderComplete(); return; }
+
+  if (mode === 'flash') renderFlash();
+  else if (mode === 'qcm') renderQCM();
+  else renderQuiz();
+}
+
+function renderFlash() {
+  const card = deck[idx];
+  const zone = document.getElementById('main-zone');
+  flipped = false;
+  zone.innerHTML = `
+    <div class="flashcard-wrap" onclick="flipCard()">
+      <div class="flashcard" id="fc">
+        <div class="fc-face fc-front">
+          <div class="fc-label">Question ${idx+1}/${deck.length}</div>
+          <div class="fc-question">${card.q}</div>
+          <div class="fc-hint">👆 Cliquez pour voir la réponse</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-label">Réponse</div>
+          <div class="fc-formula">${card.a}</div>
+          ${card.expl ? `<div class="fc-answer" style="font-size:11px;color:rgba(255,255,255,0.4);">${card.expl}</div>` : ''}
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="fc-btn nok" onclick="markCard(false)">😕 À revoir</button>
+      <span class="fc-progress">${idx+1} / ${deck.length}</span>
+      <button class="fc-btn ok" onclick="markCard(true)">✓ Je sais !</button>
+    </div>`;
+}
+
+function flipCard() {
+  flipped = !flipped;
+  const fc = document.getElementById('fc');
+  if (fc) fc.classList.toggle('flipped', flipped);
+}
+
+function markCard(ok) {
+  if (ok) scores.ok++; else scores.err++;
+  idx++;
+  updateScore(); updateProgress();
+  render();
+}
+
+function renderQCM() {
+  const card = deck[idx];
+  const pool = getPool();
+  const qcm = genQCM(card, pool);
+  const zone = document.getElementById('main-zone');
+  zone.innerHTML = `
+    <div class="qcm-card">
+      <div class="fc-label">Question ${idx+1}/${deck.length} — QCM</div>
+      <div class="qcm-q">${qcm.q}</div>
+      <div class="qcm-opts" id="qcm-opts">
+        ${qcm.opts.map((o,i) => `<button class="qcm-opt" data-idx="${i}" onclick="checkQCM(${i},${qcm.correct})">${o}</button>`).join('')}
+      </div>
+      <div class="qcm-expl" id="qcm-expl">${qcm.expl || ''}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div class="feedback-qcm" id="qcm-fb"></div>
+        <button class="btn-next-q" id="btn-nxt" onclick="nextCard()">Suivant →</button>
+      </div>
+    </div>`;
+}
+
+function checkQCM(idx2, correct) {
+  const opts = document.querySelectorAll('.qcm-opt');
+  opts.forEach((b,i) => {
+    b.classList.add('disabled');
+    if (i===correct) b.classList.add('correct');
+    else if (i===idx2 && i!==correct) b.classList.add('wrong');
+  });
+  const fb = document.getElementById('qcm-fb');
+  const expl = document.getElementById('qcm-expl');
+  const btn = document.getElementById('btn-nxt');
+  if (idx2===correct) { scores.ok++; fb.textContent='✓ Bonne réponse !'; fb.className='feedback-qcm ok'; fb.style.display='block'; }
+  else { scores.err++; fb.textContent='✗ Incorrect'; fb.className='feedback-qcm err'; fb.style.display='block'; }
+  if (expl && expl.textContent) expl.classList.add('show');
+  if (btn) btn.style.display='block';
+  updateScore();
+}
+
+function nextCard() { idx++; updateProgress(); render(); }
+
+function renderQuiz() {
+  const card = deck[idx];
+  const zone = document.getElementById('main-zone');
+  zone.innerHTML = `
+    <div class="quiz-card">
+      <div class="fc-label">Question ${idx+1}/${deck.length} — Saisie</div>
+      <div class="quiz-q">${card.q}</div>
+      <div class="quiz-row">
+        <input type="text" class="quiz-input" id="quiz-inp" placeholder="Ta réponse…" autocomplete="off">
+        <button class="btn-check" onclick="checkQuiz('${card.a.replace(/'/g,"\\'")}')">Vérifier</button>
+        <button class="btn-skip" onclick="skipQuiz('${card.a.replace(/'/g,"\\'")}')">Voir réponse</button>
+      </div>
+      <div class="quiz-fb" id="quiz-fb"></div>
+      ${card.expl ? `<div style="font-size:11px;color:rgba(255,255,255,0.25);line-height:1.5;">${card.expl}</div>` : ''}
+    </div>`;
+  document.getElementById('quiz-inp').addEventListener('keydown', e => { if (e.key==='Enter') checkQuiz(card.a); });
+  setTimeout(() => document.getElementById('quiz-inp')?.focus(), 100);
+}
+
+function normalize(s) { return s.toLowerCase().replace(/\s+/g,' ').trim().replace(/[²]/g,'2'); }
+
+function checkQuiz(answer) {
+  const inp = document.getElementById('quiz-inp');
+  const fb = document.getElementById('quiz-fb');
+  const val = inp.value.trim();
+  if (!val) { fb.textContent = 'Écris ta réponse !'; fb.className='quiz-fb'; return; }
+  const correct = normalize(answer);
+  const given = normalize(val);
+  const ok = given===correct || correct.includes(given) || given.includes(correct.split(' ')[0]);
+  if (ok) {
+    scores.ok++;
+    fb.textContent = '✓ Correct !'; fb.className='quiz-fb ok';
+    inp.disabled = true;
+    setTimeout(() => { idx++; updateProgress(); updateScore(); render(); }, 900);
+  } else {
+    scores.err++;
+    fb.innerHTML = `✗ Réponse : <strong style="color:#2ecc71">${answer}</strong>`;
+    fb.className='quiz-fb err';
+    inp.disabled = true;
+    setTimeout(() => { idx++; updateProgress(); updateScore(); render(); }, 1800);
+  }
+  updateScore();
+}
+
+function skipQuiz(answer) {
+  const fb = document.getElementById('quiz-fb');
+  fb.innerHTML = `Réponse : <strong style="color:#2ecc71">${answer}</strong>`;
+  fb.className='quiz-fb';
+  const inp = document.getElementById('quiz-inp');
+  if (inp) inp.disabled = true;
+  setTimeout(() => { idx++; updateProgress(); render(); }, 1500);
+}
+
+function renderComplete() {
+  const zone = document.getElementById('main-zone');
+  const total = scores.ok + scores.err;
+  const pct = total ? Math.round(scores.ok/total*100) : 0;
+  const emoji = pct>=80?'🏆':pct>=60?'🎯':pct>=40?'💪':'🔄';
+  zone.innerHTML = `
+    <div style="background:rgba(10,30,16,0.55);border:2px solid rgba(46,204,113,0.3);border-radius:18px;padding:32px;text-align:center;display:flex;flex-direction:column;gap:16px;align-items:center;">
+      <div style="font-size:52px;">${emoji}</div>
+      <div style="font-size:22px;font-weight:800;color:#2ecc71;">${pct}% de réussite</div>
+      <div style="font-size:14px;color:rgba(255,255,255,0.5);">✅ ${scores.ok} correctes &nbsp;·&nbsp; ❌ ${scores.err} ratées sur ${total} cartes</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.3);">${pct>=80?'Excellent ! Tu maîtrises ce chapitre 🎉':pct>=60?'Bien ! Encore un peu de travail sur les erreurs.':'Continue à t\'entraîner, ça viendra !'}</div>
+      <button onclick="resetDeck()" style="background:#2ecc71;color:#040804;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-family:\'DM Sans\',sans-serif;font-weight:700;cursor:pointer;">🔄 Recommencer</button>
+    </div>`;
+}
+
+// Init
+resetDeck();
+</script>
+</body>
+</html>
