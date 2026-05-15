@@ -11,65 +11,60 @@
         body{font-family:'DM Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#040804,#061008,#081a0e,#0a2414,#040804);background-size:400% 400%;animation:grad 20s ease infinite;color:#e8f5e9;display:flex;flex-direction:column;overflow-x:hidden}
         @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-        /* Layout principal */
-        .app{display:flex;flex:1;min-height:100vh;max-width:1100px;margin:0 auto;width:100%;gap:0;padding:16px 12px 60px;}
+        /* Enveloppe verticale (titre + mode-bar + contenu) */
+        .page-wrap{display:flex;flex-direction:column;width:100%;max-width:1100px;margin:0 auto;min-height:100vh;padding:12px 12px 60px;gap:10px;}
 
-        /* Colonne gauche */
+        /* Barre mode */
+        .mode-bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;width:100%;}
+        .mmode-btn{display:flex;align-items:center;gap:7px;padding:10px 18px;border-radius:12px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;transition:all 0.15s;}
+        .mmode-btn span{font-size:17px;}
+
+        /* Zone principale : sidebar + panel côte à côte */
+        .app-inner{display:flex;flex:1;gap:0;width:100%;}
+
+        /* Sidebar */
         .sidebar{width:240px;flex-shrink:0;display:flex;flex-direction:column;gap:6px;padding-top:4px;}
         .sidebar-title{font-size:11px;font-weight:700;color:rgba(46,204,113,0.4);text-transform:uppercase;letter-spacing:0.08em;padding:8px 12px 4px;}
         .obj-btn{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border-radius:12px;border:1px solid rgba(40,100,55,0.15);background:rgba(10,30,16,0.3);cursor:pointer;transition:all 0.15s;text-align:left;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.5);font-size:11px;line-height:1.4;width:100%;}
         .obj-btn:hover{border-color:rgba(46,204,113,0.3);background:rgba(20,50,28,0.5);color:#e8f5e9;}
         .obj-btn.active{border-color:#2ecc71;background:rgba(46,204,113,0.12);color:#2ecc71;font-weight:600;}
-        .obj-btn.special{border-color:rgba(243,156,18,0.3);background:rgba(243,156,18,0.06);color:rgba(243,156,18,0.7);}
-        .obj-btn.special.active{border-color:#f39c12;background:rgba(243,156,18,0.15);color:#f39c12;}
         .obj-num{font-size:9px;font-weight:800;min-width:18px;height:18px;border-radius:50%;background:rgba(46,204,113,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
         .obj-btn.active .obj-num{background:rgba(46,204,113,0.2);color:#2ecc71;}
-        .obj-btn.special .obj-num{background:rgba(243,156,18,0.1);color:#f39c12;}
 
-        /* Colonne droite */
+        /* Panel principal */
         .main-panel{flex:1;padding-left:20px;display:flex;flex-direction:column;gap:16px;min-width:0;}
 
-        /* En-tête */
+        /* Éléments exercice */
         .panel-header{background:rgba(10,30,16,0.55);border:2px solid rgba(40,100,55,0.25);border-radius:16px;padding:16px 20px;display:flex;flex-direction:column;gap:4px;}
         .panel-obj-num{font-size:10px;color:rgba(46,204,113,0.4);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
         .panel-title{font-size:17px;font-weight:800;color:#e8f5e9;line-height:1.4;}
-
-        /* Score */
         .score-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
         .score-box{background:rgba(0,0,0,0.2);border-radius:8px;padding:6px 12px;font-family:'JetBrains Mono',monospace;font-size:13px;display:flex;align-items:center;gap:6px;}
         .score-val{font-size:18px;font-weight:700;color:#2ecc71;}
         .score-label{font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;}
-
-        /* Exercice */
         .exercice-card{background:rgba(10,30,16,0.55);border:2px solid rgba(40,100,55,0.2);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px;}
         .question-text{font-size:15px;color:#e8f5e9;line-height:1.7;}
         .question-text strong{color:#2ecc71;}
         .svg-wrap{display:flex;justify-content:center;padding:8px 0;}
         .svg-wrap svg{max-width:280px;width:100%;}
-
-        /* QCM */
         .qcm-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
         .qcm-btn{background:rgba(0,0,0,0.2);border:1px solid rgba(40,100,55,0.2);border-radius:10px;padding:12px;font-size:13px;font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.15s;text-align:center;font-weight:600;}
         .qcm-btn:hover{border-color:rgba(46,204,113,0.35);background:rgba(46,204,113,0.06);}
         .qcm-btn.correct{border-color:#2ecc71;background:rgba(46,204,113,0.15);color:#2ecc71;}
         .qcm-btn.wrong{border-color:#e74c3c;background:rgba(231,76,60,0.1);color:#e74c3c;}
         .qcm-btn.disabled{pointer-events:none;opacity:0.5;}
-
-        /* Input réponse */
         .ans-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
         .ans-input{background:rgba(0,0,0,0.3);border:1px solid rgba(40,100,55,0.25);border-radius:8px;padding:10px 14px;font-size:16px;font-family:'JetBrains Mono',monospace;color:#e8f5e9;outline:none;width:140px;}
         .ans-input:focus{border-color:rgba(46,204,113,0.4);}
         .ans-unit{font-size:13px;color:rgba(255,255,255,0.4);}
-        .btn-check{background:#2ecc71;color:#040804;border:none;border-radius:8px;padding:10px 20px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;transition:opacity 0.15s;}
+        .btn-check{background:#2ecc71;color:#040804;border:none;border-radius:8px;padding:10px 20px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;}
         .btn-check:hover{opacity:0.85;}
         .btn-next{background:rgba(46,204,113,0.08);color:#2ecc71;border:1px solid rgba(46,204,113,0.3);border-radius:8px;padding:10px 20px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;display:none;}
         .btn-next:hover{background:rgba(46,204,113,0.15);}
         .feedback{font-size:13px;min-height:18px;font-weight:600;}
         .feedback.ok{color:#2ecc71;} .feedback.err{color:#e74c3c;}
-
-        /* Mémo */
         .memo-section{background:rgba(10,30,16,0.55);border:2px solid rgba(243,156,18,0.2);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:16px;}
-        .memo-title{font-size:14px;font-weight:700;color:#f39c12;display:flex;align-items:center;gap:8px;}
+        .memo-title{font-size:14px;font-weight:700;color:#f39c12;}
         .memo-card{background:rgba(0,0,0,0.2);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;}
         .memo-term{font-size:14px;font-weight:700;color:#e8f5e9;}
         .memo-def{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.6;}
@@ -78,73 +73,70 @@
         .memo-trig{background:rgba(46,204,113,0.06);border:1px solid rgba(46,204,113,0.15);border-radius:10px;padding:12px;text-align:center;}
         .memo-trig-name{font-size:16px;font-weight:800;color:#2ecc71;font-family:'JetBrains Mono',monospace;}
         .memo-trig-def{font-size:10px;color:rgba(255,255,255,0.4);margin-top:4px;line-height:1.4;}
-        .memo-trig-nota{font-size:11px;color:rgba(243,156,18,0.7);margin-top:4px;font-family:'JetBrains Mono',monospace;}
         .angles-table{width:100%;border-collapse:collapse;font-size:12px;}
         .angles-table th{background:rgba(46,204,113,0.1);color:#2ecc71;font-weight:700;padding:8px;text-align:center;border:1px solid rgba(40,100,55,0.2);}
         .angles-table td{padding:8px;text-align:center;border:1px solid rgba(40,100,55,0.1);color:rgba(255,255,255,0.6);font-family:'JetBrains Mono',monospace;}
-        .angles-table tr:hover td{background:rgba(46,204,113,0.04);}
 
-        /* Mobile */
         @media(max-width:680px){
-            .app{flex-direction:column;padding:12px 10px 60px;}
+            .app-inner{flex-direction:column;}
             .sidebar{width:100%;flex-direction:row;overflow-x:auto;padding-bottom:4px;gap:6px;}
             .sidebar-title{display:none;}
             .obj-btn{min-width:120px;flex-shrink:0;font-size:10px;padding:8px 10px;}
             .main-panel{padding-left:0;}
             .qcm-grid{grid-template-columns:1fr;}
             .memo-grid{grid-template-columns:1fr 1fr;}
+            .mmode-btn{padding:8px 12px;font-size:12px;}
         }
     </style>
 </head>
 <body>
-<div class="app">
+<div class="page-wrap">
 
-    <!-- MODE BUTTONS (haut) -->
-    <div id="mode-bar" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;width:100%;padding:0 0 4px;">
-        <button onclick="switchMode('entrainer')" id="mbtn-entrainer" class="mmode-btn active" style="display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:12px;border:2px solid rgba(46,204,113,0.3);background:rgba(46,204,113,0.12);color:#2ecc71;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;transition:all 0.15s;">
-            <span style="font-size:18px;">✏️</span> S'entraîner
+    <!-- BARRE DES 3 MODES -->
+    <div class="mode-bar">
+        <button id="mbtn-entrainer" class="mmode-btn" onclick="switchMode('entrainer')" style="border:2px solid rgba(46,204,113,0.5);background:rgba(46,204,113,0.15);color:#2ecc71;">
+            <span>✏️</span> S'entraîner
         </button>
-        <button onclick="switchMode('imprimer')" id="mbtn-imprimer" class="mmode-btn" style="display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:12px;border:1px solid rgba(52,152,219,0.3);background:rgba(52,152,219,0.06);color:rgba(52,152,219,0.7);font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;transition:all 0.15s;">
-            <span style="font-size:18px;">📄</span> Exercices à imprimer
+        <button id="mbtn-imprimer" class="mmode-btn" onclick="switchMode('imprimer')" style="border:1px solid rgba(52,152,219,0.2);background:rgba(52,152,219,0.04);color:rgba(52,152,219,0.4);">
+            <span>📄</span> Exercices à imprimer
         </button>
-        <button onclick="switchMode('memoriser')" id="mbtn-memoriser" class="mmode-btn" style="display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:12px;border:1px solid rgba(243,156,18,0.3);background:rgba(243,156,18,0.06);color:rgba(243,156,18,0.7);font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;transition:all 0.15s;">
-            <span style="font-size:18px;">🧠</span> Mémoriser
+        <button id="mbtn-memoriser" class="mmode-btn" onclick="switchMode('memoriser')" style="border:1px solid rgba(243,156,18,0.2);background:rgba(243,156,18,0.04);color:rgba(243,156,18,0.4);">
+            <span>🧠</span> Mémoriser
         </button>
     </div>
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-        <div class="sidebar-title">Objectifs</div>
-        <button class="obj-btn active" onclick="showObj(0)"><span class="obj-num">1</span>Pythagore & nombres trigonométriques</button>
-        <button class="obj-btn" onclick="showObj(1)"><span class="obj-num">2</span>Définition des nombres trigonométriques</button>
-        <button class="obj-btn" onclick="showObj(2)"><span class="obj-num">3</span>Cercle trigonométrique</button>
-        <button class="obj-btn" onclick="showObj(3)"><span class="obj-num">4</span>Placer des angles sur le cercle</button>
-        <button class="obj-btn" onclick="showObj(4)"><span class="obj-num">5</span>Mesure principale d'un angle</button>
-        <button class="obj-btn" onclick="showObj(5)"><span class="obj-num">6</span>Nombres trig. sur le cercle</button>
-        <button class="obj-btn" onclick="showObj(6)"><span class="obj-num">7</span>Signe des nombres trigonométriques</button>
-        <button class="obj-btn" onclick="showObj(7)"><span class="obj-num">8</span>Angles remarquables</button>
-        <button class="obj-btn" onclick="showObj(8)"><span class="obj-num">9</span>Angles associés</button>
-        <button class="obj-btn" onclick="showObj(9)"><span class="obj-num">10</span>Notion de radian</button>
-        <button class="obj-btn" onclick="showObj(10)"><span class="obj-num">11</span>Conversion degrés ↔ radians</button>
-        <button class="obj-btn" onclick="showObj(11)"><span class="obj-num">12</span>Arc, rayon, aire de secteur</button>
-        <button class="obj-btn" onclick="showObj(12)"><span class="obj-num">13</span>Solutions générales (k·360°)</button>
-        <button class="obj-btn" onclick="showObj(13)"><span class="obj-num">14</span>Vrai ou Faux — identités</button>
-        <button class="obj-btn" onclick="showObj(14)"><span class="obj-num">15</span>Angles associés — simplifier</button>
-        <button class="obj-btn" onclick="showObj(15)"><span class="obj-num">16</span>Classer par ordre croissant</button>
-        <div style="height:1px;background:rgba(243,156,18,0.2);margin:4px 0;"></div>
-        <button class="obj-btn special" onclick="showObj(16)"><span class="obj-num">★</span>Mémo : définitions & notations</button>
-        <div style="height:1px;background:rgba(52,152,219,0.2);margin:4px 0;"></div>
-        <button class="obj-btn" onclick="showObj(17)" style="border-color:rgba(52,152,219,0.25);background:rgba(52,152,219,0.06);color:rgba(52,152,219,0.7);">
-            <span class="obj-num" style="background:rgba(52,152,219,0.1);color:#3498db;">📄</span>Exercices à imprimer (PDF)
-        </button>
+    <!-- ZONE PRINCIPALE : sidebar + panel -->
+    <div class="app-inner" id="app-inner">
 
-    </div>
+        <!-- SIDEBAR OBJECTIFS -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-title">Objectifs</div>
+            <button class="obj-btn active" onclick="showObj(0)"><span class="obj-num">1</span>Pythagore & nombres trig.</button>
+            <button class="obj-btn" onclick="showObj(1)"><span class="obj-num">2</span>Définition des nombres trig.</button>
+            <button class="obj-btn" onclick="showObj(2)"><span class="obj-num">3</span>Cercle trigonométrique</button>
+            <button class="obj-btn" onclick="showObj(3)"><span class="obj-num">4</span>Placer des angles sur le cercle</button>
+            <button class="obj-btn" onclick="showObj(4)"><span class="obj-num">5</span>Mesure principale d'un angle</button>
+            <button class="obj-btn" onclick="showObj(5)"><span class="obj-num">6</span>Nombres trig. sur le cercle</button>
+            <button class="obj-btn" onclick="showObj(6)"><span class="obj-num">7</span>Signe des nombres trig.</button>
+            <button class="obj-btn" onclick="showObj(7)"><span class="obj-num">8</span>Angles remarquables</button>
+            <button class="obj-btn" onclick="showObj(8)"><span class="obj-num">9</span>Angles associés</button>
+            <button class="obj-btn" onclick="showObj(9)"><span class="obj-num">10</span>Notion de radian</button>
+            <button class="obj-btn" onclick="showObj(10)"><span class="obj-num">11</span>Conversion degrés ↔ radians</button>
+            <button class="obj-btn" onclick="showObj(11)"><span class="obj-num">12</span>Arc, rayon, aire de secteur</button>
+            <button class="obj-btn" onclick="showObj(12)"><span class="obj-num">13</span>Solutions générales (k·360°)</button>
+            <button class="obj-btn" onclick="showObj(13)"><span class="obj-num">14</span>Vrai ou Faux — identités</button>
+            <button class="obj-btn" onclick="showObj(14)"><span class="obj-num">15</span>Angles associés — simplifier</button>
+            <button class="obj-btn" onclick="showObj(15)"><span class="obj-num">16</span>Classer par ordre croissant</button>
+        </div>
 
-    <!-- PANEL PRINCIPAL -->
-    <div class="main-panel" id="main-panel">
-        <!-- Rempli par JS -->
-    </div>
-</div>
+        <!-- PANEL PRINCIPAL -->
+        <div class="main-panel" id="main-panel">
+            <!-- Rempli par JS -->
+        </div>
+
+    </div><!-- fin app-inner -->
+
+</div><!-- fin page-wrap -->
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -153,15 +145,125 @@
 <script src="theme.js"></script>
 <script src="breadcrumb.js"></script>
 <script>
+// ════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════
 let currentUser = null;
 let scores = {};
 let currentObj = 0;
+let sessionCorrect = 0, sessionTotal = 0;
 
 requireAuth((user, profile) => {
     currentUser = user;
-    scores = profile.scores || {};
-    showObj(0);
+    scores = profile ? profile.scores || {} : {};
+    const urlMode = new URLSearchParams(window.location.search).get('mode');
+    if (urlMode === 'imprimer')   switchMode('imprimer');
+    else if (urlMode === 'memoriser') switchMode('memoriser');
+    else { switchMode('entrainer'); }
 });
+
+// ════════════════════════════════════════
+//  MODE SWITCHER
+// ════════════════════════════════════════
+function switchMode(mode) {
+    const sidebar  = document.getElementById('sidebar');
+    const panel    = document.getElementById('main-panel');
+    const appInner = document.getElementById('app-inner');
+
+    ['entrainer','imprimer','memoriser'].forEach(m => {
+        const btn = document.getElementById('mbtn-' + m);
+        if (!btn) return;
+        const on = m === mode;
+        const cfg = {
+            entrainer: ['rgba(46,204,113,', '#2ecc71'],
+            imprimer:  ['rgba(52,152,219,', '#3498db'],
+            memoriser: ['rgba(243,156,18,', '#f39c12'],
+        }[m];
+        btn.style.border     = on ? `2px solid ${cfg[0]}0.5)` : `1px solid ${cfg[0]}0.2)`;
+        btn.style.background = on ? `${cfg[0]}0.15)` : `${cfg[0]}0.04)`;
+        btn.style.color      = on ? cfg[1] : `${cfg[0]}0.4)`;
+    });
+
+    if (mode === 'entrainer') {
+        sidebar.style.display  = 'flex';
+        panel.style.paddingLeft = '20px';
+        appInner.style.flexDirection = 'row';
+        showObj(currentObj);
+    } else {
+        sidebar.style.display  = 'none';
+        panel.style.paddingLeft = '0';
+        appInner.style.flexDirection = 'column';
+        if (mode === 'imprimer')   renderPrint();
+        if (mode === 'memoriser')  renderMemoPanel();
+    }
+
+    const url = new URL(window.location);
+    url.searchParams.set('mode', mode);
+    window.history.replaceState({}, '', url);
+}
+
+// ════════════════════════════════════════
+//  PANEL MÉMORISER
+// ════════════════════════════════════════
+function renderMemoPanel() {
+    document.getElementById('main-panel').innerHTML = `
+        <div class="panel-header" style="border-color:rgba(243,156,18,0.3);">
+            <div class="panel-obj-num" style="color:#f39c12;">🧠 Mémorisation</div>
+            <div class="panel-title">Flashcards, QCM &amp; Quiz</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;max-width:600px;">
+            <div style="background:rgba(10,30,16,0.5);border:2px solid rgba(46,204,113,0.2);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;">
+                <div style="font-size:13px;font-weight:700;color:#2ecc71;">💻 S'entraîner en ligne</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;">Flashcards interactives, QCM et quiz de saisie — toutes les définitions et formules du cours.</div>
+                <a href="memo-trig.html" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.3);border-radius:10px;color:#2ecc71;font-weight:700;font-size:13px;text-decoration:none;">🃏 Ouvrir les flashcards interactives</a>
+            </div>
+            <div style="background:rgba(10,30,16,0.5);border:2px solid rgba(243,156,18,0.2);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;">
+                <div style="font-size:13px;font-weight:700;color:#f39c12;">🃏 Flashcards à imprimer</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;">80 cartes recto/verso — 8 par page — Découpez selon les pointillés.</div>
+                <div style="font-size:10px;color:rgba(255,255,255,0.2);font-style:italic;">Thèmes : Définitions · Formules · Valeurs remarquables · Angles associés · Radians · Arcs</div>
+                <a href="flashcards-trig.pdf" target="_blank" download style="display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;background:rgba(243,156,18,0.08);border:1px solid rgba(243,156,18,0.3);border-radius:10px;color:#f39c12;font-weight:700;font-size:13px;text-decoration:none;">📥 Télécharger les flashcards PDF (80 cartes)</a>
+            </div>
+            <div style="background:rgba(0,0,0,0.1);border:1px solid rgba(255,255,255,0.05);border-radius:10px;padding:12px;font-size:11px;color:rgba(255,255,255,0.25);line-height:1.7;">
+                💡 <strong style="color:rgba(243,156,18,0.5);">Conseil :</strong> Commence en ligne pour repérer les lacunes, puis imprime les cartes pour réviser n'importe où !
+            </div>
+        </div>`;
+}
+
+// ════════════════════════════════════════
+//  PANEL IMPRIMER
+// ════════════════════════════════════════
+function renderPrint() {
+    document.getElementById('main-panel').innerHTML = `
+        <div class="panel-header" style="border-color:rgba(52,152,219,0.3);">
+            <div class="panel-obj-num" style="color:#3498db;">📄 Ressources imprimables</div>
+            <div class="panel-title">Exercices à imprimer — Série B</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;max-width:600px;">
+            <div style="background:rgba(10,30,16,0.5);border:2px solid rgba(155,89,182,0.25);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px;">
+                <div style="font-size:14px;font-weight:700;color:#9b59b6;">📚 Série B — Exercices 1 à 24</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;">24 exercices avec dessins (cercles trigonométriques, triangles, secteurs) — valeurs différentes du cours pour s'entraîner.</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <a href="serie-b-final.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;background:rgba(155,89,182,0.1);border:1px solid rgba(155,89,182,0.3);border-radius:10px;color:#9b59b6;font-weight:700;font-size:13px;text-decoration:none;min-width:130px;">📄 Télécharger les exercices</a>
+                    <a href="serie-b-final-corrige.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.25);border-radius:10px;color:#2ecc71;font-weight:700;font-size:13px;text-decoration:none;min-width:130px;">✅ Télécharger le corrigé</a>
+                </div>
+            </div>
+            <div style="background:rgba(10,30,16,0.5);border:2px solid rgba(243,156,18,0.25);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px;">
+                <div style="font-size:14px;font-weight:700;color:#f39c12;">🎯 Me préparer à l'interrogation</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;">Sélection de 7 questions représentant tout le chapitre. Durée indicative : 50 minutes.</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <a href="interro-b.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;background:rgba(243,156,18,0.08);border:1px solid rgba(243,156,18,0.3);border-radius:10px;color:#f39c12;font-weight:700;font-size:13px;text-decoration:none;min-width:130px;">📋 Télécharger la simulation</a>
+                    <a href="interro-b-corrige.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.25);border-radius:10px;color:#2ecc71;font-weight:700;font-size:13px;text-decoration:none;min-width:130px;">✅ Télécharger le corrigé</a>
+                </div>
+            </div>
+            <div style="background:rgba(0,0,0,0.1);border:1px solid rgba(243,156,18,0.1);border-radius:10px;padding:12px;font-size:11px;color:rgba(255,255,255,0.3);line-height:1.7;">
+                💡 <strong style="color:rgba(243,156,18,0.5);">Conseil :</strong> Fais d'abord les exercices sans le corrigé, puis compare. Pour l'interro : chronomètre-toi !
+            </div>
+        </div>`;
+}
+
+
+
+
 
 
 // Obj 12 : solutions générales (cosα = val → α = ?+k·360°)
@@ -501,8 +603,6 @@ const OBJECTIVES = [
     { title: "Classer par ordre croissant", gen: genObj15, type: 'qcm' },
 ];
 
-let currentExercice = null;
-let sessionCorrect = 0, sessionTotal = 0;
 
 function showObj(idx) {
     currentObj = idx;
@@ -776,6 +876,7 @@ function renderMemo() {
             </table>
         </div>`;
 }
+
 </script>
 </body>
 </html>
