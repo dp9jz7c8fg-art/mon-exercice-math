@@ -610,58 +610,38 @@ function renderPrint() {
     document.getElementById('main-panel').innerHTML = `
         <div class="panel-header" style="border-color:rgba(52,152,219,0.3);">
             <div class="panel-obj-num" style="color:#3498db;">📄 Ressources imprimables</div>
-            <div class="panel-title">Exercices à imprimer</div>
+            <div class="panel-title">Exercices à imprimer — Série B</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:14px;">
 
-            <div style="background:rgba(10,30,16,0.5);border:2px solid rgba(52,152,219,0.2);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px;">
-                <div style="font-size:13px;font-weight:700;color:#3498db;">📚 Série complète — Exercices 1 à 24</div>
-                <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;">Tous les exercices du chapitre (niveaux C et A), dans le style du cours. Espace de réponse + aide-mémoire inclus.</div>
+            <div style="background:rgba(10,30,16,0.5);border:2px solid rgba(155,89,182,0.25);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px;">
+                <div style="font-size:14px;font-weight:700;color:#9b59b6;">📚 Série B — Exercices 1 à 24</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;">24 exercices avec dessins (cercles trigonométriques, triangles, secteurs) — valeurs différentes du cours pour s'entraîner.</div>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                    <a href="exercices-trig-complet.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:rgba(52,152,219,0.1);border:1px solid rgba(52,152,219,0.3);border-radius:8px;color:#3498db;font-weight:700;font-size:12px;text-decoration:none;min-width:120px;">
-                        📄 Exercices
+                    <a href="serie-b-final.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;background:rgba(155,89,182,0.1);border:1px solid rgba(155,89,182,0.3);border-radius:10px;color:#9b59b6;font-weight:700;font-size:13px;text-decoration:none;min-width:130px;">
+                        📄 Télécharger les exercices
                     </a>
-                    <a href="exercices-trig-complet-corrige.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.25);border-radius:8px;color:#2ecc71;font-weight:700;font-size:12px;text-decoration:none;min-width:120px;">
-                        ✅ Avec solutions
-                    </a>
-                </div>
-                <div style="font-size:10px;color:rgba(255,255,255,0.25);font-style:italic;">Solutions affichées à côté de chaque question dans la version corrigée.</div>
-            </div>
-
-            <div style="background:rgba(10,30,16,0.5);border:2px solid rgba(155,89,182,0.2);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px;">
-                <div style="font-size:13px;font-weight:700;color:#9b59b6;">🆕 Série B — Valeurs différentes</div>
-                <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;">Mêmes types d'exercices mais avec d'autres valeurs pour s'entraîner. Idéal après avoir fait la Série A.</div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                    <a href="serie-b-exercices.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:rgba(155,89,182,0.08);border:1px solid rgba(155,89,182,0.3);border-radius:8px;color:#9b59b6;font-weight:700;font-size:12px;text-decoration:none;min-width:120px;">
-                        📄 Exercices B
-                    </a>
-                    <a href="serie-b-corrige.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.25);border-radius:8px;color:#2ecc71;font-weight:700;font-size:12px;text-decoration:none;min-width:120px;">
-                        ✅ Avec solutions
+                    <a href="serie-b-final-corrige.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.25);border-radius:10px;color:#2ecc71;font-weight:700;font-size:13px;text-decoration:none;min-width:130px;">
+                        ✅ Télécharger le corrigé
                     </a>
                 </div>
             </div>
 
             <div style="background:rgba(10,30,16,0.5);border:2px solid rgba(243,156,18,0.25);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px;">
-                <div style="font-size:13px;font-weight:700;color:#f39c12;">🎯 Me préparer pour l'interro</div>
-                <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;">Sélection d'exercices représentatifs de tout le chapitre. Durée indicative : 50 minutes. Conditions similaires à l'interrogation.</div>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                    <a href="prep-interro-trig.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px;background:rgba(243,156,18,0.08);border:1px solid rgba(243,156,18,0.3);border-radius:8px;color:#f39c12;font-weight:700;font-size:11px;text-decoration:none;min-width:100px;">
-                        📋 Interro A
+                <div style="font-size:14px;font-weight:700;color:#f39c12;">🎯 Me préparer à l'interrogation</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;">Sélection de 7 questions représentant tout le chapitre. Durée indicative : 50 minutes. Conditions similaires à l'interrogation réelle.</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <a href="interro-b.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;background:rgba(243,156,18,0.08);border:1px solid rgba(243,156,18,0.3);border-radius:10px;color:#f39c12;font-weight:700;font-size:13px;text-decoration:none;min-width:130px;">
+                        📋 Télécharger la simulation
                     </a>
-                    <a href="prep-interro-trig-corrige.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.25);border-radius:8px;color:#2ecc71;font-weight:700;font-size:11px;text-decoration:none;min-width:100px;">
-                        ✅ Corrigé A
-                    </a>
-                    <a href="serie-b-interro.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px;background:rgba(155,89,182,0.08);border:1px solid rgba(155,89,182,0.25);border-radius:8px;color:#9b59b6;font-weight:700;font-size:11px;text-decoration:none;min-width:100px;">
-                        📋 Interro B
-                    </a>
-                    <a href="serie-b-interro-corrige.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.25);border-radius:8px;color:#2ecc71;font-weight:700;font-size:11px;text-decoration:none;min-width:100px;">
-                        ✅ Corrigé B
+                    <a href="interro-b-corrige.pdf" target="_blank" download style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.25);border-radius:10px;color:#2ecc71;font-weight:700;font-size:13px;text-decoration:none;min-width:130px;">
+                        ✅ Télécharger le corrigé
                     </a>
                 </div>
             </div>
 
             <div style="background:rgba(243,156,18,0.04);border:1px solid rgba(243,156,18,0.12);border-radius:10px;padding:12px;font-size:11px;color:rgba(255,255,255,0.35);line-height:1.7;">
-                💡 <strong style="color:rgba(243,156,18,0.6);">Conseil :</strong> Fais d'abord les exercices sans regarder les solutions, puis compare. Pour l'interro : chronomètre-toi !
+                💡 <strong style="color:rgba(243,156,18,0.6);">Conseil :</strong> Fais d'abord les exercices sans regarder les solutions, puis compare. Pour l'interro : chronomètre-toi sur 50 minutes !
             </div>
         </div>`;
 }
