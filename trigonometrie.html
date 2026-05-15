@@ -120,6 +120,10 @@
         <button class="obj-btn" onclick="showObj(15)"><span class="obj-num">16</span>Classer par ordre croissant</button>
         <div style="height:1px;background:rgba(243,156,18,0.2);margin:4px 0;"></div>
         <button class="obj-btn special" onclick="showObj(16)"><span class="obj-num">★</span>Mémo : définitions & notations</button>
+        <div style="height:1px;background:rgba(52,152,219,0.2);margin:4px 0;"></div>
+        <button class="obj-btn" onclick="showObj(17)" style="border-color:rgba(52,152,219,0.25);background:rgba(52,152,219,0.06);color:rgba(52,152,219,0.7);">
+            <span class="obj-num" style="background:rgba(52,152,219,0.1);color:#3498db;">📄</span>Exercices à imprimer (PDF)
+        </button>
     </div>
 
     <!-- PANEL PRINCIPAL -->
@@ -492,6 +496,7 @@ function showObj(idx) {
     sessionCorrect = 0; sessionTotal = 0;
 
     if (idx === 16) { renderMemo(); return; }
+    if (idx === 17) { renderPrint(); return; }
     renderExercice();
 }
 
@@ -596,6 +601,36 @@ async function saveScore() {
         try { await db.collection('users').doc(currentUser.uid).update({[`scores.${key}`]: sessionCorrect}); }
         catch(e) {}
     }
+}
+
+// ═══════════════════════════════════════
+//  IMPRESSION
+// ═══════════════════════════════════════
+function renderPrint() {
+    document.getElementById('main-panel').innerHTML = `
+        <div class="panel-header" style="border-color:rgba(52,152,219,0.3);">
+            <div class="panel-obj-num" style="color:#3498db;">📄 Ressources imprimables</div>
+            <div class="panel-title">Exercices à imprimer</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+            <div style="background:rgba(10,30,16,0.5);border:2px solid rgba(52,152,219,0.2);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px;">
+                <div style="font-size:14px;font-weight:700;color:#e8f5e9;display:flex;align-items:center;gap:8px;">📝 Feuille d'exercices</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;">8 exercices dans le style du cours (niveaux C et A), espaces pour réponses, mémo formules en dernière page. <strong style="color:#e8f5e9;">Sans corrigé.</strong></div>
+                <a href="exercices-trig.pdf" target="_blank" download style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;background:rgba(52,152,219,0.12);border:1px solid rgba(52,152,219,0.3);border-radius:10px;color:#3498db;font-weight:700;font-size:14px;text-decoration:none;transition:all 0.15s;" onmouseenter="this.style.background='rgba(52,152,219,0.2)'" onmouseleave="this.style.background='rgba(52,152,219,0.12)'">
+                    📄 Télécharger les exercices
+                </a>
+            </div>
+            <div style="background:rgba(10,30,16,0.5);border:2px solid rgba(46,204,113,0.2);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px;">
+                <div style="font-size:14px;font-weight:700;color:#e8f5e9;display:flex;align-items:center;gap:8px;">✅ Corrigé complet</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;">Les mêmes exercices avec toutes les solutions détaillées. Mémo formules inclus.</div>
+                <a href="exercices-trig-corrige.pdf" target="_blank" download style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.3);border-radius:10px;color:#2ecc71;font-weight:700;font-size:14px;text-decoration:none;transition:all 0.15s;" onmouseenter="this.style.background='rgba(46,204,113,0.2)'" onmouseleave="this.style.background='rgba(46,204,113,0.12)'">
+                    📄 Télécharger le corrigé
+                </a>
+            </div>
+            <div style="background:rgba(243,156,18,0.05);border:1px solid rgba(243,156,18,0.15);border-radius:12px;padding:14px;font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;">
+                💡 <strong style="color:rgba(243,156,18,0.7);">Conseil :</strong> Imprime d'abord la feuille d'exercices, fais-les sans regarder le corrigé, puis vérifie tes réponses !
+            </div>
+        </div>`;
 }
 
 // ═══════════════════════════════════════
