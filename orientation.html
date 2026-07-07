@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trouve ta voie — Test d'orientation | La classe de Stef</title>
+<style>
+  :root{
+    --bleu:#2563eb;
+    --bleu-fonce:#1e3a8a;
+    --vert:#16a34a;
+    --orange:#f59e0b;
+    --rose:#db2777;
+    --violet:#7c3aed;
+    --rouge:#dc2626;
+    --gris-clair:#f1f5f9;
+    --gris:#64748b;
+    --texte:#1e293b;
+    --ombre:0 10px 30px rgba(30,58,138,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    color:var(--texte);
+    background:linear-gradient(135deg,#eff6ff 0%,#f5f3ff 100%);
+    min-height:100vh;
+    line-height:1.6;
+    padding:20px;
+  }
+  .wrap{max-width:820px;margin:0 auto}
+
+  header{text-align:center;padding:30px 20px 10px}
+  header .badge{
+    display:inline-block;background:var(--bleu);color:#fff;
+    padding:4px 14px;border-radius:20px;font-size:.8rem;
+    font-weight:600;letter-spacing:.5px;margin-bottom:14px;
+  }
+  header h1{font-size:2.1rem;color:var(--bleu-fonce);margin-bottom:8px}
+  header p{color:var(--gris);font-size:1.05rem}
+
+  .carte{
+    background:#fff;border-radius:18px;padding:32px;
+    box-shadow:var(--ombre);margin:24px 0;
+  }
+
+  /* Intro */
+  .intro-liste{list-style:none;margin:20px 0}
+  .intro-liste li{
+    display:flex;align-items:center;gap:12px;
+    padding:10px 0;font-size:1.02rem;
+  }
+  .intro-liste .ico{
+    font-size:1.4rem;width:44px;height:44px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--gris-clair);border-radius:12px;
+  }
+
+  .btn{
+    display:inline-block;border:none;cursor:pointer;
+    background:var(--bleu);color:#fff;font-size:1.05rem;font-weight:600;
+    padding:14px 32px;border-radius:12px;transition:.2s;
+    font-family:inherit;
+  }
+  .btn:hover{background:var(--bleu-fonce);transform:translateY(-2px)}
+  .btn.secondaire{background:var(--gris-clair);color:var(--texte)}
+  .btn.secondaire:hover{background:#e2e8f0}
+  .centre{text-align:center}
+
+  /* Progression */
+  .barre{
+    height:10px;background:var(--gris-clair);border-radius:10px;
+    overflow:hidden;margin-bottom:8px;
+  }
+  .barre span{
+    display:block;height:100%;background:linear-gradient(90deg,var(--bleu),var(--violet));
+    width:0;transition:width .3s;border-radius:10px;
+  }
+  .compteur{text-align:center;color:var(--gris);font-size:.9rem;margin-bottom:24px}
+
+  /* Question */
+  .question h2{font-size:1.45rem;margin-bottom:6px;color:var(--bleu-fonce)}
+  .question .consigne{color:var(--gris);margin-bottom:24px}
+  .reponses{display:flex;flex-direction:column;gap:12px}
+  .rep{
+    border:2px solid #e2e8f0;background:#fff;border-radius:12px;
+    padding:16px 20px;cursor:pointer;transition:.15s;
+    font-size:1.05rem;text-align:left;font-family:inherit;color:var(--texte);
+    display:flex;align-items:center;gap:14px;
+  }
+  .rep:hover{border-color:var(--bleu);background:#eff6ff}
+  .rep .emo{font-size:1.5rem}
+  .rep.actif{border-color:var(--bleu);background:#dbeafe}
+
+  .nav-q{display:flex;justify-content:space-between;margin-top:26px}
+
+  /* Résultats */
+  .hidden{display:none}
+  .profil-code{
+    text-align:center;font-size:3rem;font-weight:800;
+    letter-spacing:6px;color:var(--violet);margin:10px 0;
+  }
+  .profil-sous{text-align:center;color:var(--gris);margin-bottom:24px}
+
+  .score-ligne{margin-bottom:16px}
+  .score-tete{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .score-tete strong{font-size:1.05rem}
+  .score-tete .pct{color:var(--gris);font-weight:600}
+  .score-barre{height:14px;background:var(--gris-clair);border-radius:8px;overflow:hidden}
+  .score-barre span{display:block;height:100%;border-radius:8px;transition:width .8s}
+
+  .bloc-domaine{
+    border-left:4px solid var(--bleu);background:var(--gris-clair);
+    border-radius:0 12px 12px 0;padding:18px 22px;margin:16px 0;
+  }
+  .bloc-domaine h3{color:var(--bleu-fonce);margin-bottom:6px;font-size:1.2rem}
+  .bloc-domaine .metiers{margin-top:10px}
+  .tag{
+    display:inline-block;background:#fff;border:1px solid #cbd5e1;
+    padding:4px 12px;border-radius:16px;font-size:.88rem;
+    margin:4px 4px 0 0;
+  }
+
+  .conseil{
+    background:#fffbeb;border:1px solid #fde68a;border-radius:12px;
+    padding:18px 22px;margin:22px 0;
+  }
+  .conseil h3{color:#b45309;margin-bottom:6px}
+
+  footer{text-align:center;color:var(--gris);font-size:.85rem;padding:30px 10px}
+
+  @media(max-width:600px){
+    header h1{font-size:1.6rem}
+    .carte{padding:22px}
+    .profil-code{font-size:2.2rem;letter-spacing:4px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="badge">La classe de Stef</span>
+    <h1>🧭 Trouve ta voie</h1>
+    <p>Un test pour t'aider à y voir plus clair sur ton orientation (14–17 ans)</p>
+  </header>
+
+  <!-- ÉCRAN 1 : INTRO -->
+  <section id="ecran-intro" class="carte">
+    <p style="font-size:1.08rem">Choisir son orientation, c'est stressant… mais ce petit test va t'aider !
+    Il est basé sur le modèle <strong>RIASEC</strong>, utilisé par de vrais conseillers d'orientation.</p>
+    <ul class="intro-liste">
+      <li><span class="ico">🎯</span> <span><strong>18 questions</strong> — environ 4 minutes</span></li>
+      <li><span class="ico">🧠</span> <span>Pas de bonne ou de mauvaise réponse : sois juste honnête !</span></li>
+      <li><span class="ico">💡</span> <span>Tu obtiens ton <strong>profil</strong> + des idées de domaines et de métiers</span></li>
+      <li><span class="ico">🔒</span> <span>Rien n'est enregistré : c'est 100&nbsp;% privé, juste pour toi</span></li>
+    </ul>
+    <div class="centre" style="margin-top:20px">
+      <button class="btn" onclick="demarrer()">Commencer le test →</button>
+    </div>
+  </section>
+
+  <!-- ÉCRAN 2 : QUESTIONS -->
+  <section id="ecran-test" class="carte hidden">
+    <div class="barre"><span id="progress"></span></div>
+    <div class="compteur" id="compteur"></div>
+    <div class="question">
+      <h2 id="q-texte"></h2>
+      <p class="consigne">À quel point est-ce que ça te ressemble&nbsp;?</p>
+      <div class="reponses" id="reponses"></div>
+    </div>
+    <div class="nav-q">
+      <button class="btn secondaire" id="btn-precedent" onclick="precedent()">← Précédent</button>
+      <span></span>
+    </div>
+  </section>
+
+  <!-- ÉCRAN 3 : RÉSULTATS -->
+  <section id="ecran-resultat" class="carte hidden">
+    <h2 class="centre" style="color:var(--bleu-fonce)">🎉 Voici ton profil&nbsp;!</h2>
+    <div class="profil-code" id="profil-code"></div>
+    <p class="profil-sous" id="profil-sous"></p>
+
+    <h3 style="margin:20px 0 14px">📊 Tes affinités en détail</h3>
+    <div id="scores"></div>
+
+    <h3 style="margin:26px 0 6px">🚀 Des pistes pour toi</h3>
+    <div id="domaines"></div>
+
+    <div class="conseil">
+      <h3>💬 Le conseil de Stef</h3>
+      <p>Ce test est une <strong>boussole, pas une carte</strong>&nbsp;: il te donne des idées,
+      mais rien n'est figé à ton âge&nbsp;! Parles-en avec tes parents, tes profs ou un centre
+      PMS. Le mieux, c'est de <strong>tester</strong> : stages, portes ouvertes, discussions avec
+      des gens qui font le métier. Et surtout, un métier peut mélanger plusieurs profils.</p>
+    </div>
+
+    <div class="centre" style="margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn" onclick="window.print()">🖨️ Imprimer mon résultat</button>
+      <button class="btn secondaire" onclick="recommencer()">↺ Recommencer</button>
+    </div>
+  </section>
+
+  <footer>
+    Test d'orientation basé sur le modèle RIASEC de John Holland ·
+    Outil pédagogique — ne remplace pas un vrai conseil personnalisé.
+  </footer>
+
+</div>
+
+<script>
+/* ---------- Données RIASEC ---------- */
+const TYPES = {
+  R:{nom:"Réaliste",emoji:"🔧",couleur:"#dc2626",desc:"Concret, manuel, tu aimes agir et fabriquer."},
+  I:{nom:"Investigateur",emoji:"🔬",couleur:"#2563eb",desc:"Curieux, analytique, tu aimes comprendre et résoudre."},
+  A:{nom:"Artistique",emoji:"🎨",couleur:"#db2777",desc:"Créatif, sensible, tu aimes imaginer et t'exprimer."},
+  S:{nom:"Social",emoji:"🤝",couleur:"#16a34a",desc:"Aidant, à l'écoute, tu aimes le contact et transmettre."},
+  E:{nom:"Entreprenant",emoji:"🚀",couleur:"#f59e0b",desc:"Meneur, convaincant, tu aimes diriger et entreprendre."},
+  C:{nom:"Conventionnel",emoji:"📊",couleur:"#7c3aed",desc:"Organisé, rigoureux, tu aimes classer et structurer."}
+};
+
+/* 18 affirmations (3 par type) */
+const QUESTIONS = [
+  {t:"R", q:"Réparer, bricoler ou construire quelque chose de mes mains me plaît."},
+  {t:"I", q:"J'aime comprendre comment les choses fonctionnent et résoudre des énigmes."},
+  {t:"A", q:"Dessiner, écrire, jouer de la musique ou créer m'attire beaucoup."},
+  {t:"S", q:"Aider les autres et expliquer les choses me rend content(e)."},
+  {t:"E", q:"Convaincre, organiser un projet ou diriger une équipe me motive."},
+  {t:"C", q:"J'aime quand tout est bien rangé, classé et organisé."},
+  {t:"R", q:"Travailler dehors, avec des machines ou des outils me tente."},
+  {t:"I", q:"Les sciences, les maths ou les expériences me passionnent."},
+  {t:"A", q:"J'ai souvent des idées originales et une bonne imagination."},
+  {t:"S", q:"On vient facilement me parler de ses problèmes."},
+  {t:"E", q:"Lancer ma propre affaire ou vendre une idée me plairait."},
+  {t:"C", q:"Suivre une méthode précise, étape par étape, me rassure."},
+  {t:"R", q:"Je préfère les activités concrètes plutôt que la théorie."},
+  {t:"I", q:"Je me pose beaucoup de questions et j'aime chercher des réponses."},
+  {t:"A", q:"J'aime les activités artistiques et sortir des sentiers battus."},
+  {t:"S", q:"Travailler en équipe et prendre soin des gens compte pour moi."},
+  {t:"E", q:"Prendre des décisions et relever des défis ne me fait pas peur."},
+  {t:"C", q:"Gérer des chiffres, des listes ou des plannings me convient bien."}
+];
+
+const ECHELLE = [
+  {label:"Pas du tout",  emo:"😕", val:0},
+  {label:"Un peu",       emo:"🙂", val:1},
+  {label:"Moyennement",  emo:"😊", val:2},
+  {label:"Beaucoup",     emo:"😃", val:3},
+  {label:"Tout à fait",  emo:"🤩", val:4}
+];
+
+/* Domaines / métiers par type (contexte Belgique/francophone) */
+const DOMAINES = {
+  R:{titre:"Technique, mécanique & nature",
+     texte:"Des filières concrètes où on agit avec ses mains et des outils.",
+     metiers:["Mécanicien·ne","Électricien·ne","Informaticien·ne réseau","Vétérinaire","Ingénieur·e","Cuisinier·ère","Métiers du bâtiment","Agronome"]},
+  I:{titre:"Sciences & recherche",
+     texte:"Pour les esprits curieux qui veulent comprendre et analyser.",
+     metiers:["Médecin","Chercheur·se","Data analyst","Biologiste","Ingénieur·e","Pharmacien·ne","Développeur·se","Physicien·ne"]},
+  A:{titre:"Arts, création & communication",
+     texte:"Pour exprimer ta créativité et ton originalité.",
+     metiers:["Graphiste","Architecte","Journaliste","Musicien·ne","Designer","Réalisateur·rice","Styliste","Web designer"]},
+  S:{titre:"Aide, soin & enseignement",
+     texte:"Pour celles et ceux qui aiment le contact et se rendre utiles.",
+     metiers:["Enseignant·e","Infirmier·ère","Psychologue","Éducateur·rice","Kiné","Assistant·e social·e","Logopède","Coach sportif"]},
+  E:{titre:"Business, gestion & leadership",
+     texte:"Pour les meneur·se·s qui aiment convaincre et entreprendre.",
+     metiers:["Entrepreneur·e","Commercial·e","Manager","Avocat·e","Marketing","Gestionnaire","Agent immobilier","Communication"]},
+  C:{titre:"Gestion, chiffres & organisation",
+     texte:"Pour les personnes rigoureuses qui aiment structurer.",
+     metiers:["Comptable","Banquier·ère","Secrétaire de direction","Juriste","Logisticien·ne","Analyste financier","Fiscaliste","Data manager"]}
+};
+
+/* ---------- Logique ---------- */
+let index = 0;
+let reponses = new Array(QUESTIONS.length).fill(null);
+
+const $ = id => document.getElementById(id);
+
+function demarrer(){
+  $("ecran-intro").classList.add("hidden");
+  $("ecran-test").classList.remove("hidden");
+  index = 0;
+  afficherQuestion();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function afficherQuestion(){
+  const q = QUESTIONS[index];
+  $("q-texte").textContent = q.q;
+  $("compteur").textContent = `Question ${index+1} sur ${QUESTIONS.length}`;
+  $("progress").style.width = ((index)/QUESTIONS.length*100)+"%";
+  $("btn-precedent").style.visibility = index===0 ? "hidden" : "visible";
+
+  const cont = $("reponses");
+  cont.innerHTML = "";
+  ECHELLE.forEach(e=>{
+    const b = document.createElement("button");
+    b.className = "rep" + (reponses[index]===e.val ? " actif" : "");
+    b.innerHTML = `<span class="emo">${e.emo}</span> ${e.label}`;
+    b.onclick = ()=>repondre(e.val);
+    cont.appendChild(b);
+  });
+}
+
+function repondre(val){
+  reponses[index] = val;
+  // petit délai pour voir la sélection
+  setTimeout(()=>{
+    if(index < QUESTIONS.length-1){
+      index++;
+      afficherQuestion();
+    }else{
+      terminer();
+    }
+    window.scrollTo({top:0,behavior:"smooth"});
+  },180);
+  afficherQuestion();
+}
+
+function precedent(){
+  if(index>0){index--;afficherQuestion();window.scrollTo({top:0,behavior:"smooth"});}
+}
+
+function terminer(){
+  // Calcul des scores par type
+  const scores = {R:0,I:0,A:0,S:0,E:0,C:0};
+  QUESTIONS.forEach((q,i)=>{ scores[q.t] += (reponses[i] ?? 0); });
+  const maxParType = 3*4; // 3 questions × 4 points
+
+  // Tri décroissant
+  const tri = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const code = tri.slice(0,3).map(x=>x[0]).join("");
+
+  // Affichage écran
+  $("ecran-test").classList.add("hidden");
+  $("ecran-resultat").classList.remove("hidden");
+
+  $("profil-code").textContent = code;
+  $("profil-sous").textContent =
+    tri.slice(0,3).map(x=>TYPES[x[0]].emoji+" "+TYPES[x[0]].nom).join("  ·  ");
+
+  // Barres de score
+  const sc = $("scores"); sc.innerHTML="";
+  tri.forEach(([t,val])=>{
+    const pct = Math.round(val/maxParType*100);
+    const T = TYPES[t];
+    sc.innerHTML += `
+      <div class="score-ligne">
+        <div class="score-tete">
+          <strong>${T.emoji} ${T.nom}</strong>
+          <span class="pct">${pct}%</span>
+        </div>
+        <div class="score-barre"><span style="width:${pct}%;background:${T.couleur}"></span></div>
+        <div style="font-size:.9rem;color:var(--gris);margin-top:3px">${T.desc}</div>
+      </div>`;
+  });
+
+  // Domaines des 3 types dominants
+  const dom = $("domaines"); dom.innerHTML="";
+  tri.slice(0,3).forEach(([t])=>{
+    const D = DOMAINES[t];
+    dom.innerHTML += `
+      <div class="bloc-domaine" style="border-color:${TYPES[t].couleur}">
+        <h3>${TYPES[t].emoji} ${D.titre}</h3>
+        <p>${D.texte}</p>
+        <div class="metiers">${D.metiers.map(m=>`<span class="tag">${m}</span>`).join("")}</div>
+      </div>`;
+  });
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function recommencer(){
+  reponses = new Array(QUESTIONS.length).fill(null);
+  index = 0;
+  $("ecran-resultat").classList.add("hidden");
+  $("ecran-intro").classList.remove("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tableau visio – La Classe de Stef</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="visio/style.css" />
+</head>
+<body class="board-page">
+  <!-- Barre d'outils -->
+  <aside id="toolbar">
+    <div class="tool-group">
+      <button class="tool active" data-tool="crayon" title="Crayon">✏️</button>
+      <button class="tool" data-tool="fluo" title="Surligneur (fluo)">🖊️</button>
+      <button class="tool" data-tool="gomme" title="Gomme">🧽</button>
+      <button class="tool" data-tool="ligne" title="Ligne droite">📏</button>
+    </div>
+    <div class="tool-group">
+      <button class="tool" data-tool="regle" title="Règle graduée">📐<span class="lbl">Règle</span></button>
+      <button class="tool" data-tool="equerre" title="Équerre">◣<span class="lbl">Équerre</span></button>
+      <button class="tool" data-tool="aristo" title="Équerre Aristo">◢<span class="lbl">Aristo</span></button>
+      <button class="tool" data-tool="rapporteur" title="Rapporteur">◐<span class="lbl">Rapport.</span></button>
+      <button class="tool" data-tool="compas" title="Compas">⊙<span class="lbl">Compas</span></button>
+      <button class="tool" data-tool="thamographe" title="Thamographe : règle origine-centre + rapporteur + équerre + cercles">◉<span class="lbl">Thamo</span></button>
+    </div>
+    <div class="tool-group colors" id="colors"></div>
+    <div class="tool-group">
+      <label class="slider-wrap" title="Épaisseur"><span>Trait</span><input type="range" id="width" min="1" max="30" value="3" /></label>
+    </div>
+    <div class="tool-group">
+      <label class="check" title="Quadrillage"><span>Quadrillage</span>
+        <select id="grid">
+          <option value="none">Aucun</option>
+          <option value="squares">Carreaux</option>
+          <option value="small">Petits carreaux</option>
+          <option value="dots">Points</option>
+        </select>
+      </label>
+    </div>
+    <div class="tool-group actions">
+      <button id="undo" title="Annuler mon dernier trait">↶ Annuler</button>
+      <button id="clear" class="danger" title="Tout effacer">🗑 Effacer</button>
+    </div>
+  </aside>
+
+  <!-- Zone tableau -->
+  <main id="stage">
+    <div id="topbar">
+      <span id="board-title">Tableau</span>
+      <span id="presence"></span>
+      <span class="spacer"></span>
+      <span id="conn" class="badge">…</span>
+      <button id="prof-switch" hidden>👨‍🏫 Prof</button>
+      <button id="logout">Quitter</button>
+    </div>
+    <div id="canvas-wrap">
+      <canvas id="board"></canvas>
+      <canvas id="overlay"></canvas>
+      <div id="instr-hint" hidden></div>
+    </div>
+  </main>
+
+  <!-- Panneau droite -->
+  <aside id="side">
+    <section id="audio-panel">
+      <h3>🎙️ Audio</h3>
+      <div class="audio-controls">
+        <button id="mic-toggle" class="audio-btn">Rejoindre l'audio</button>
+        <button id="mute-toggle" class="audio-btn" disabled>Couper le micro</button>
+      </div>
+      <div id="audio-status" class="muted">Micro non connecté</div>
+      <p class="audio-hint">Le prof <b>et</b> l'élève doivent cliquer sur « Rejoindre l'audio ». Autorisez le micro. Utilisez un <b>casque</b> pour éviter l'écho.</p>
+      <div id="remote-audios"></div>
+    </section>
+    <section id="chat-panel">
+      <h3>💬 Messages</h3>
+      <div id="messages"></div>
+      <form id="chat-form">
+        <input id="chat-input" placeholder="Écris un message…" autocomplete="off" />
+        <button type="submit">Envoyer</button>
+      </form>
+    </section>
+  </aside>
+
+  <!-- Modale : mot de passe prof -->
+  <div id="prof-modal" class="modal" hidden>
+    <div class="modal-card">
+      <h2>👨‍🏫 Espace prof</h2>
+      <form id="prof-form">
+        <label>Mot de passe enseignant
+          <input id="prof-pass" type="password" autocomplete="off" />
+        </label>
+        <p id="prof-err" class="err" hidden></p>
+        <button type="submit">Continuer</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modale : choix de l'année (prof) -->
+  <div id="year-picker" class="modal" hidden>
+    <div class="modal-card">
+      <h2>Choisir un tableau</h2>
+      <p>Sélectionne l'année de l'élève :</p>
+      <div id="year-list"></div>
+    </div>
+  </div>
+
+  <!-- Firebase (compat 10.12.2) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script>
+    // ⚠️ IMPORTANT : après avoir activé la Realtime Database dans la console Firebase,
+    // remplacez databaseURL ci-dessous par l'URL EXACTE affichée dans la console
+    // (elle ressemble à https://classe-de-stef-default-rtdb.europe-west1.firebasedatabase.app).
+    firebase.initializeApp({
+      apiKey: "AIzaSyB0djV_ZDOsYngnUeceNiTUt60IEKP_Qvg",
+      authDomain: "classe-de-stef.firebaseapp.com",
+      databaseURL: "https://classe-de-stef-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "classe-de-stef",
+      storageBucket: "classe-de-stef.firebasestorage.app",
+      messagingSenderId: "16372668790",
+      appId: "1:16372668790:web:b1bfed825bfb36111b0257"
+    });
+  </script>
+
+  <!-- Moteur de dessin + collaboration -->
+  <script src="visio/instruments.js"></script>
+  <script src="visio/board.js"></script>
+  <script src="visio/collab-firebase.js"></script>
+  <script src="visio/audio.js"></script>
+  <script src="visio/app.js"></script>
+</body>
+</html>
