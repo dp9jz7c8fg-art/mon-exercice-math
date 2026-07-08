@@ -173,9 +173,9 @@
             <a href="exercices-en-ligne.html" class="ch-btn" style="justify-content:center;padding:7px 4px;font-size:10px;flex-direction:column;gap:3px;text-align:center;min-height:52px;">
                 <span style="font-size:18px;">✏️</span><span>S'exercer</span>
             </a>
-            <a href="stef-math-arcade.html" class="ch-btn" style="justify-content:center;padding:7px 4px;font-size:10px;flex-direction:column;gap:3px;text-align:center;min-height:52px;">
+            <div class="ch-btn" onclick="openJouer()" style="justify-content:center;padding:7px 4px;font-size:10px;flex-direction:column;gap:3px;text-align:center;min-height:52px;cursor:pointer;">
                 <span style="font-size:18px;">🎮</span><span>Jouer</span>
-            </a>
+            </div>
         </div>
     </div>
 
@@ -242,6 +242,41 @@
                     <div style="font-size:10px;color:rgba(46,204,113,0.5);margin-top:6px;font-weight:600;">👆 Clique pour en savoir plus →</div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CHOIX DU JEU -->
+<div class="modal-overlay" id="jouer-modal">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="modal-title">🎮 Choisis ton jeu</div>
+            <button class="modal-close-btn" onclick="closeModal('jouer-modal')">✕</button>
+        </div>
+        <p style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;text-align:center;">Choisis un chapitre pour lancer l'arcade.</p>
+        <div class="ateliers-list">
+            <a href="stef-math-arcade.html?chapter=ce1d" class="atelier-item" style="flex-direction:row;align-items:center;gap:10px;text-decoration:none;color:inherit;">
+                <div style="flex:1;">
+                    <div class="atelier-name">🎮 CE1D</div>
+                    <div class="atelier-sub">Crystal Match, Data Hack, Void Runner</div>
+                </div>
+                <span style="color:rgba(255,255,255,0.2);font-size:16px;flex-shrink:0;">›</span>
+            </a>
+            <a href="stef-math-arcade.html?chapter=fractions" class="atelier-item" style="flex-direction:row;align-items:center;gap:10px;text-decoration:none;color:inherit;">
+                <div style="flex:1;">
+                    <div class="atelier-name">💎 Fractions</div>
+                    <div class="atelier-sub">Crystal Match — équivalences fraction/décimal/%</div>
+                </div>
+                <span style="color:rgba(255,255,255,0.2);font-size:16px;flex-shrink:0;">›</span>
+            </a>
+            <a href="stef-math-arcade.html?chapter=pourcentages" class="atelier-item" style="flex-direction:row;align-items:center;gap:10px;text-decoration:none;color:inherit;">
+                <div style="flex:1;">
+                    <div class="atelier-name">💯 Pourcentages</div>
+                    <div class="atelier-sub">Percent Crush — associe fractions, décimaux et %</div>
+                </div>
+                <span style="color:rgba(255,255,255,0.2);font-size:16px;flex-shrink:0;">›</span>
+            </a>
         </div>
     </div>
 </div>
@@ -608,6 +643,7 @@ function openKeyring() { closeModal('tools-modal'); document.getElementById('key
 function openMethodo() { document.getElementById('methodo-modal').classList.add('open'); }
 function openDevSoi() { document.getElementById('devsoi-modal').classList.add('open'); }
 function openAvis() { document.getElementById('avis-modal').classList.add('open'); }
+function openJouer() { document.getElementById('jouer-modal').classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function toggleToolsList(key, btn) {
     const list = document.getElementById(key + '-pdf-list');
