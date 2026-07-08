@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scolaire Planner Pro</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <style>
+        :root {
+            --color-primary: #2ecc71; /* Vert néon Stef */
+            --color-primary-glow: rgba(46, 204, 113, 0.4);
+            /* Subject Colors as CSS Variables */
+            --subj-general: #feff9c;
+            --subj-math: #7afbff;
+            --subj-francais: #ff7eb9;
+            --subj-sciences: #a7f432;
+            --subj-histoire: #ff9bbb;
+            --subj-edm: #e8dff5;
+            --subj-option: #fce1e4;
+            --subj-langues: #daeaf6;
+            --subj-autres: #ddedea;
+            
+            --color-bg-start: #040804;
+            --color-bg-mid: #081a0e;
+            --color-bg-end: #040804;
+            --color-card: rgba(255, 255, 255, 0.05);
+            --color-card-border: rgba(46, 204, 113, 0.2);
+            --color-text: #f0f0f8;
+            --color-text-light: #a8f0c0;
+            --color-border: rgba(255, 255, 255, 0.1);
+            --color-success: #2ecc71;
+            --color-warning: #f1c40f;
+            --color-danger: #e74c3c;
+            --radius: 16px;
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+            --glass: blur(12px);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            background: linear-gradient(135deg, var(--color-bg-start) 0%, var(--color-bg-mid) 50%, var(--color-bg-end) 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--color-text);
+            line-height: 1.5;
+            padding-bottom: 80px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--color-card);
+            backdrop-filter: var(--glass);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius);
+        }
+
+        .logo {
+            width: 64px;
+            height: 64px;
+            background: var(--color-card);
+            border: 1px solid var(--color-card-border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            box-shadow: 0 0 20px var(--color-primary-glow);
+        }
+
+        .logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .header-text h1 { 
+            font-size: 22px; 
+            font-weight: 700;
+            background: linear-gradient(135deg, #2ecc71, #a8f0c0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header-text p { font-size: 14px; color: var(--color-text-light); opacity: 0.8; }
+
+        /* Pop-up de victoire */
+        .celebration-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .celebration-card {
+            background: var(--color-card);
+            border: 2px solid var(--color-primary);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 400px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 50px var(--color-primary-glow);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .celebration-icon {
+            font-size: 64px;
+            color: var(--color-primary);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .celebration-card h3 { font-size: 24px; margin-bottom: 10px; color: #fff; }
+        .celebration-card p { color: var(--color-text-light); margin-bottom: 25px; }
+
+        /* Confettis simple */
+        .confetti {
+            position: absolute;
+            width: 10px; height: 10px;
+            background: var(--color-primary);
+            border-radius: 2px;
+            animation: fall 3s linear forwards;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: var(--glass);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius);
+            padding: 8px;
+            margin-bottom: 25px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 12px 5px;
+            border: none;
+            background: none;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 75px;
+        }
+
+        .nav-item i { font-size: 22px; }
+        .nav-item span { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .nav-item.active {
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--color-primary);
+            box-shadow: inset 0 0 10px rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
+        /* Sections */
+        .page { display: none; animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .page.active { display: block; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 { font-size: 20px; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; color: var(--color-primary); }
+
+        .card {
+            background: var(--color-card);
+            backdrop-filter: var(--glass);
+            border-radius: var(--radius);
+            padding: 24px;
+            border: 1px solid var(--color-card-border);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        /* Forms */
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--color-text-light); text-transform: uppercase; }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--color-card-border);
+            border-radius: 10px;
+            font-size: 14px;
+            color: white;
+            outline: none;
+            transition: all 0.2s;
+        }
+        input:focus { border-color: var(--color-primary); box-shadow: 0 0 10px var(--color-primary-glow); }
+
+        button.btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
+        button.btn-primary:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.5);
+        }
+
+        /* Kanban Board */
+        .kanban-board {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+            scrollbar-width: none;
+        }
+        .kanban-board::-webkit-scrollbar { display: none; }
+
+        .kanban-column {
+            flex: 0 0 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .column-title {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-text-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+            padding-left: 5px;
+        }
+
+        .column-title i { color: var(--color-primary); }
+
+        /* Calendar */
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .calendar-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+        .calendar-nav { display: flex; gap: 10px; }
+        .btn-nav {
+            background: var(--color-card);
+            border: 1px solid var(--color-card-border);
+            color: var(--color-text);
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            text-align: center;
+        }
+        .calendar-day-head {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--color-text-light);
+            text-transform: uppercase;
+            padding-bottom: 10px;
+        }
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            font-size: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .calendar-day:hover { background: rgba(46, 204, 113, 0.1); border-color: var(--color-primary); }
+        .calendar-day.today { border-color: var(--color-primary); background: rgba(46, 204, 113, 0.05); font-weight: 700; color: var(--color-primary); }
+        .calendar-day.empty { opacity: 0; pointer-events: none; }
+        .calendar-dot-container {
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 2px;
+            justify-content: center;
+            flex-wrap: nowrap; /* Force single line */
+            width: 100%;
+        }
+
+        .calendar-dot {
+            width: 5px;
+            height: 5px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 2px rgba(0,0,0,0.5);
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+
+        /* Calendar Tooltip */
+        .calendar-tooltip {
+            position: absolute;
+            background: rgba(8, 26, 14, 0.95);
+            border: 1px solid var(--color-primary);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: white;
+            z-index: 1000;
+            display: none;
+            pointer-events: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            width: 150px;
+            text-align: left;
+        }
+
+        /* Assistant Flottant */
+
+        /* Post-it Colors by Subject */
+        .objectif-item.subj-general { background: #feff9c; }
+        .objectif-item.subj-math { background: #7afbff; }
+        .objectif-item.subj-francais { background: #ff7eb9; }
+        .objectif-item.subj-sciences { background: #a7f432; }
+        .objectif-item.subj-histoire { background: #ff9bbb; }
+        .objectif-item.subj-edm { background: #e8dff5; }
+        .objectif-item.subj-option { background: #fce1e4; }
+        .objectif-item.subj-langues { background: #daeaf6; }
+        .objectif-item.subj-autres { background: #ddedea; }
+
+        .objectif-item {
+            color: #333;
+            padding: 10px;
+            margin-bottom: 12px;
+            border-radius: 2px;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            transition: all 0.3s;
+            position: relative;
+            transform: rotate(-1deg);
+            cursor: grab;
+            min-height: 80px;
+            height: auto;
+        }
+
+        .objectif-item:active { cursor: grabbing; }
+
+        .objectif-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .objectif-item:nth-child(even) { transform: rotate(1.5deg); }
+        .objectif-item:nth-child(3n) { transform: rotate(-0.5deg); }
+
+        .objectif-item:hover {
+            transform: scale(1.05) rotate(0deg);
+            z-index: 100;
+        }
+
+        .objectif-item.urgent {
+            border: 3px solid #e74c3c !important;
+            animation: urgentPulse 2s infinite;
+        }
+
+        @keyframes blinkRed {
+            0% { color: #e74c3c; }
+            50% { color: #ff0000; }
+            100% { color: #e74c3c; }
+        }
+
+        .blink-red {
+            animation: blinkRed 0.5s infinite;
+            font-weight: bold;
+        }
+
+        .urgent-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #e74c3c;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 800;
+            transform: rotate(15deg);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .objectif-item.done {
+            opacity: 0.6;
+            transform: translateY(10px) rotate(0deg) !important;
+            filter: grayscale(0.5);
+        }
+
+        .objectif-item.done .obj-text {
+            text-decoration: line-through;
+            color: rgba(51, 51, 51, 0.5);
+        }
+
+        .subtask-list {
+            margin-top: 5px;
+            padding-left: 0;
+            list-style: none;
+            border-top: 1px dashed rgba(0,0,0,0.1);
+            padding-top: 5px;
+        }
+
+        .subtask-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .subtask-item input[type="checkbox"] {
+            width: 12px;
+            height: 12px;
+        }
+
+        .subtask-item.completed {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .add-subtask-form {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .add-subtask-form input {
+            padding: 4px 8px;
+            font-size: 10px;
+            background: rgba(255,255,255,0.5);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 4px;
+            color: #333;
+        }
+
+        .add-subtask-form button {
+            padding: 4px 8px;
+            font-size: 10px;
+            width: auto;
+            margin-top: 0;
+            border-radius: 4px;
+        }
+
+        .obj-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .focus-btn {
+            background: rgba(0,0,0,0.1);
+            border: none;
+            color: #333;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            transition: all 0.2s;
+        }
+
+        .focus-btn:hover { background: rgba(0,0,0,0.2); transform: scale(1.05); }
+
+        .task-container {
+            min-height: 150px;
+            transition: background 0.3s;
+        }
+
+        .task-container.drag-over {
+            background: rgba(46, 204, 113, 0.1);
+            border-radius: 8px;
+        }
+
+        .obj-deadline {
+            font-size: 10px;
+            font-weight: 700;
+            color: #e74c3c;
+            text-transform: uppercase;
+            margin-top: auto;
+        }
+
+        .obj-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .obj-status-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            color: rgba(0, 0, 0, 0.3);
+        }
+
+        .obj-status-btn.not-started { border-color: rgba(0, 0, 0, 0.2); }
+        .obj-status-btn.in-progress { border-color: #f39c12; color: #f39c12; }
+        .obj-status-btn.completed { border-color: #27ae60; color: #27ae60; }
+
+        .obj-content { flex: 1; }
+        .obj-text { font-size: 15px; font-weight: 700; line-height: 1.2; font-family: 'Comic Sans MS', cursive, sans-serif; }
+        
+        .delete-btn {
+            background: none;
+            border: none;
+            color: rgba(231, 76, 60, 0.4);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 2px;
+            transition: all 0.2s;
+        }
+        .delete-btn:hover { color: #e74c3c; transform: scale(1.1); }
+
+        /* Timer */
+        .timer-display {
+            text-align: center;
+            font-size: 80px;
+            font-weight: 800;
+            margin: 30px 0;
+            color: var(--color-primary);
+            text-shadow: 0 0 20px var(--color-primary-glow);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .timer-controls { display: flex; justify-content: center; gap: 20px; }
+        .btn-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: none;
+            background: var(--color-primary);
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px var(--color-primary-glow);
+        }
+        .btn-circle:hover { transform: scale(1.1); }
+
+        /* Custom Date Picker */
+        .datepicker-container {
+            position: relative;
+        }
+
+        .datepicker-input {
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.3) !important;
+            border: 1px solid var(--color-card-border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .datepicker-calendar {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            background: #081a0e;
+            border: 1px solid var(--color-primary);
+            border-radius: 12px;
+            padding: 15px;
+            width: 250px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .datepicker-calendar.active {
+            display: flex;
+        }
+
+        .dp-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dp-month-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .dp-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .dp-day-head {
+            font-size: 9px;
+            font-weight: 800;
+            color: var(--color-text-light);
+            text-align: center;
+            opacity: 0.6;
+        }
+
+        .dp-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .dp-day:hover {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--color-primary);
+        }
+
+        .dp-day.selected {
+            background: var(--color-primary);
+            color: black;
+            font-weight: 700;
+        }
+
+        .dp-day.today {
+            border: 1px solid var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .dp-day.past {
+            opacity: 0.15;
+            filter: grayscale(1);
+            cursor: pointer;
+        }
+
+        .dp-btn {
+            background: none;
+            border: none;
+            color: var(--color-text-light);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .dp-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .stat-card { text-align: center; }
+        .stat-value { font-size: 32px; font-weight: 800; color: var(--color-primary); margin-bottom: 5px; }
+        .stat-label { font-size: 11px; color: var(--color-text-light); text-transform: uppercase; font-weight: 700; }
+
+        /* Assistant Flottant */
+        .assistant-bubble {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px var(--color-primary-glow);
+            z-index: 3000;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        .assistant-bubble:hover { transform: scale(1.1) rotate(10deg); }
+        .assistant-bubble.pulse { animation: bubblePulse 2s infinite; }
+        
+        @keyframes bubblePulse {
+            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(46, 204, 113, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+        }
+
+        .chat-window {
+            position: fixed;
+            bottom: 95px;
+            left: 25px;
+            width: 320px;
+            height: 450px;
+            background: var(--color-bg-mid);
+            border: 2px solid var(--color-card-border);
+            border-radius: 20px;
+            display: none;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+            z-index: 3000;
+            overflow: hidden;
+            backdrop-filter: var(--glass);
+            animation: slideInLeft 0.3s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .chat-header {
+            padding: 15px;
+            background: rgba(46, 204, 113, 0.1);
+            border-bottom: 1px solid var(--color-card-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .chat-header h4 { font-size: 14px; color: var(--color-primary); }
+
+        #chat-messages::-webkit-scrollbar { width: 4px; }
+        #chat-messages::-webkit-scrollbar-thumb { background: var(--color-card-border); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo"><img src="logogerlando.png" alt="Logo Stef" onerror="this.parentNode.innerHTML='<i class=&quot;ti ti-school&quot;></i>'"></div>
+        <div class="header-text">
+            <h1>Scolaire Planner Pro</h1>
+            <div id="level-bar-container" style="width: 150px; height: 8px; background: rgba(0,0,0,0.3); border-radius: 4px; margin-top: 5px; overflow: hidden;">
+                <div id="level-bar-fill" style="width: 0%; height: 100%; background: var(--color-primary);"></div>
+            </div>
+            <p id="level-text" style="font-size: 11px; margin-top: 2px;">Niveau 1 (0 XP)</p>
+        </div>
+    </header>
+
+    <div class="celebration-overlay" id="celebration">
+        <div class="celebration-card">
+            <i class="ti ti-trophy celebration-icon"></i>
+            <h3>Félicitations !</h3>
+            <p id="celebration-msg">Tu as accompli un objectif important !</p>
+            <button class="btn-primary" onclick="closeCelebration()">Continuer ainsi !</button>
+        </div>
+    </div>
+
+    <nav id="main-nav">
+        <button class="nav-item active" data-page="tasks"><i class="ti ti-target"></i><span>Objectifs</span></button>
+        <button class="nav-item" data-page="plan"><i class="ti ti-calendar"></i><span>Planning</span></button>
+        <button class="nav-item" data-page="focus"><i class="ti ti-clock"></i><span>Focus</span></button>
+        <button class="nav-item" data-page="stats"><i class="ti ti-chart-bar"></i><span>Suivi</span></button>
+        <button class="nav-item" data-page="profile"><i class="ti ti-user"></i><span>Profil</span></button>
+    </nav>
+
+    <div class="assistant-bubble pulse" id="assistant-bubble" onclick="toggleChat()">
+        <i class="ti ti-message-2"></i>
+    </div>
+
+    <div class="chat-window" id="chat-window">
+        <div class="chat-header">
+            <div style="width:32px; height:32px; border-radius:50%; background:var(--color-primary); display:flex; align-items:center; justify-content:center; color:white;">
+                <i class="ti ti-robot"></i>
+            </div>
+            <h4>Assistant Scolaire</h4>
+            <button onclick="toggleChat()" style="margin-left:auto; background:none; border:none; color:var(--color-text-light); cursor:pointer;"><i class="ti ti-x"></i></button>
+        </div>
+        <div id="chat-messages" style="flex:1; overflow-y:auto; padding:15px;">
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <div style="width:32px; height:32px; border-radius:50%; background:var(--color-primary); display:flex; align-items:center; justify-content:center; color:white; font-size:14px; flex-shrink:0;">
+                    <i class="ti ti-robot"></i>
+                </div>
+                <div style="background:var(--color-card); color:var(--color-text); padding:10px 15px; border-radius:12px; font-size:13px; border:1px solid var(--color-card-border); max-width:80%;">
+                    Besoin d'un coup de pouce ou d'un peu de motivation ? Je suis là !
+                </div>
+            </div>
+        </div>
+        <div class="quick-btns" style="padding:10px; display:flex; gap:5px; flex-wrap:wrap; border-top:1px solid var(--color-card-border); background:rgba(0,0,0,0.2);">
+            <button class="btn-primary" style="padding:5px 10px; font-size:10px; width:auto;" onclick="sendQuick('Conseils pour un examen')">📚 Examen</button>
+            <button class="btn-primary" style="padding:5px 10px; font-size:10px; width:auto; background:var(--color-warning);" onclick="sendQuick('Devoir urgent')">⚡ Urgent</button>
+            <button class="btn-primary" style="padding:5px 10px; font-size:10px; width:auto; background:var(--color-success);" onclick="sendQuick('Pas de devoirs')">😊 Zen</button>
+        </div>
+    </div>
+
+    <main>
+        <!-- Tâches / Kanban -->
+        <section id="page-tasks" class="page active">
+            <h2><i class="ti ti-layout-kanban"></i> Je gère mes tâches</h2>
+            <div class="card">
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <input type="text" id="task-input" placeholder="Nouvel objectif...">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Matière</label>
+                        <select id="task-subject">
+                            <option value="math">Mathématiques</option>
+                            <option value="francais">Français</option>
+                            <option value="sciences">Sciences</option>
+                            <option value="histoire">Histoire-Géo</option>
+                            <option value="edm">EDM</option>
+                            <option value="option">Option</option>
+                            <option value="langues">Langues</option>
+                            <option value="autres">Autres</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label id="deadline-label">Échéance</label>
+                        <div class="datepicker-container">
+                            <div class="datepicker-input" id="dp-trigger" onclick="toggleDatePicker()">
+                                <i class="ti ti-calendar"></i>
+                                <span id="dp-selected-text">Choisir une date</span>
+                            </div>
+                            <input type="hidden" id="task-deadline">
+                            <div class="datepicker-calendar" id="dp-calendar">
+                                <div class="dp-header">
+                                    <button class="dp-btn" onclick="changeDPMonth(-1)"><i class="ti ti-chevron-left"></i></button>
+                                    <div class="dp-month-title" id="dp-month-title">Mai 2026</div>
+                                    <button class="dp-btn" onclick="changeDPMonth(1)"><i class="ti ti-chevron-right"></i></button>
+                                </div>
+                                <div class="dp-grid" id="dp-grid">
+                                    <!-- Days injected by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="addTask()">Ajouter l'objectif</button>
+            </div>
+            
+            <div class="kanban-board">
+                <div class="kanban-column">
+                    <div class="column-title"><i class="ti ti-circle"></i> À faire</div>
+                    <div id="col-todo" class="task-container"></div>
+                </div>
+                <div class="kanban-column">
+                    <div class="column-title"><i class="ti ti-loader"></i> En cours</div>
+                    <div id="col-progress" class="task-container"></div>
+                </div>
+                <div class="kanban-column">
+                    <div class="column-title"><i class="ti ti-check"></i> Terminé</div>
+                    <div id="col-done" class="task-container"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-plan" class="page">
+            <h2><i class="ti ti-calendar"></i> Mon Planning</h2>
+            <div class="calendar-layout" style="display: grid; grid-template-columns: 1fr 300px; gap: 20px;">
+                <div class="card">
+                    <div class="calendar-header">
+                        <div class="calendar-title" id="calendar-month">Mai 2026</div>
+                        <div class="calendar-nav">
+                            <button class="btn-nav" onclick="changeMonth(-1)"><i class="ti ti-chevron-left"></i></button>
+                            <button class="btn-nav" onclick="changeMonth(1)"><i class="ti ti-chevron-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="calendar-grid" id="calendar-grid">
+                        <!-- Généré par JS -->
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Tâches du jour</h3>
+                    <div id="day-tasks-list" style="margin-top: 15px; font-size: 13px;">Sélectionne un jour...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Focus -->
+        <section id="page-focus" class="page">
+            <h2><i class="ti ti-clock"></i> Session de travail</h2>
+            <div class="card" style="text-align: center;">
+                <p id="timer-type">Travail</p>
+                <div class="timer-display" id="timer-display">25:00</div>
+                <div class="timer-controls">
+                    <button class="btn-circle" id="timer-start"><i class="ti ti-play"></i></button>
+                    <button class="btn-circle" id="timer-reset" style="background: var(--color-border); color: var(--color-text);"><i class="ti ti-refresh"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Suivi -->
+        <section id="page-stats" class="page">
+            <h2><i class="ti ti-chart-bar"></i> Mes Progrès</h2>
+            <div class="stats-grid">
+                <div class="card stat-card">
+                    <div class="stat-value" id="stat-tasks">0</div>
+                    <div class="stat-label">Tâches finies</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-value" id="stat-streak">0</div>
+                    <div class="stat-label">Jours de suite</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profil -->
+        <section id="page-profile" class="page">
+            <h2><i class="ti ti-user"></i> Mon Profil</h2>
+            <div class="card">
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" id="prof-name" placeholder="Ton nom">
+                </div>
+                <div class="form-group">
+                    <label>Niveau scolaire</label>
+                    <select id="prof-level">
+                        <option value="primaire">Primaire</option>
+                        <option value="secondaire">Secondaire</option>
+                        <option value="superieur">Supérieur</option>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="saveProfile()">Enregistrer</button>
+            </div>
+        </section>
+    </main>
+    <div id="calendar-tooltip" class="calendar-tooltip"></div>
+</div>
+
+<script>
+    // Navigation logic
+    document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            
+            btn.classList.add('active');
+            const pageId = 'page-' + btn.dataset.page;
+            document.getElementById(pageId).classList.add('active');
+            
+            if (btn.dataset.page === 'plan') renderPlan();
+        });
+    });
+
+    // Initial state
+    let state = {
+        profile: { name: '', level: 'secondaire' },
+        tasks: [],
+        sessions: []
+    };
+
+    let currentCalDate = new Date();
+    let dpDate = new Date(); // Date for the mini calendar picker
+    let dpSelectedDate = null;
+
+    function toggleDatePicker() {
+        const cal = document.getElementById('dp-calendar');
+        cal.classList.toggle('active');
+        if (cal.classList.contains('active')) renderDP();
+    }
+
+    function renderDP() {
+        const grid = document.getElementById('dp-grid');
+        const title = document.getElementById('dp-month-title');
+        grid.innerHTML = '';
+
+        const year = dpDate.getFullYear();
+        const month = dpDate.getMonth();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const firstDay = new Date(year, month, 1).getDay();
+
+        const monthName = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' }).format(dpDate);
+        title.textContent = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+
+        // Day headers
+        ['L', 'M', 'M', 'J', 'V', 'S', 'D'].forEach(day => {
+            const h = document.createElement('div');
+            h.className = 'dp-day-head';
+            h.textContent = day;
+            grid.appendChild(h);
+        });
+
+        // Empty
+        let startOffset = firstDay === 0 ? 6 : firstDay - 1;
+        for (let i = 0; i < startOffset; i++) {
+            const empty = document.createElement('div');
+            empty.className = 'dp-day empty';
+            grid.appendChild(empty);
+        }
+
+        // Days
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateObj = new Date(year, month, d);
+            const el = document.createElement('div');
+            el.className = 'dp-day';
+            
+            // Check if past
+            if (dateObj < today) {
+                el.classList.add('past');
+            } else {
+                if (year === today.getFullYear() && month === today.getMonth() && d === today.getDate()) el.classList.add('today');
+                el.onclick = () => selectDPDate(d, month, year);
+            }
+            
+            if (dpSelectedDate && year === dpSelectedDate.getFullYear() && month === dpSelectedDate.getMonth() && d === dpSelectedDate.getDate()) {
+                el.classList.add('selected');
+            }
+
+            el.textContent = d;
+            grid.appendChild(el);
+        }
+    }
+
+    function changeDPMonth(dir) {
+        dpDate.setMonth(dpDate.getMonth() + dir);
+        renderDP();
+    }
+
+    function selectDPDate(d, m, y) {
+        dpSelectedDate = new Date(y, m, d);
+        document.getElementById('task-deadline').value = dpSelectedDate.toISOString().split('T')[0];
+        document.getElementById('dp-selected-text').textContent = dpSelectedDate.toLocaleDateString('fr-FR');
+        document.getElementById('dp-calendar').classList.remove('active');
+    }
+
+    function loadState() {
+        const saved = localStorage.getItem('scolaire_planner_data');
+        if (saved) {
+            state = JSON.parse(saved);
+        }
+        renderTasks();
+        renderProfile();
+        updateStats();
+        renderCalendar();
+    }
+
+    function saveState() {
+        localStorage.setItem('scolaire_planner_data', JSON.stringify(state));
+    }
+
+    // Profile logic
+    function renderProfile() {
+        document.getElementById('prof-name').value = state.profile.name || '';
+        document.getElementById('prof-level').value = state.profile.level || 'secondaire';
+        if (state.profile.name) {
+            document.querySelector('.header-text p').textContent = `Bonjour, ${state.profile.name} !`;
+        }
+    }
+
+    function saveProfile() {
+        state.profile.name = document.getElementById('prof-name').value;
+        state.profile.level = document.getElementById('prof-level').value;
+        saveState();
+        renderProfile();
+        alert('Profil enregistré !');
+    }
+
+    // Tasks logic (Kanban)
+    function addTask() {
+        const input = document.getElementById('task-input');
+        const subjectSelect = document.getElementById('task-subject');
+        const deadlineInput = document.getElementById('task-deadline');
+        
+        const text = input.value.trim();
+        const subject = subjectSelect.value;
+        const deadline = deadlineInput.value;
+        
+        if (!text) {
+            // Optional: Add blink effect to input too if needed, but keeping it simple for now
+            return;
+        }
+        if (!deadline) {
+            const label = document.getElementById('deadline-label');
+            const trigger = document.getElementById('dp-trigger');
+            
+            const blinkElements = [label, trigger];
+            blinkElements.forEach(el => {
+                if (el) {
+                    el.style.color = 'red';
+                    el.style.fontWeight = 'bold';
+                    el.style.borderColor = 'red';
+                    let count = 0;
+                    let interval = setInterval(() => {
+                        el.style.visibility = (count % 2 === 0) ? 'hidden' : 'visible';
+                        count++;
+                        if (count > 6) {
+                            clearInterval(interval);
+                            el.style.visibility = 'visible';
+                            el.style.color = '';
+                            el.style.fontWeight = '';
+                            el.style.borderColor = '';
+                        }
+                    }, 300);
+                }
+            });
+            return;
+        }
+
+        const task = {
+            id: Date.now(),
+            title: text,
+            subject: subject,
+            deadline: deadline,
+            status: 'not-started', // not-started, in-progress, completed
+            subtasks: [],
+            createdAt: new Date().toISOString()
+        };
+
+        state.tasks.push(task);
+        input.value = '';
+        deadlineInput.value = '';
+        document.getElementById('dp-selected-text').textContent = 'Choisir une date';
+        dpSelectedDate = null;
+        saveState();
+        renderTasks();
+        updateStats();
+        renderCalendar();
+    }
+
+    function addXP(amount) {
+        state.xp = (state.xp || 0) + amount;
+        let level = Math.floor(state.xp / 100) + 1;
+        let progress = (state.xp % 100);
+        
+        document.getElementById('level-bar-fill').style.width = progress + '%';
+        document.getElementById('level-text').textContent = `Niveau ${level} (${state.xp} XP)`;
+        saveState();
+    }
+
+    function addSubtask(taskId, text) {
+        const task = state.tasks.find(t => t.id === taskId);
+        if (task && text.trim()) {
+            task.subtasks.push({ id: Date.now(), text: text.trim(), completed: false });
+            saveState();
+            renderTasks();
+        }
+    }
+
+    function toggleSubtask(taskId, subtaskId) {
+        const task = state.tasks.find(t => t.id === taskId);
+        if (task) {
+            const sub = task.subtasks.find(s => s.id === subtaskId);
+            if (sub) {
+                sub.completed = !sub.completed;
+                saveState();
+                renderTasks();
+            }
+        }
+    }
+
+    function cycleTaskStatus(id) {
+        const task = state.tasks.find(t => t.id === id);
+        if (task) {
+            if (task.status === 'not-started') task.status = 'in-progress';
+            else if (task.status === 'in-progress') {
+                task.status = 'completed';
+                addXP(20);
+                triggerCelebration(task.title);
+            }
+            else task.status = 'not-started';
+            
+            saveState();
+            renderTasks();
+            updateStats();
+            renderCalendar();
+        }
+    }
+
+    function deleteTask(id) {
+        state.tasks = state.tasks.filter(t => t.id !== id);
+        saveState();
+        renderTasks();
+        updateStats();
+        renderCalendar();
+    }
+
+    // Drag and Drop Logic
+    function handleDragStart(e, id) {
+        e.dataTransfer.setData('text/plain', id);
+        e.target.classList.add('dragging');
+    }
+
+    function handleDragEnd(e) {
+        e.target.classList.remove('dragging');
+    }
+
+    function initDragAndDrop() {
+        const containers = document.querySelectorAll('.task-container');
+        containers.forEach(container => {
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                container.classList.add('drag-over');
+            });
+            container.addEventListener('dragleave', () => {
+                container.classList.remove('drag-over');
+            });
+            container.addEventListener('drop', (e) => {
+                e.preventDefault();
+                container.classList.remove('drag-over');
+                const id = parseInt(e.dataTransfer.getData('text/plain'));
+                const newStatus = container.id === 'col-todo' ? 'not-started' : 
+                                  container.id === 'col-progress' ? 'in-progress' : 'completed';
+                
+                const task = state.tasks.find(t => t.id === id);
+                if (task && task.status !== newStatus) {
+                    if (newStatus === 'completed') triggerCelebration(task.title);
+                    task.status = newStatus;
+                    saveState();
+                    renderTasks();
+                    updateStats();
+                    renderCalendar();
+                }
+            });
+        });
+    }
+
+    function renderTasks() {
+        const cols = {
+            'not-started': document.getElementById('col-todo'),
+            'in-progress': document.getElementById('col-progress'),
+            'completed': document.getElementById('col-done')
+        };
+
+        Object.values(cols).forEach(c => c.innerHTML = '');
+
+        const now = new Date();
+        const tomorrow = new Date();
+        tomorrow.setDate(now.getDate() + 1);
+
+        state.tasks.forEach(task => {
+            const isDone = task.status === 'completed';
+            const item = document.createElement('div');
+            
+            // Check for urgency
+            let isUrgent = false;
+            if (task.deadline && !isDone) {
+                const d = new Date(task.deadline);
+                isUrgent = d <= tomorrow;
+            }
+
+            item.className = `objectif-item subj-${task.subject} ${isDone ? 'done' : ''} ${isUrgent ? 'urgent' : ''}`;
+            item.draggable = !isDone;
+            item.addEventListener('dragstart', (e) => handleDragStart(e, task.id));
+            item.addEventListener('dragend', handleDragEnd);
+            
+            let statusIcon = '<i class="ti ti-circle"></i>';
+            if (task.status === 'in-progress') statusIcon = '<i class="ti ti-loader"></i>';
+            else if (task.status === 'completed') statusIcon = '<i class="ti ti-check"></i>';
+
+            const deadlineHtml = task.deadline ? `<div class="obj-deadline"><i class="ti ti-calendar-event"></i> ${new Date(task.deadline).toLocaleDateString('fr-FR')}</div>` : '';
+            const urgentBadge = isUrgent ? '<div class="urgent-badge">URGENT</div>' : '';
+
+            // Subtasks rendering
+            let subtasksHtml = '<ul class="subtask-list">';
+            (task.subtasks || []).forEach(sub => {
+                subtasksHtml += `
+                    <li class="subtask-item ${sub.completed ? 'completed' : ''}">
+                        <input type="checkbox" ${sub.completed ? 'checked' : ''} onchange="toggleSubtask(${task.id}, ${sub.id})">
+                        <span>${sub.text}</span>
+                    </li>
+                `;
+            });
+            subtasksHtml += '</ul>';
+
+            const addSubtaskHtml = !isDone ? `
+                <div class="add-subtask-form">
+                    <input type="text" placeholder="Sous-tâche..." onkeypress="if(event.key==='Enter'){ addSubtask(${task.id}, this.value); this.value=''; }">
+                </div>
+            ` : '';
+
+            const focusBtn = !isDone ? `
+                <button class="focus-btn" onclick="launchFocus('${task.title}')">
+                    <i class="ti ti-player-play"></i> Focus
+                </button>
+            ` : '';
+
+            item.innerHTML = `
+                ${urgentBadge}
+                <div class="obj-header">
+                    <button class="obj-status-btn ${task.status}" onclick="cycleTaskStatus(${task.id})" title="Changer le statut">
+                        ${statusIcon}
+                    </button>
+                    <button class="delete-btn" onclick="deleteTask(${task.id})">
+                        <i class="ti ti-trash"></i>
+                    </button>
+                </div>
+                <div class="obj-content">
+                    <div class="obj-text">${task.title}</div>
+                    ${subtasksHtml}
+                    ${addSubtaskHtml}
+                </div>
+                <div class="obj-actions">
+                    ${deadlineHtml}
+                    ${focusBtn}
+                </div>
+            `;
+            cols[task.status].appendChild(item);
+        });
+
+        initDragAndDrop();
+
+        // Placeholder if empty
+        Object.entries(cols).forEach(([status, el]) => {
+            if (el.children.length === 0) {
+                el.innerHTML = '<p style="text-align:center; color:var(--color-text-light); font-size:11px; opacity:0.4; padding:10px;">Vide</p>';
+            }
+        });
+    }
+
+    function launchFocus(taskTitle) {
+        // Change page to focus
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        
+        const focusBtn = document.querySelector('[data-page="focus"]');
+        focusBtn.classList.add('active');
+        document.getElementById('page-focus').classList.add('active');
+        
+        // Set focus title
+        document.getElementById('timer-type').textContent = `Travail : ${taskTitle}`;
+        
+        // Reset and start timer
+        clearInterval(timerInterval);
+        isRunning = false;
+        timeLeft = 25 * 60;
+        updateTimerDisplay();
+        
+        // Auto-start
+        document.getElementById('timer-start').click();
+    }
+
+    // Calendar logic
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            const monthLabel = document.getElementById('calendar-month');
+            grid.innerHTML = '';
+
+            const year = currentCalDate.getFullYear();
+            const month = currentCalDate.getMonth();
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            const monthName = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' }).format(currentCalDate);
+            monthLabel.textContent = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+
+            ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].forEach(day => {
+                const h = document.createElement('div');
+                h.className = 'calendar-day-head';
+                h.textContent = day;
+                grid.appendChild(h);
+            });
+
+            let startOffset = firstDay === 0 ? 6 : firstDay - 1;
+            for (let i = 0; i < startOffset; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'calendar-day empty';
+                grid.appendChild(empty);
+            }
+
+            const today = new Date();
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateObj = new Date(year, month, d);
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                if (year === today.getFullYear() && month === today.getMonth() && d === today.getDate()) {
+                    dayEl.classList.add('today');
+                }
+                dayEl.textContent = d;
+
+                // Find tasks for this date
+                const tasksForDay = state.tasks.filter(t => t.deadline && new Date(t.deadline).toDateString() === dateObj.toDateString());
+                
+                if (tasksForDay.length > 0) {
+                    const dotContainer = document.createElement('div');
+                    dotContainer.className = 'calendar-dot-container';
+                    
+                    tasksForDay.forEach(task => {
+                        const dot = document.createElement('div');
+                        dot.className = 'calendar-dot';
+                        dot.style.background = `var(--subj-${task.subject})`;
+                        dotContainer.appendChild(dot);
+                    });
+                    dayEl.appendChild(dotContainer);
+                }
+
+                dayEl.onclick = () => showDayTasks(dateObj, tasksForDay);
+                grid.appendChild(dayEl);
+            }
+        }
+
+        function showDayTasks(date, tasks) {
+            const list = document.getElementById('day-tasks-list');
+            list.innerHTML = `<strong>${date.toLocaleDateString('fr-FR')}</strong><br><br>`;
+            
+            if (tasks.length === 0) {
+                list.innerHTML += 'Aucune tâche prévue.';
+            } else {
+                tasks.forEach(t => {
+                    list.innerHTML += `<div style="padding:5px; border-bottom:1px solid #ccc; margin-bottom:5px;">• ${t.title}</div>`;
+                });
+            }
+        }
+
+    function changeMonth(dir) {
+        currentCalDate.setMonth(currentCalDate.getMonth() + dir);
+        renderCalendar();
+    }
+
+    // Timer logic
+    let timerInterval;
+    let timeLeft = 25 * 60;
+    let isRunning = false;
+    let currentType = 'work'; // work, break
+
+    const display = document.getElementById('timer-display');
+    const startBtn = document.getElementById('timer-start');
+    const resetBtn = document.getElementById('timer-reset');
+    const typeLabel = document.getElementById('timer-type');
+
+    function updateTimerDisplay() {
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        display.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    startBtn.addEventListener('click', () => {
+        if (isRunning) {
+            clearInterval(timerInterval);
+            startBtn.innerHTML = '<i class="ti ti-play"></i>';
+        } else {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    completeSession();
+                }
+            }, 1000);
+            startBtn.innerHTML = '<i class="ti ti-pause"></i>';
+        }
+        isRunning = !isRunning;
+    });
+
+    resetBtn.addEventListener('click', () => {
+        clearInterval(timerInterval);
+        isRunning = false;
+        timeLeft = currentType === 'work' ? 25 * 60 : 5 * 60;
+        updateTimerDisplay();
+        startBtn.innerHTML = '<i class="ti ti-play"></i>';
+    });
+
+    function completeSession() {
+        if (currentType === 'work') {
+            state.sessions.push({ date: new Date().toISOString(), type: 'work' });
+            saveState();
+            updateStats();
+            triggerCelebration("Session de travail intensive");
+            currentType = 'break';
+            timeLeft = 5 * 60;
+            typeLabel.textContent = 'Pause';
+        } else {
+            alert('Pause terminée ! Prêt à retravailler ?');
+            currentType = 'work';
+            timeLeft = 25 * 60;
+            typeLabel.textContent = 'Travail';
+        }
+        updateTimerDisplay();
+        isRunning = false;
+        startBtn.innerHTML = '<i class="ti ti-play"></i>';
+    }
+
+    // Assistant logic (Floating)
+    function toggleChat() {
+        const window = document.getElementById('chat-window');
+        const bubble = document.getElementById('assistant-bubble');
+        if (window.style.display === 'flex') {
+            window.style.display = 'none';
+            bubble.classList.add('pulse');
+        } else {
+            window.style.display = 'flex';
+            bubble.classList.remove('pulse');
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    }
+
+    function addAssistantMsg(text, isUser = false) {
+        const chat = document.getElementById('chat-messages');
+        const msg = document.createElement('div');
+        msg.style.display = 'flex';
+        msg.style.flexDirection = isUser ? 'row-reverse' : 'row';
+        msg.style.gap = '10px';
+        msg.style.marginBottom = '15px';
+        
+        msg.innerHTML = `
+            <div style="width:28px; height:28px; border-radius:50%; background:${isUser ? 'var(--color-card-border)' : 'var(--color-primary)'}; display:flex; align-items:center; justify-content:center; color:${isUser ? 'var(--color-text)' : 'white'}; font-size:12px; flex-shrink:0;">
+                <i class="ti ti-${isUser ? 'user' : 'robot'}"></i>
+            </div>
+            <div style="background:${isUser ? 'var(--color-primary)' : 'var(--color-card)'}; color:${isUser ? 'white' : 'var(--color-text)'}; padding:8px 12px; border-radius:12px; font-size:13px; border:1px solid var(--color-card-border); max-width:85%;">
+                ${text}
+            </div>
+        `;
+        chat.appendChild(msg);
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    function sendQuick(text) {
+        addAssistantMsg(text, true);
+        setTimeout(() => {
+            let reply = "";
+            const prompts = {
+                'examen': [
+                    "Pour ton examen, n'oublie pas : une bonne nuit de sommeil vaut mieux que 3h de révisions fatiguées ! Tu as tout mon soutien.",
+                    "Divise tes révisions en petits blocs de 25 min. C'est la méthode que je préfère pour t'aider à rester au top !",
+                    "Tu as déjà accompli de grandes choses. Cet examen est juste une étape de plus que tu vas franchir avec brio."
+                ],
+                'urgent': [
+                    "Pas de panique ! Respire un grand coup. On va s'en occuper ensemble. Lance le minuteur Focus et donne tout pendant 25 minutes.",
+                    "L'urgence est un défi que tu es capable de relever. On priorise l'essentiel et on avance pas à pas.",
+                    "Je suis là pour t'épauler. Une tâche urgente n'est qu'une mission de plus pour un champion comme toi !"
+                ],
+                'zen': [
+                    "C'est génial ! Profite de ce temps pour te ressourcer. Un esprit reposé est un esprit plus fort demain.",
+                    "C'est le moment parfait pour une petite lecture plaisir ou un projet créatif. Bravo pour ton organisation !",
+                    "Zéro devoirs ? C'est la récompense de ton travail acharné. Savoure ce moment de calme !"
+                ]
+            };
+
+            let category = 'zen';
+            if (text.toLowerCase().includes('examen')) category = 'examen';
+            else if (text.toLowerCase().includes('urgent')) category = 'urgent';
+
+            const possibleReplies = prompts[category];
+            reply = possibleReplies[Math.floor(Math.random() * possibleReplies.length)];
+            
+            addAssistantMsg(reply);
+        }, 800);
+    }
+
+    function triggerCelebration(title) {
+        const overlay = document.getElementById('celebration');
+        const msg = document.getElementById('celebration-msg');
+        msg.textContent = `Tu as terminé l'objectif : "${title}" !`;
+        overlay.style.display = 'flex';
+        
+        // Simple confetti effect
+        for(let i=0; i<30; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.backgroundColor = `hsl(${Math.random()*360}, 70%, 50%)`;
+            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            document.body.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 4000);
+        }
+    }
+
+    function closeCelebration() {
+        document.getElementById('celebration').style.display = 'none';
+    }
+
+    function updateStats() {
+        const completedCount = state.tasks.filter(t => t.status === 'completed').length;
+        document.getElementById('stat-tasks').textContent = completedCount;
+        
+        // Simple streak calculation (mock for now based on tasks today)
+        const today = new Date().toLocaleDateString();
+        const doneToday = state.tasks.some(t => t.status === 'completed' && new Date(t.createdAt).toLocaleDateString() === today);
+        document.getElementById('stat-streak').textContent = doneToday ? 1 : 0;
+    }
+
+    // Planning logic
+    function renderPlan() {
+        const planList = document.getElementById('plan-list');
+        planList.innerHTML = '';
+        const todoTasks = state.tasks.filter(t => t.status !== 'completed');
+        
+        if (todoTasks.length === 0) {
+            planList.innerHTML = '<p style="text-align:center; color:var(--color-text-light); padding:20px;">Ajoute des objectifs pour voir ton planning !</p>';
+            return;
+        }
+
+        todoTasks.forEach(task => {
+            const item = document.createElement('div');
+            item.className = 'card';
+            item.style.padding = '10px 15px';
+            item.style.marginBottom = '10px';
+            item.innerHTML = `<div style="font-weight:600; font-size:14px;">${task.title}</div><div style="font-size:12px; color:var(--color-text-light)">Prévu aujourd'hui • 25 min</div>`;
+            planList.appendChild(item);
+        });
+    }
+
+    loadState();
+    updateTimerDisplay();
+</script>
+
+</body>
+</html>
