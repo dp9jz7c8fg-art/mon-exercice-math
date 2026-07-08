@@ -398,7 +398,7 @@
             </div>
         </div>
         <div class="stat-group">
-            <div class="cyber-badge">LEVEL <span id="cur-diff">1</span></div>
+            <div class="cyber-badge">CHAPITRE : <span id="cur-chapter">CE1D</span></div>
             <div class="cyber-badge" style="border-color: var(--primary); color: #fff">
                 STÉ-POINTS: <span id="score-val">0</span>
             </div>
@@ -410,27 +410,13 @@
         <h1 class="view-title">SYSTÈMES PRÊTS</h1>
         
         <div class="difficulty-nav">
-            <button class="nav-btn active" id="btn-diff-1" onclick="changeDiff(1)">SECTEUR CE1D</button>
-            <button class="nav-btn" id="btn-diff-3" onclick="changeDiff(3)">SECTEUR AVANCÉ</button>
+            <button class="nav-btn" id="btn-chap-ce1d" onclick="changeChapter('ce1d')">CE1D</button>
+            <button class="nav-btn" id="btn-chap-vocab" onclick="changeChapter('vocab')">VOCABULAIRE</button>
+            <button class="nav-btn" id="btn-chap-fractions" onclick="changeChapter('fractions')">FRACTIONS</button>
+            <button class="nav-btn" id="btn-chap-stats" onclick="changeChapter('stats')">STATISTIQUES</button>
         </div>
 
-        <div id="hub-grid">
-            <div class="cyber-card" onclick="loadGame('fraction')">
-                <span class="card-icon">💎</span>
-                <h2 class="card-title">Crystal Match</h2>
-                <p class="card-desc">Fusionnez les fréquences numériques équivalentes pour stabiliser le noyau d'énergie.</p>
-            </div>
-            <div class="cyber-card" onclick="loadGame('algebra')">
-                <span class="card-icon">⚡</span>
-                <h2 class="card-title">Data Hack</h2>
-                <p class="card-desc">Interceptez les variables manquantes et piratez les serveurs pour rafler les Sté-Points.</p>
-            </div>
-            <div class="cyber-card" onclick="loadGame('geometry')">
-                <span class="card-icon">🌌</span>
-                <h2 class="card-title">Void Runner</h2>
-                <p class="card-desc">Calculez les trajectoires orbitales parfaites pour naviguer à travers le vide cosmique.</p>
-            </div>
-        </div>
+        <div id="hub-grid"></div>
     </div>
 
     <!-- GAME VIEW -->
@@ -446,16 +432,44 @@
     'use strict';
 
     let score = 0;
-    let difficulty = 1;
+    let currentChapter = 'ce1d';
     const toast = document.getElementById('toast');
 
     // --- ENGINE ---
-    function changeDiff(d) {
-        difficulty = d;
-        document.getElementById('cur-diff').innerText = d === 1 ? "1.0" : "2.0";
-        document.getElementById('btn-diff-1').classList.toggle('active', d === 1);
-        document.getElementById('btn-diff-3').classList.toggle('active', d === 3);
-        showToast("DIFFICULTÉ : SECTEUR " + d, "primary");
+    const GAMES = {
+        fraction: { icon: '💎', title: 'Crystal Match', desc: "Fusionnez les fréquences numériques équivalentes pour stabiliser le noyau d'énergie.", init: (t) => initCrystalMatch(t) },
+        algebra:  { icon: '⚡', title: 'Data Hack', desc: "Interceptez les variables manquantes et piratez les serveurs pour rafler les Sté-Points.", init: (t) => initDataHack(t) },
+        geometry: { icon: '🌌', title: 'Void Runner', desc: "Calculez les trajectoires orbitales parfaites pour naviguer à travers le vide cosmique.", init: (t) => initVoidRunner(t) },
+        vocab:    { icon: '🔤', title: 'Lexique Hack', desc: "Décryptez le vocabulaire mathématique avant que le système ne se verrouille.", init: (t) => initVocabHack(t) },
+        stats:    { icon: '📊', title: 'Stat Scanner', desc: "Analysez les flux de données et calculez moyenne, médiane et mode.", init: (t) => initStatScanner(t) }
+    };
+
+    const CHAPTERS = {
+        ce1d:      { label: 'CE1D', games: ['fraction', 'algebra', 'geometry'] },
+        vocab:     { label: 'VOCABULAIRE', games: ['vocab'] },
+        fractions: { label: 'FRACTIONS', games: ['fraction'] },
+        stats:     { label: 'STATISTIQUES', games: ['stats'] }
+    };
+
+    function changeChapter(id) {
+        currentChapter = id;
+        document.getElementById('cur-chapter').innerText = CHAPTERS[id].label;
+        Object.keys(CHAPTERS).forEach(k => {
+            document.getElementById('btn-chap-' + k).classList.toggle('active', k === id);
+        });
+        renderHub();
+    }
+
+    function renderHub() {
+        const grid = document.getElementById('hub-grid');
+        grid.innerHTML = CHAPTERS[currentChapter].games.map(key => {
+            const g = GAMES[key];
+            return `<div class="cyber-card" onclick="loadGame('${key}')">
+                <span class="card-icon">${g.icon}</span>
+                <h2 class="card-title">${g.title}</h2>
+                <p class="card-desc">${g.desc}</p>
+            </div>`;
+        }).join('');
     }
 
     function showToast(msg, theme) {
@@ -482,11 +496,10 @@
         const core = document.getElementById('game-core');
         view.style.display = 'block';
         core.innerHTML = '';
-
-        if(type === 'fraction') initCrystalMatch(core);
-        if(type === 'algebra') initDataHack(core);
-        if(type === 'geometry') initVoidRunner(core);
+        GAMES[type].init(core);
     }
+
+    changeChapter('ce1d');
 
     // --- GAME 1: CRYSTAL MATCH ---
     function initCrystalMatch(target) {
@@ -494,12 +507,12 @@
         const board = document.getElementById('fc-board');
         let first = null;
 
-        const data = difficulty === 1 
-            ? [{f: "1/2", v: 1}, {f: "0.5", v: 1}, {f: "50%", v: 1}, {f: "3/6", v: 1},
-               {f: "1/4", v: 2}, {f: "0.25", v: 2}, {f: "25%", v: 2}, {f: "2/8", v: 2}]
-            : [{f: "1/3", v: 4}, {f: "0.33", v: 4}, {f: "33%", v: 4},
-               {f: "2/5", v: 5}, {f: "0.4", v: 5}, {f: "40%", v: 5},
-               {f: "3/4", v: 6}, {f: "0.75", v: 6}, {f: "75%", v: 6}];
+        const data = [
+            {f: "1/2", v: 1}, {f: "0.5", v: 1}, {f: "50%", v: 1}, {f: "3/6", v: 1},
+            {f: "1/4", v: 2}, {f: "0.25", v: 2}, {f: "25%", v: 2}, {f: "2/8", v: 2},
+            {f: "1/3", v: 4}, {f: "0.33", v: 4}, {f: "33%", v: 4},
+            {f: "2/5", v: 5}, {f: "0.4", v: 5}, {f: "40%", v: 5},
+            {f: "3/4", v: 6}, {f: "0.75", v: 6}, {f: "75%", v: 6}];
 
         const tiles = [];
         for(let i=0; i<24; i++) tiles.push(data[Math.floor(Math.random()*data.length)]);
@@ -598,6 +611,131 @@
             char.style.transition = 'all 0.3s';
             char.style.transform = 'translateY(100px)';
             setTimeout(() => { char.style.transform = 'none'; nextVoid(); }, 1000);
+        }
+    }
+
+    // --- GAME 4: LEXIQUE HACK (VOCABULAIRE) ---
+    const VOCAB_TERMS = [
+        { term: "Numérateur", def: "Le nombre du dessus dans une fraction" },
+        { term: "Dénominateur", def: "Le nombre du dessous dans une fraction" },
+        { term: "Quotient", def: "Résultat d'une division" },
+        { term: "Produit", def: "Résultat d'une multiplication" },
+        { term: "Somme", def: "Résultat d'une addition" },
+        { term: "Différence", def: "Résultat d'une soustraction" },
+        { term: "Hypoténuse", def: "Le plus grand côté d'un triangle rectangle, opposé à l'angle droit" },
+        { term: "Périmètre", def: "La longueur totale du contour d'une figure" },
+        { term: "Aire", def: "La mesure de la surface d'une figure" },
+        { term: "Médiane", def: "La valeur du milieu d'une série de données triée" },
+        { term: "Moyenne", def: "La somme des valeurs divisée par leur nombre" },
+        { term: "Mode", def: "La valeur la plus fréquente d'une série de données" },
+        { term: "Multiple", def: "Nombre obtenu en multipliant un nombre par un entier" },
+        { term: "Diviseur", def: "Nombre qui divise un autre nombre sans laisser de reste" },
+        { term: "Nombre premier", def: "Nombre qui n'a que deux diviseurs : 1 et lui-même" }
+    ];
+    let vocabAnswer = '';
+
+    function initVocabHack(target) {
+        target.innerHTML = `<h2 class="view-title" style="font-size:24px; margin-bottom:20px">LEXIQUE HACK</h2>
+            <p style="text-align:center; color: rgba(255,255,255,0.5); margin-bottom:30px">Quelle est la bonne définition ?</p>
+            <div id="vocab-term" style="text-align:center; font-family:'Orbitron'; font-size:28px; color: var(--secondary); text-shadow: var(--neon-shadow); margin-bottom:40px"></div>
+            <div id="vocab-choices" style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; max-width:700px; margin:0 auto"></div>`;
+        nextVocab();
+    }
+
+    function nextVocab() {
+        const pick = VOCAB_TERMS[Math.floor(Math.random() * VOCAB_TERMS.length)];
+        vocabAnswer = pick.def;
+        document.getElementById('vocab-term').innerText = pick.term;
+
+        const wrong = VOCAB_TERMS.filter(t => t.def !== pick.def)
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 3)
+            .map(t => t.def);
+        const choices = [pick.def, ...wrong].sort(() => Math.random() - 0.5);
+
+        const box = document.getElementById('vocab-choices');
+        box.innerHTML = '';
+        choices.forEach(def => {
+            const btn = document.createElement('div');
+            btn.className = 'cyber-card';
+            btn.style.padding = '20px';
+            btn.style.fontSize = '13px';
+            btn.innerText = def;
+            btn.onclick = () => {
+                if(def === vocabAnswer) {
+                    addScore(20);
+                    showToast("DÉCRYPTAGE RÉUSSI +20", "secondary");
+                    setTimeout(nextVocab, 800);
+                } else {
+                    showToast("MAUVAISE CLÉ", "primary");
+                }
+            };
+            box.appendChild(btn);
+        });
+    }
+
+    // --- GAME 5: STAT SCANNER (STATISTIQUES) ---
+    let statAnswer = 0;
+    let statTolerance = 0.15;
+
+    function initStatScanner(target) {
+        target.innerHTML = `<h2 class="view-title" style="font-size:24px; margin-bottom:20px">STAT SCANNER</h2>
+            <div id="stat-data" style="text-align:center; font-family:'Orbitron'; font-size:22px; color: var(--secondary); margin-bottom:10px; letter-spacing:2px"></div>
+            <p id="stat-task" style="text-align:center; margin-bottom:30px; color: rgba(255,255,255,0.6)"></p>
+            <div style="text-align:center"><input type="number" step="0.1" id="stat-in" class="cyber-input" placeholder="?"><br><button class="lever-btn" onclick="executeStatScan()">ANALYSER</button></div>`;
+        nextStat();
+    }
+
+    function hasUniqueMode(values) {
+        const counts = {};
+        values.forEach(v => counts[v] = (counts[v] || 0) + 1);
+        const max = Math.max(...Object.values(counts));
+        return Object.values(counts).filter(c => c === max).length === 1;
+    }
+
+    function nextStat() {
+        const n = Math.floor(Math.random() * 3) + 5;
+        const kinds = ['moyenne', 'médiane', 'mode'];
+        const chosen = kinds[Math.floor(Math.random() * kinds.length)];
+
+        let values, attempts = 0;
+        do {
+            values = [];
+            const base = Math.floor(Math.random() * 15) + 1;
+            for(let i = 0; i < n; i++) values.push(base + Math.floor(Math.random() * 5));
+            attempts++;
+        } while(chosen === 'mode' && !hasUniqueMode(values) && attempts < 50);
+
+        const sorted = [...values].sort((a, b) => a - b);
+        if(chosen === 'moyenne') {
+            statAnswer = values.reduce((a, b) => a + b, 0) / values.length;
+            statTolerance = 0.15;
+        } else if(chosen === 'médiane') {
+            const mid = Math.floor(sorted.length / 2);
+            statAnswer = sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+            statTolerance = 0.05;
+        } else {
+            const counts = {};
+            values.forEach(v => counts[v] = (counts[v] || 0) + 1);
+            let best = values[0], bestCount = 0;
+            Object.entries(counts).forEach(([v, c]) => { if(c > bestCount) { bestCount = c; best = Number(v); } });
+            statAnswer = best;
+            statTolerance = 0.05;
+        }
+
+        document.getElementById('stat-data').innerText = values.join(' — ');
+        document.getElementById('stat-task').innerText = "CALCULEZ LA " + chosen.toUpperCase() + " DE CETTE SÉRIE";
+        document.getElementById('stat-in').value = '';
+    }
+
+    window.executeStatScan = function() {
+        const val = parseFloat(document.getElementById('stat-in').value);
+        if(Math.abs(val - statAnswer) < statTolerance) {
+            addScore(30);
+            showToast("ANALYSE VALIDÉE +30", "secondary");
+            setTimeout(nextStat, 1000);
+        } else {
+            showToast("DONNÉES INCORRECTES", "primary");
         }
     }
 </script>
