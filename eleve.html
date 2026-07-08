@@ -82,6 +82,9 @@
         .tools-pdf-list.open{display:flex}
         .tools-pdf-link{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,0,0,0.1);border-left:2px solid rgba(46,204,113,0.3);border-radius:8px;font-size:12px;color:rgba(255,255,255,0.55);text-decoration:none;transition:all 0.15s}
         .tools-pdf-link:hover{background:rgba(46,204,113,0.08);color:#e8f5e9;border-left-color:#2ecc71}
+        .jouer-tabs{display:flex;gap:8px}
+        .jouer-tab-btn{flex:1;padding:10px 6px;border-radius:10px;border:1px solid rgba(46,204,113,0.25);background:rgba(0,0,0,0.15);color:rgba(255,255,255,0.6);font-size:11px;font-weight:700;cursor:pointer;text-align:center;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+        .jouer-tab-btn.active{background:rgba(46,204,113,0.15);color:#2ecc71;border-color:rgba(46,204,113,0.45)}
 
         /* Ateliers modals */
         .ateliers-list{display:flex;flex-direction:column;gap:8px}
@@ -173,9 +176,9 @@
             <a href="exercices-en-ligne.html" class="ch-btn" style="justify-content:center;padding:7px 4px;font-size:10px;flex-direction:column;gap:3px;text-align:center;min-height:52px;">
                 <span style="font-size:18px;">✏️</span><span>S'exercer</span>
             </a>
-            <a href="stef-math-arcade.html" class="ch-btn" style="justify-content:center;padding:7px 4px;font-size:10px;flex-direction:column;gap:3px;text-align:center;min-height:52px;">
+            <div class="ch-btn" onclick="openJouer()" style="justify-content:center;padding:7px 4px;font-size:10px;flex-direction:column;gap:3px;text-align:center;min-height:52px;cursor:pointer;">
                 <span style="font-size:18px;">🎮</span><span>Jouer</span>
-            </a>
+            </div>
         </div>
     </div>
 
@@ -243,6 +246,23 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- MODAL JOUER -->
+<div class="modal-overlay" id="jouer-modal">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="modal-title">🎮 Jouer</div>
+            <button class="modal-close-btn" onclick="closeModal('jouer-modal')">✕</button>
+        </div>
+        <div class="jouer-tabs">
+            <button class="jouer-tab-btn active" id="jbtn-ce1d" onclick="selectJouerTab('ce1d')">CE1D</button>
+            <button class="jouer-tab-btn" id="jbtn-fractions" onclick="selectJouerTab('fractions')">Fractions</button>
+            <button class="jouer-tab-btn" id="jbtn-vocab" onclick="selectJouerTab('vocab')">Vocabulaire</button>
+        </div>
+        <div id="jouer-content"></div>
     </div>
 </div>
 
@@ -608,6 +628,19 @@ function openKeyring() { closeModal('tools-modal'); document.getElementById('key
 function openMethodo() { document.getElementById('methodo-modal').classList.add('open'); }
 function openDevSoi() { document.getElementById('devsoi-modal').classList.add('open'); }
 function openAvis() { document.getElementById('avis-modal').classList.add('open'); }
+function openJouer() { document.getElementById('jouer-modal').classList.add('open'); selectJouerTab('ce1d'); }
+function selectJouerTab(tab) {
+    ['ce1d','fractions','vocab'].forEach(t => document.getElementById('jbtn-'+t).classList.toggle('active', t === tab));
+    const content = document.getElementById('jouer-content');
+    if (tab === 'ce1d') {
+        content.innerHTML = `<a href="stef-math-arcade.html" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.35);border-radius:12px;color:#2ecc71;font-weight:700;font-size:14px;text-decoration:none;">🎮 Lancer l'arcade</a>`;
+    } else {
+        content.innerHTML = `<div style="text-align:center;padding:30px 10px;color:rgba(255,255,255,0.4);">
+            <div style="font-size:32px;margin-bottom:8px;">🚧</div>
+            <div style="font-size:13px;">Bientôt disponible</div>
+        </div>`;
+    }
+}
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function toggleToolsList(key, btn) {
     const list = document.getElementById(key + '-pdf-list');
