@@ -78,6 +78,10 @@
         .tools-section-title{font-size:12px;font-weight:700;color:rgba(46,204,113,0.5);text-transform:uppercase;letter-spacing:0.06em;margin-top:4px}
         .tools-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(0,0,0,0.15);border-radius:10px;font-size:13px;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.15s;border:none;text-align:left;width:100%;font-family:'DM Sans',sans-serif}
         .tools-item:hover{background:rgba(46,204,113,0.06);color:#e8f5e9}
+        .tools-pdf-list{display:none;flex-direction:column;gap:5px;padding:2px 4px 4px 14px}
+        .tools-pdf-list.open{display:flex}
+        .tools-pdf-link{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,0,0,0.1);border-left:2px solid rgba(46,204,113,0.3);border-radius:8px;font-size:12px;color:rgba(255,255,255,0.55);text-decoration:none;transition:all 0.15s}
+        .tools-pdf-link:hover{background:rgba(46,204,113,0.08);color:#e8f5e9;border-left-color:#2ecc71}
 
         /* Ateliers modals */
         .ateliers-list{display:flex;flex-direction:column;gap:8px}
@@ -213,7 +217,11 @@
         </div>
         <div class="tools-section">
             <div class="tools-section-title">📚 Cours généraux</div>
-            <a href="formules-math.pdf" target="_blank" download class="tools-item" style="text-decoration:none;">📐 Mathématiques <span style="margin-left:auto;font-size:11px;opacity:0.5;">PDF ↓</span></a>
+            <button class="tools-item" onclick="toggleToolsList('math', this)">📐 Mathématiques <span style="margin-left:auto;font-size:11px;opacity:0.5;" id="math-chevron">▾</span></button>
+            <div class="tools-pdf-list" id="math-pdf-list">
+                <a href="formules-math.pdf" target="_blank" download class="tools-pdf-link">📄 Formules</a>
+                <a href="derivees.pdf" target="_blank" download class="tools-pdf-link">📄 Dérivées</a>
+            </div>
             <button class="tools-item">📝 Français</button>
             <button class="tools-item">🌍 Histoire / Géographie (EDM)</button>
             <button class="tools-item">🔬 Sciences</button>
@@ -601,6 +609,12 @@ function openMethodo() { document.getElementById('methodo-modal').classList.add(
 function openDevSoi() { document.getElementById('devsoi-modal').classList.add('open'); }
 function openAvis() { document.getElementById('avis-modal').classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function toggleToolsList(key, btn) {
+    const list = document.getElementById(key + '-pdf-list');
+    const chevron = document.getElementById(key + '-chevron');
+    list.classList.toggle('open');
+    if (chevron) chevron.innerText = list.classList.contains('open') ? '▴' : '▾';
+}
 document.querySelectorAll('.modal-overlay,.avis-modal').forEach(m => {
     m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); });
 });
