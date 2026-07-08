@@ -433,6 +433,9 @@ function openDesc(id) {
     extraLinkEl.innerHTML = atelier.id === 'd8' ? `
         <a href="orientation.html" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:rgba(155,89,182,0.12);border:1px solid rgba(155,89,182,0.35);border-radius:12px;color:#b980db;font-size:14px;font-weight:700;text-decoration:none;margin-top:2px;transition:all 0.15s;" onmouseenter="this.style.background='rgba(155,89,182,0.2)'" onmouseleave="this.style.background='rgba(155,89,182,0.12)'">
             🧭 Faire le test d'orientation
+        </a>` : atelier.id === 'm7' ? `
+        <a href="scolaire-planner-pro.html" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.35);border-radius:12px;color:#2ecc71;font-size:14px;font-weight:700;text-decoration:none;margin-top:2px;transition:all 0.15s;" onmouseenter="this.style.background='rgba(46,204,113,0.2)'" onmouseleave="this.style.background='rgba(46,204,113,0.12)'">
+            ⏱️ Lancer mon planner
         </a>` : '';
     document.getElementById('desc-content').innerHTML = `
         <div style="display:flex;flex-direction:column;gap:10px;">
