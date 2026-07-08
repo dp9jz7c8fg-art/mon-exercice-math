@@ -410,6 +410,12 @@
         <h1 class="view-title">SYSTÈMES PRÊTS</h1>
 
         <div class="difficulty-nav">
+            <button class="nav-btn active" id="btn-tab-ce1d" onclick="selectTab('ce1d')">CE1D</button>
+            <button class="nav-btn" id="btn-tab-fractions" onclick="selectTab('fractions')">FRACTIONS</button>
+            <button class="nav-btn" id="btn-tab-vocab" onclick="selectTab('vocab')">VOCABULAIRE</button>
+        </div>
+
+        <div class="difficulty-nav" id="difficulty-nav">
             <button class="nav-btn active" id="btn-diff-1" onclick="changeDiff(1)">SECTEUR CE1D</button>
             <button class="nav-btn" id="btn-diff-3" onclick="changeDiff(3)">SECTEUR AVANCÉ</button>
         </div>
@@ -448,6 +454,21 @@
     let score = 0;
     let difficulty = 1;
     const toast = document.getElementById('toast');
+    const ce1dHubHTML = document.getElementById('hub-grid').innerHTML;
+    const SOON_HTML = `<div class="cyber-card" style="cursor:default;grid-column:1/-1;">
+        <span class="card-icon">🚧</span>
+        <h2 class="card-title">Bientôt disponible</h2>
+        <p class="card-desc">Ce chapitre arrive bientôt !</p>
+    </div>`;
+
+    // --- TABS ---
+    function selectTab(tab) {
+        ['ce1d', 'fractions', 'vocab'].forEach(t => {
+            document.getElementById('btn-tab-' + t).classList.toggle('active', t === tab);
+        });
+        document.getElementById('difficulty-nav').style.display = tab === 'ce1d' ? 'flex' : 'none';
+        document.getElementById('hub-grid').innerHTML = tab === 'ce1d' ? ce1dHubHTML : SOON_HTML;
+    }
 
     // --- ENGINE ---
     function changeDiff(d) {
