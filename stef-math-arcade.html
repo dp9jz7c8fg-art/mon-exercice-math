@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stef's Math Arcade - Cyber Experience</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Orbitron:wght@400;700;900&display=swap');
+
+        :root {
+            --primary: #6200ee;
+            --secondary: #03dac6;
+            --accent: #cf6679;
+            --bg-dark: #0a0b1e;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --neon-shadow: 0 0 15px rgba(3, 218, 198, 0.4);
+            --purple-shadow: 0 0 20px rgba(98, 0, 238, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg-dark); 
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        .bg-mesh {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(98, 0, 238, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(3, 218, 198, 0.15) 0%, transparent 40%);
+            animation: bgShift 15s infinite alternate ease-in-out;
+        }
+
+        @keyframes bgShift {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1) rotate(2deg); }
+        }
+
+        #app-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Header / Navigation */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            padding: 15px 30px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #stef-logo {
+            height: 55px;
+            filter: drop-shadow(0 0 8px var(--primary));
+            transition: 0.3s;
+        }
+
+        #stef-logo:hover { transform: scale(1.05) rotate(5deg); }
+
+        .stat-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .cyber-badge {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--secondary);
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            letter-spacing: 1px;
+            color: var(--secondary);
+            text-shadow: var(--neon-shadow);
+        }
+
+        /* Hub / Menu */
+        #hub-view {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .view-title {
+            text-align: center;
+            margin: 20px 0;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            letter-spacing: 4px;
+            background: linear-gradient(90deg, #fff, var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .difficulty-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: rgba(255,255,255,0.6);
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-btn:hover { color: #fff; border-color: var(--primary); }
+        .nav-btn.active { 
+            background: var(--primary); 
+            color: #fff; 
+            border-color: var(--primary);
+            box-shadow: var(--purple-shadow);
+        }
+
+        #hub-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .cyber-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: 0.4s;
+        }
+
+        .cyber-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: var(--secondary);
+            box-shadow: var(--neon-shadow);
+        }
+
+        .cyber-card:hover::before { opacity: 1; }
+
+        .card-icon { 
+            font-size: 80px; 
+            margin-bottom: 25px; 
+            display: block; 
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
+        }
+
+        .card-title { 
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px; 
+            margin-bottom: 12px; 
+            color: var(--secondary); 
+            text-transform: uppercase;
+        }
+
+        .card-desc { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+
+        /* Game Screen */
+        #game-view {
+            display: none;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 50px;
+            min-height: 600px;
+            position: relative;
+            backdrop-filter: blur(20px);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .exit-btn {
+            position: absolute;
+            top: 25px; left: 25px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        /* 1. FRACTION CRUSH OVERHAUL */
+        #fc-board {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        .crystal-tile {
+            aspect-ratio: 1;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            color: var(--secondary);
+        }
+
+        .crystal-tile:hover {
+            background: rgba(3, 218, 198, 0.1);
+            border-color: var(--secondary);
+            transform: scale(1.05);
+        }
+
+        .crystal-tile.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: var(--purple-shadow);
+            transform: scale(1.15) rotate(3deg);
+            z-index: 10;
+        }
+
+        .crystal-tile.gone {
+            animation: shatter 0.4s forwards;
+        }
+
+        @keyframes shatter {
+            0% { transform: scale(1); opacity: 1; filter: brightness(2); }
+            100% { transform: scale(0) rotate(45deg); opacity: 0; }
+        }
+
+        /* 2. ALGEBRA SLOTS OVERHAUL */
+        .terminal-display {
+            background: #000;
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            box-shadow: inset 0 0 30px rgba(98, 0, 238, 0.3);
+        }
+
+        .reel {
+            width: 90px;
+            height: 120px;
+            background: #111;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--secondary);
+            text-shadow: var(--neon-shadow);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .cyber-input {
+            background: transparent;
+            border: 2px solid var(--secondary);
+            border-radius: 15px;
+            padding: 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            color: #fff;
+            width: 180px;
+            text-align: center;
+            outline: none;
+            box-shadow: var(--neon-shadow);
+        }
+
+        .lever-btn {
+            background: linear-gradient(135deg, var(--primary), #8e24aa);
+            border: none;
+            color: #fff;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .lever-btn:hover { transform: scale(1.05); filter: brightness(1.2); }
+
+        /* 3. PYTHAGO JUMP OVERHAUL */
+        #neon-sky {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(180deg, #0a0b1e 0%, #1a0a2e 100%);
+            border-radius: 25px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 30px;
+        }
+
+        .glow-platform {
+            position: absolute;
+            background: var(--primary);
+            bottom: 0;
+            height: 60px;
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        #cyber-runner {
+            position: absolute;
+            width: 45px; height: 45px;
+            background: var(--secondary);
+            border-radius: 8px;
+            bottom: 60px; left: 40px;
+            box-shadow: var(--neon-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        /* Toast Feedback */
+        #toast {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-weight: 900;
+            font-family: 'Orbitron', sans-serif;
+            z-index: 2000;
+            transform: translateX(120%);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+        }
+
+        #toast.show { transform: translateX(0); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+    </style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<div id="app-container">
+    <header>
+        <div class="logo-box">
+            <img src="Stef.png" id="stef-logo" alt="Stef Arcade" onerror="this.src='https://via.placeholder.com/60?text=STEF'">
+            <div style="font-family: 'Orbitron', sans-serif; font-weight: 900; letter-spacing: 1px">
+                <div style="font-size: 18px; color: var(--secondary)">STEF'S</div>
+                <div style="font-size: 14px; opacity: 0.7">MATH ARCADE</div>
+            </div>
+        </div>
+        <div class="stat-group">
+            <div class="cyber-badge">LEVEL <span id="cur-diff">1</span></div>
+            <div class="cyber-badge" style="border-color: var(--primary); color: #fff">
+                STÉ-POINTS: <span id="score-val">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- HUB VIEW -->
+    <div id="hub-view">
+        <h1 class="view-title">SYSTÈMES PRÊTS</h1>
+        
+        <div class="difficulty-nav">
+            <button class="nav-btn active" id="btn-diff-1" onclick="changeDiff(1)">SECTEUR CE1D</button>
+            <button class="nav-btn" id="btn-diff-3" onclick="changeDiff(3)">SECTEUR AVANCÉ</button>
+        </div>
+
+        <div id="hub-grid">
+            <div class="cyber-card" onclick="loadGame('fraction')">
+                <span class="card-icon">💎</span>
+                <h2 class="card-title">Crystal Match</h2>
+                <p class="card-desc">Fusionnez les fréquences numériques équivalentes pour stabiliser le noyau d'énergie.</p>
+            </div>
+            <div class="cyber-card" onclick="loadGame('algebra')">
+                <span class="card-icon">⚡</span>
+                <h2 class="card-title">Data Hack</h2>
+                <p class="card-desc">Interceptez les variables manquantes et piratez les serveurs pour rafler les Sté-Points.</p>
+            </div>
+            <div class="cyber-card" onclick="loadGame('geometry')">
+                <span class="card-icon">🌌</span>
+                <h2 class="card-title">Void Runner</h2>
+                <p class="card-desc">Calculez les trajectoires orbitales parfaites pour naviguer à travers le vide cosmique.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- GAME VIEW -->
+    <div id="game-view">
+        <button class="exit-btn" onclick="backToHub()">[ ESC ] TERMINER LA SESSION</button>
+        <div id="game-core"></div>
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+    'use strict';
+
+    let score = 0;
+    let difficulty = 1;
+    const toast = document.getElementById('toast');
+
+    // --- ENGINE ---
+    function changeDiff(d) {
+        difficulty = d;
+        document.getElementById('cur-diff').innerText = d === 1 ? "1.0" : "2.0";
+        document.getElementById('btn-diff-1').classList.toggle('active', d === 1);
+        document.getElementById('btn-diff-3').classList.toggle('active', d === 3);
+        showToast("DIFFICULTÉ : SECTEUR " + d, "primary");
+    }
+
+    function showToast(msg, theme) {
+        toast.innerText = msg;
+        toast.style.background = theme === 'primary' ? 'rgba(98, 0, 238, 0.8)' : 'rgba(3, 218, 198, 0.8)';
+        toast.style.border = "2px solid " + (theme === 'primary' ? '#6200ee' : '#03dac6');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function addScore(pts) {
+        score += pts;
+        document.getElementById('score-val').innerText = score;
+    }
+
+    function backToHub() {
+        document.getElementById('hub-view').style.display = 'block';
+        document.getElementById('game-view').style.display = 'none';
+    }
+
+    function loadGame(type) {
+        document.getElementById('hub-view').style.display = 'none';
+        const view = document.getElementById('game-view');
+        const core = document.getElementById('game-core');
+        view.style.display = 'block';
+        core.innerHTML = '';
+
+        if(type === 'fraction') initCrystalMatch(core);
+        if(type === 'algebra') initDataHack(core);
+        if(type === 'geometry') initVoidRunner(core);
+    }
+
+    // --- GAME 1: CRYSTAL MATCH ---
+    function initCrystalMatch(target) {
+        target.innerHTML = `<h2 class="view-title" style="font-size:24px; margin-bottom:40px">CRYSTAL MATCH</h2><div id="fc-board"></div>`;
+        const board = document.getElementById('fc-board');
+        let first = null;
+
+        const data = difficulty === 1 
+            ? [{f: "1/2", v: 1}, {f: "0.5", v: 1}, {f: "50%", v: 1}, {f: "3/6", v: 1},
+               {f: "1/4", v: 2}, {f: "0.25", v: 2}, {f: "25%", v: 2}, {f: "2/8", v: 2}]
+            : [{f: "1/3", v: 4}, {f: "0.33", v: 4}, {f: "33%", v: 4},
+               {f: "2/5", v: 5}, {f: "0.4", v: 5}, {f: "40%", v: 5},
+               {f: "3/4", v: 6}, {f: "0.75", v: 6}, {f: "75%", v: 6}];
+
+        const tiles = [];
+        for(let i=0; i<24; i++) tiles.push(data[Math.floor(Math.random()*data.length)]);
+
+        tiles.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'crystal-tile';
+            div.innerText = item.f;
+            div.onclick = () => {
+                if(div.classList.contains('gone')) return;
+                div.classList.add('active');
+                if(!first) {
+                    first = div;
+                } else {
+                    if(first === div) { div.classList.remove('active'); first = null; return; }
+                    const val1 = tiles[Array.from(board.children).indexOf(first)].v;
+                    const val2 = tiles[Array.from(board.children).indexOf(div)].v;
+                    if(val1 === val2) {
+                        first.classList.add('gone');
+                        div.classList.add('gone');
+                        addScore(15);
+                        showToast("SYNC RÉUSSIE +15", "secondary");
+                    } else {
+                        const f = first;
+                        setTimeout(() => { f.classList.remove('active'); div.classList.remove('active'); }, 400);
+                        showToast("DÉSYNC !", "primary");
+                    }
+                    first = null;
+                }
+            };
+            board.appendChild(div);
+        });
+    }
+
+    // --- GAME 2: DATA HACK ---
+    let hackAnswer = 0;
+    function initDataHack(target) {
+        target.innerHTML = `<h2 class="view-title" style="font-size:24px; margin-bottom:40px">DATA HACK TERMINAL</h2><div class="terminal-display"><div class="reel" id="r1">X</div><div class="reel" id="r2" style="font-size:30px">+</div><div class="reel" id="r3">?</div><div class="reel" id="r4" style="font-size:30px">=</div><div class="reel" id="r5">?</div></div><div style="text-align:center"><input type="number" id="h-in" class="cyber-input" placeholder="X = ?"><br><button class="lever-btn" onclick="executeHack()">DÉCRYPTER</button><br><br><button class="nav-btn" onclick="spinHack()">NOUVEAU FLUX</button></div>`;
+        spinHack();
+    }
+
+    function spinHack() {
+        const b = Math.floor(Math.random()*12) + 2;
+        const res = Math.floor(Math.random()*20) + b;
+        hackAnswer = res - b;
+        document.getElementById('r3').innerText = b;
+        document.getElementById('r5').innerText = res;
+        document.getElementById('h-in').value = '';
+    }
+
+    window.executeHack = function() {
+        const val = parseInt(document.getElementById('h-in').value);
+        if(val === hackAnswer) {
+            addScore(40);
+            showToast("DATA HACK RÉUSSI +40", "secondary");
+            setTimeout(spinHack, 1000);
+        } else {
+            showToast("ACCÈS REFUSÉ", "primary");
+        }
+    }
+
+    // --- GAME 3: VOID RUNNER ---
+    let targetHypo = 0;
+    function initVoidRunner(target) {
+        target.innerHTML = `<h2 class="view-title" style="font-size:24px; margin-bottom:40px">VOID RUNNER</h2><div id="neon-sky"><div class="glow-platform" style="width:120px; left:0"></div><div id="v-plat" class="glow-platform"></div><div id="cyber-runner">STEF</div></div><div style="text-align:center"><p id="v-task" style="margin-bottom:20px; font-family: 'Orbitron'; color: var(--secondary)"></p><input type="number" id="v-in" class="cyber-input" placeholder="DIST."><button class="lever-btn" style="padding:15px 30px" onclick="launchRunner()">SAUT QUANTIQUE</button></div>`;
+        nextVoid();
+    }
+
+    function nextVoid() {
+        const char = document.getElementById('cyber-runner');
+        const plat = document.getElementById('v-plat');
+        char.style.left = '40px';
+        char.style.transition = 'none';
+        const gap = Math.floor(Math.random()*120) + 120;
+        plat.style.width = '100px';
+        plat.style.left = (120 + gap) + 'px';
+        const a = Math.floor(Math.random()*6) + 3;
+        const b = Math.floor(Math.random()*6) + 4;
+        targetHypo = Math.sqrt(a*a + b*b).toFixed(1);
+        document.getElementById('v-task').innerText = "SYSTÈME : HAUTEUR " + a + " | LARGEUR " + b + ". CALCULEZ LE SAUT (HYPOTÉNUSE).";
+        document.getElementById('v-in').value = '';
+    }
+
+    window.launchRunner = function() {
+        const val = parseFloat(document.getElementById('v-in').value);
+        const char = document.getElementById('cyber-runner');
+        const targetX = document.getElementById('v-plat').offsetLeft + 20;
+        if(Math.abs(val - targetHypo) < 0.2) {
+            char.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            char.style.left = targetX + 'px';
+            addScore(60);
+            showToast("SAUT PARFAIT +60", "secondary");
+            setTimeout(nextVoid, 1500);
+        } else {
+            showToast("ERREUR DE TRAJECTOIRE", "primary");
+            char.style.transition = 'all 0.3s';
+            char.style.transform = 'translateY(100px)';
+            setTimeout(() => { char.style.transform = 'none'; nextVoid(); }, 1000);
+        }
+    }
+</script>
+</body>
+</html>
