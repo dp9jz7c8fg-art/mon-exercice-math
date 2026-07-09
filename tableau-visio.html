@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tableau visio – La Classe de Stef</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://www.gstatic.com" />
+  <link rel="preconnect" href="https://classe-de-stef-default-rtdb.europe-west1.firebasedatabase.app" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="visio/style.css" />
 </head>
@@ -107,12 +110,12 @@
     </div>
   </div>
 
-  <!-- Firebase (compat 10.12.2) -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-  <script>
+  <!-- Firebase (compat 10.12.2) — defer : téléchargement en parallèle, exécution dans l'ordre -->
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script defer>
     // ⚠️ IMPORTANT : après avoir activé la Realtime Database dans la console Firebase,
     // remplacez databaseURL ci-dessous par l'URL EXACTE affichée dans la console
     // (elle ressemble à https://classe-de-stef-default-rtdb.europe-west1.firebasedatabase.app).
@@ -128,10 +131,10 @@
   </script>
 
   <!-- Moteur de dessin + collaboration -->
-  <script src="visio/instruments.js"></script>
-  <script src="visio/board.js"></script>
-  <script src="visio/collab-firebase.js"></script>
-  <script src="visio/audio.js"></script>
-  <script src="visio/app.js"></script>
+  <script defer src="visio/instruments.js"></script>
+  <script defer src="visio/board.js"></script>
+  <script defer src="visio/collab-firebase.js"></script>
+  <script defer src="visio/audio.js"></script>
+  <script defer src="visio/app.js"></script>
 </body>
 </html>
