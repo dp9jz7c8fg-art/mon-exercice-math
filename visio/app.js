@@ -1,11 +1,24 @@
 // app.js (visio) — assemble le tableau collaboratif Firebase :
-// authentification, rôle prof/élève, salle = année, outils, chat, quadrillage.
+// authentification, rôle prof/élève, salle = degré, outils, chat, quadrillage.
 window.App = { state: { tool: "crayon", color: "#111827", width: 3 } };
 
 const PALETTE = ["#111827", "#ef4444", "#2563eb", "#16a34a", "#f59e0b", "#a21caf", "#ffffff"];
 const TEACHER_PASSWORD = "stef2026"; // même mot de passe que l'espace enseignant du site
-const ANNEE_LABEL = { "1": "1ère année", "2": "2ème année", "3": "3ème année", "4": "4ème année", "5": "5ème année", "6": "6ème année" };
+const DEGRE_LABEL = { "1": "1er degré", "2": "2ème degré", "3": "3ème degré" };
+// Outils disponibles par degré : le tableau se complexifie avec le niveau.
+const DEGRE_TOOLS = {
+  "1": ["crayon", "fluo", "gomme", "ligne", "regle", "equerre"],
+  "2": ["crayon", "fluo", "gomme", "ligne", "regle", "equerre", "aristo", "rapporteur"],
+  "3": ["crayon", "fluo", "gomme", "ligne", "regle", "equerre", "aristo", "rapporteur", "compas", "thamographe"],
+};
 let ME = { name: "?", role: "eleve" };
+
+// années 1-2 → 1er degré, 3-4 → 2ème degré, 5-6 → 3ème degré
+function anneeToDegre(annee) {
+  const n = Number(annee);
+  if (!n) return null;
+  return String(Math.min(3, Math.ceil(n / 2)));
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   buildColors();
@@ -27,18 +40,19 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (e) { console.error(e); }
     const name = profile.name || user.displayName || "Élève";
     const annee = profile.learningProfile && profile.learningProfile.annee ? String(profile.learningProfile.annee) : null;
+    const degre = anneeToDegre(annee);
 
     const wantProf = new URLSearchParams(location.search).get("prof") === "1";
-    if (!wantProf && annee) startStudent(user.uid, name, annee);
+    if (!wantProf && degre) startStudent(user.uid, name, degre);
     else startProfFlow(user.uid, name);
   });
 });
 
 // ---------- démarrage élève ----------
-function startStudent(uid, name, annee) {
+function startStudent(uid, name, degre) {
   ME = { name, role: "eleve" };
   Board.setMe(ME);
-  join(uid, "annee-" + annee, ANNEE_LABEL[annee] || annee);
+  join(uid, "degre-" + degre, DEGRE_LABEL[degre] || degre, degre);
 }
 
 // ---------- démarrage prof ----------
@@ -55,32 +69,33 @@ function startProfFlow(uid, name) {
       return;
     }
     modal.hidden = true;
-    chooseYear(uid, name || "Stef");
+    chooseDegre(uid, name || "Stef");
   };
 }
 
-function chooseYear(uid, name) {
+function chooseDegre(uid, name) {
   const modal = document.getElementById("year-picker");
   const list = document.getElementById("year-list");
   list.innerHTML = "";
   modal.hidden = false;
-  for (const v of ["1", "2", "3", "4", "5", "6"]) {
+  for (const v of ["1", "2", "3"]) {
     const b = document.createElement("button");
-    b.textContent = ANNEE_LABEL[v];
+    b.textContent = DEGRE_LABEL[v];
     b.onclick = () => {
       modal.hidden = true;
       ME = { name: name, role: "prof" };
       Board.setMe(ME);
-      join(uid, "annee-" + v, ANNEE_LABEL[v]);
+      join(uid, "degre-" + v, DEGRE_LABEL[v], v);
     };
     list.appendChild(b);
   }
 }
 
 // ---------- connexion à la salle ----------
-function join(uid, room, label) {
+function join(uid, room, label, degre) {
   document.getElementById("board-title").textContent = "Tableau — " + label + (ME.role === "prof" ? " (prof)" : "");
   document.getElementById("prof-switch").hidden = ME.role === "prof";
+  applyDegreTools(degre);
   Collab.init({
     room,
     me: { uid, name: ME.name, role: ME.role },
@@ -119,6 +134,17 @@ function bindToolbar() {
     const id = Board.lastMineId();
     if (id) Collab.sendUndo(id);
   });
+}
+
+// affiche uniquement les outils débloqués pour le degré en cours
+function applyDegreTools(degre) {
+  const allowed = DEGRE_TOOLS[degre] || DEGRE_TOOLS["3"];
+  document.querySelectorAll(".tool").forEach((btn) => {
+    btn.style.display = allowed.includes(btn.dataset.tool) ? "" : "none";
+  });
+  if (!allowed.includes(App.state.tool)) {
+    document.querySelector('.tool[data-tool="crayon"]')?.click();
+  }
 }
 
 function showInstrHint(tool) {
