@@ -12,7 +12,6 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:
 #hud { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; font-size: 12px; color: #94a3b8; }
 #progress-track { flex: 1; height: 6px; background: #334155; border-radius: 999px; margin: 0 14px; overflow: hidden; }
 #progress-bar { height: 100%; background: #10b981; width: 0%; transition: width 0.4s ease; }
-#score-badge { font-weight: 700; color: #10b981; white-space: nowrap; }
 .defi-icon { font-size: 40px; margin-bottom: 6px; }
 h2 { color: #10b981; margin: 6px 0 12px; }
 p.scene-text { color: #cbd5e1; line-height: 1.5; }
@@ -42,9 +41,9 @@ const scenes = {
     icon: "🧠",
     text: "Un carnet affiche le code 8-3-1-9-4-2 et disparaît. Que fais-tu ?",
     options: [
-      { text: "Je répète 831-942 en boucle", feedback: "C'est la boucle phonologique. Efficace 30 secondes, mais fragile !", points: 5 },
-      { text: "Je ferme les yeux pour « voir » le carnet", feedback: "L'image mentale aide, mais s'efface vite sans effort actif.", points: 8 },
-      { text: "J'essaie de retrouver les chiffres par pur effort", feedback: "BRAVO ! C'est l'effort de récupération, la base de la mémoire forte.", points: 15, type: "strategist" }
+      { text: "Je répète 831-942 en boucle", feedback: "Bon réflexe pour tenir quelques secondes : c'est la boucle phonologique. Pour que ça reste plus longtemps, essaie d'ajouter un petit effort de rappel un peu plus tard, sans regarder.", type: "strategist" },
+      { text: "Je ferme les yeux pour « voir » le carnet", feedback: "L'image mentale est une bonne stratégie visuelle. Pour la rendre encore plus solide, essaie de la combiner avec un essai de rappel sans regarder.", type: "strategist" },
+      { text: "J'essaie de retrouver les chiffres par pur effort", feedback: "Tu viens d'utiliser l'effort de récupération : se forcer à retrouver une info dans sa tête est l'une des façons les plus efficaces de la faire tenir dans la mémoire.", type: "strategist" }
     ],
     next: "scene2"
   },
@@ -53,8 +52,8 @@ const scenes = {
     icon: "🎯",
     text: "Des notifications vibrent partout. Ton attention se fragmente...",
     options: [
-      { text: "Je gère les deux en même temps (multitâche)", feedback: "ERREUR ! Ton cerveau ne fait pas deux choses à la fois : il switch et perd jusqu'à 40% d'efficacité.", points: 2 },
-      { text: "Je range mon téléphone dans une autre pièce", feedback: "PARFAIT. Le contrôle de l'environnement bat la volonté à chaque fois.", points: 15, type: "optimizer" }
+      { text: "Je gère les deux en même temps (multitâche)", feedback: "C'est tentant de vouloir tout gérer en même temps. En réalité, le cerveau ne fait pas deux choses à la fois : il bascule sans cesse de l'une à l'autre, ce qui coûte de l'énergie et du temps.", type: "optimizer" },
+      { text: "Je range mon téléphone dans une autre pièce", feedback: "Couper les distractions avant de commencer demande moins de volonté que d'y résister sans arrêt : contrôler son environnement est une vraie stratégie.", type: "optimizer" }
     ],
     next: "scene3"
   },
@@ -63,9 +62,9 @@ const scenes = {
     icon: "🛡️",
     text: "Demain c'est l'interro. Le Gardien du Savoir te bloque le passage : comment révises-tu ce soir ?",
     options: [
-      { text: "Je relis mon cours plusieurs fois", feedback: "PIÈGE ! La relecture donne une fausse impression de maîtrise, sans vraiment renforcer la mémoire.", points: 3 },
-      { text: "Je me teste sans regarder mes notes", feedback: "EXCELLENT ! Se tester soi-même (l'active recall) est la méthode de révision la plus puissante.", points: 15, type: "strategist" },
-      { text: "Je surligne tout en couleurs", feedback: "Ça occupe les mains... mais surligner n'apprend rien par soi-même.", points: 2 }
+      { text: "Je relis mon cours plusieurs fois", feedback: "Relire donne un sentiment rassurant de familiarité. Pour vérifier si ça a vraiment tenu, essaie d'y ajouter un petit autotest sans regarder tes notes.", type: "strategist" },
+      { text: "Je me teste sans regarder mes notes", feedback: "Se tester soi-même sans regarder ses notes (l'autotest actif) est l'une des méthodes de révision les plus efficaces qui soient.", type: "strategist" },
+      { text: "Je surligne tout en couleurs", feedback: "Surligner aide à repérer l'essentiel d'un coup d'œil. Pour vraiment le retenir, essaie ensuite de reformuler ou de te tester sur ce que tu as surligné.", type: "strategist" }
     ],
     next: "scene4"
   },
@@ -74,15 +73,14 @@ const scenes = {
     icon: "🌙",
     text: "Il est 23h, tu n'as pas fini de réviser et l'examen est à 8h. Que choisis-tu ?",
     options: [
-      { text: "Je révise toute la nuit, café à volonté", feedback: "DANGER ! Sans sommeil, ton cerveau ne fixe pas ce que tu viens d'apprendre. Tu perds plus que tu ne gagnes.", points: 2 },
-      { text: "Je dors 8h, quitte à réviser un peu moins", feedback: "SAGE CHOIX. C'est pendant le sommeil que ton cerveau consolide et range ce que tu as appris.", points: 15, type: "optimizer" }
+      { text: "Je révise toute la nuit, café à volonté", feedback: "Quand le temps manque, ça semble logique de grappiller des heures sur la nuit. Sache juste que le cerveau a besoin de sommeil pour ranger et consolider ce qu'il vient d'apprendre.", type: "optimizer" },
+      { text: "Je dors 8h, quitte à réviser un peu moins", feedback: "Dormir suffisamment fait aussi partie de la révision : c'est pendant le sommeil que ton cerveau consolide ce que tu as appris dans la journée.", type: "optimizer" }
     ],
     next: "final"
   }
 };
 
 const TOTAL_DEFIS = 4;
-let score = 0;
 let typeCounts = { strategist: 0, optimizer: 0 };
 
 document.getElementById('start-btn').addEventListener('click', () => nextScene('scene1'));
@@ -109,7 +107,6 @@ function nextScene(id) {
         <div class="profile-title">${profile.title}</div>
         <p class="scene-text">${profile.text}</p>
       </div>
-      <p class="scene-text" style="margin-top:14px;">Score final : <b style="color:#10b981">${score} pts</b></p>
       <button class="btn" id="restart-btn">🔄 Recommencer</button>`;
     document.getElementById('restart-btn').addEventListener('click', () => location.reload());
     return;
@@ -120,7 +117,6 @@ function nextScene(id) {
     <div id="hud">
       <span>Défi ${sceneIndex(id)}/${TOTAL_DEFIS}</span>
       <div id="progress-track"><div id="progress-bar"></div></div>
-      <span id="score-badge">⚡ ${score} pts</span>
     </div>
     <div class="defi-icon">${s.icon}</div>
     <h2>${s.title}</h2>
@@ -142,11 +138,9 @@ function nextScene(id) {
 
 function chooseOption(scene, index) {
   const opt = scene.options[index];
-  score += opt.points;
   if (opt.type) typeCounts[opt.type]++;
 
   document.getElementById('options').querySelectorAll('.btn').forEach((b) => (b.disabled = true));
-  document.getElementById('score-badge').textContent = `⚡ ${score} pts`;
 
   const box = document.getElementById('feedback-box');
   box.innerHTML = `<p style="margin:0 0 12px;">${opt.feedback}</p><button class="btn" id="continue-btn">Continuer →</button>`;
