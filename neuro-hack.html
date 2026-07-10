@@ -94,8 +94,22 @@ const QUIZ = [
   { statement: "Le cerveau continue à créer de nouvelles connexions tout au long de la vie.", answer: true, explain: "C'est vrai, on appelle ça la plasticité cérébrale — une bonne nouvelle : on peut progresser à tout âge !" }
 ];
 
+const CHALLENGES = {
+  strategist: [
+    "Cette semaine, je me teste sur un chapitre au lieu de le relire.",
+    "Je refais un exercice sans regarder la correction avant d'avoir vraiment cherché.",
+    "J'explique un chapitre à voix haute, comme si j'apprenais à quelqu'un d'autre."
+  ],
+  optimizer: [
+    "Cette semaine, je range mon téléphone dans une autre pièce pendant mes devoirs.",
+    "Je me couche à une heure fixe la veille de chaque interro.",
+    "Je prépare mon espace de travail avant de commencer à réviser."
+  ]
+};
+
 const TOTAL_DEFIS = 4;
 let typeCounts = { strategist: 0, optimizer: 0 };
+let choicesMade = [];
 
 document.getElementById('start-btn').addEventListener('click', () => renderQuiz(0));
 
@@ -153,37 +167,56 @@ function nextScene(id) {
   const container = document.getElementById('game-container');
 
   if (id === 'final') {
-    const profile = typeCounts.strategist === typeCounts.optimizer
+    const isTie = typeCounts.strategist === typeCounts.optimizer;
+    const leadType = isTie ? null : (typeCounts.strategist > typeCounts.optimizer ? 'strategist' : 'optimizer');
+    const profile = isTie
       ? { title: "🧠 HACKER COMPLET", text: "Tu combines l'effort actif ET l'hygiène de vie. C'est exactement le combo gagnant pour apprendre efficacement !" }
-      : typeCounts.strategist > typeCounts.optimizer
+      : leadType === 'strategist'
         ? { title: "🎯 STRATEGIST", text: "Tu apprends par l'effort actif : tester, récupérer, s'entraîner. Continue à te tester plutôt qu'à relire !" }
         : { title: "⚡ OPTIMIZER", text: "Tu sais que le corps et l'environnement comptent autant que la volonté. Protège ton sommeil et ton espace de travail !" };
+
+    const recap = choicesMade.map((c) => `<li><b>${c.defi}</b> — ${c.text}</li>`).join('');
+    const challengeOptions = isTie
+      ? [...CHALLENGES.strategist.slice(0, 2), ...CHALLENGES.optimizer.slice(0, 2)]
+      : CHALLENGES[leadType];
 
     container.innerHTML = `
       <div class="defi-icon">🏆</div>
       <h2>Mission Accomplie !</h2>
-      <p class="scene-text">Tu as désormais les bases du Neuro-Hack. Apprends avec la science, pas avec les mythes.</p>
+      <p class="scene-text">Voici tes choix sur les 4 défis :</p>
+      <ul class="scene-text" style="text-align:left;padding-left:20px;">${recap}</ul>
       <div class="profile-card">
         <div class="profile-title">${profile.title}</div>
         <p class="scene-text">${profile.text}</p>
       </div>
       <div class="profile-card" id="commitment-card">
         <div class="profile-title" style="font-size:16px;">🎯 Ton défi de la semaine</div>
-        <p class="scene-text">Qu'est-ce que tu vas mettre en place suite à ce que tu viens de découvrir ?</p>
-        <textarea id="commitment-input" placeholder="Ex : Je vais me tester sur mon cours au lieu de le relire..."></textarea>
-        <button class="btn" id="commit-btn">Je m'engage 💪</button>
+        <p class="scene-text">D'après ton profil, voici des défis qui pourraient te correspondre. Choisis celui que tu veux essayer :</p>
+        <div id="challenge-options"></div>
+        <button class="btn" id="own-challenge-btn">✍️ Écrire mon propre défi</button>
       </div>
       <button class="btn" id="restart-btn">🔄 Recommencer</button>`;
     document.getElementById('restart-btn').addEventListener('click', () => location.reload());
-    document.getElementById('commit-btn').addEventListener('click', () => {
-      const text = document.getElementById('commitment-input').value.trim();
-      if (!text) return;
-      const card = document.getElementById('commitment-card');
-      card.innerHTML = `
-        <div class="profile-title" style="font-size:16px;">🎯 Ton défi de la semaine</div>
-        <p class="scene-text" id="commitment-echo"></p>
-        <p class="scene-text" style="color:#10b981;margin-top:8px;">C'est noté ! Reviens sur cette page quand tu veux pour te rappeler ton engagement.</p>`;
-      document.getElementById('commitment-echo').textContent = `« ${text} »`;
+
+    const optionsEl = document.getElementById('challenge-options');
+    challengeOptions.forEach((text) => {
+      const btn = document.createElement('button');
+      btn.className = 'btn';
+      btn.textContent = text;
+      btn.addEventListener('click', () => confirmCommitment(text));
+      optionsEl.appendChild(btn);
+    });
+
+    document.getElementById('own-challenge-btn').addEventListener('click', () => {
+      optionsEl.insertAdjacentHTML('afterend', `
+        <textarea id="commitment-input" placeholder="Ex : Je vais me tester sur mon cours au lieu de le relire..."></textarea>
+        <button class="btn" id="commit-btn">Je m'engage 💪</button>`);
+      document.getElementById('own-challenge-btn').remove();
+      document.getElementById('commit-btn').addEventListener('click', () => {
+        const text = document.getElementById('commitment-input').value.trim();
+        if (!text) return;
+        confirmCommitment(text);
+      });
     });
     return;
   }
@@ -215,6 +248,7 @@ function nextScene(id) {
 function chooseOption(scene, index) {
   const opt = scene.options[index];
   if (opt.type) typeCounts[opt.type]++;
+  choicesMade.push({ defi: scene.title.replace(/^DÉFI \d+ : /, ''), text: opt.text });
 
   document.getElementById('options').querySelectorAll('.btn').forEach((b) => (b.disabled = true));
 
@@ -227,6 +261,15 @@ function chooseOption(scene, index) {
     </div>`;
   box.classList.add('show');
   document.getElementById('continue-btn').addEventListener('click', () => nextScene(scene.next));
+}
+
+function confirmCommitment(text) {
+  const card = document.getElementById('commitment-card');
+  card.innerHTML = `
+    <div class="profile-title" style="font-size:16px;">🎯 Ton défi de la semaine</div>
+    <p class="scene-text" id="commitment-echo"></p>
+    <p class="scene-text" style="color:#10b981;margin-top:8px;">C'est noté ! Reviens sur cette page quand tu veux pour te rappeler ton engagement.</p>`;
+  document.getElementById('commitment-echo').textContent = `« ${text} »`;
 }
 </script>
 </body>
