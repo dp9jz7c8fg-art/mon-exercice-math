@@ -5,67 +5,153 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NEURO-HACK : Le Jeu</title>
 <style>
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-#game-container { background: #1e293b; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-width: 600px; width: 90%; text-align: center; border: 1px solid #10b981; }
-h2 { color: #10b981; }
-.btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: #334155; border: none; border-radius: 10px; color: white; cursor: pointer; transition: 0.3s; font-size: 16px; }
+* { box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+#game-container { background: #1e293b; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-width: 600px; width: 100%; text-align: center; border: 1px solid #10b981; animation: fadeIn 0.4s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+#hud { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; font-size: 12px; color: #94a3b8; }
+#progress-track { flex: 1; height: 6px; background: #334155; border-radius: 999px; margin: 0 14px; overflow: hidden; }
+#progress-bar { height: 100%; background: #10b981; width: 0%; transition: width 0.4s ease; }
+#score-badge { font-weight: 700; color: #10b981; white-space: nowrap; }
+.defi-icon { font-size: 40px; margin-bottom: 6px; }
+h2 { color: #10b981; margin: 6px 0 12px; }
+p.scene-text { color: #cbd5e1; line-height: 1.5; }
+.btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: #334155; border: none; border-radius: 10px; color: white; cursor: pointer; transition: 0.2s; font-size: 15px; text-align: left; }
 .btn:hover { background: #10b981; color: #020617; }
-#feedback { margin-top: 20px; font-style: italic; color: #94a3b8; }
+#feedback-box { display: none; margin-top: 16px; padding: 16px; border-radius: 12px; background: rgba(16,185,129,0.1); border: 1px solid #10b981; text-align: left; font-size: 14px; line-height: 1.5; }
+#feedback-box.show { display: block; animation: fadeIn 0.3s ease-out; }
+#continue-btn { margin-top: 14px; background: #10b981; color: #020617; font-weight: 700; }
+#continue-btn:hover { background: #0d9668; color: white; }
+.profile-card { background: rgba(16,185,129,0.08); border: 1px solid #10b981; border-radius: 14px; padding: 20px; margin-top: 16px; }
+.profile-title { font-size: 22px; font-weight: 800; color: #10b981; margin-bottom: 8px; }
 </style>
 </head>
 <body>
 <div id="game-container">
 <div id="scene">
 <h2>Bienvenue Recrue...</h2>
-<p>Es-tu prêt à hacker ton cerveau pour réussir tes études ?</p>
-<button class="btn" onclick="nextScene('scene1')">Lancer la mission</button>
+<p class="scene-text">Es-tu prêt à hacker ton cerveau pour réussir tes études ? 4 défis t'attendent.</p>
+<button class="btn" id="start-btn">🚀 Lancer la mission</button>
 </div>
 </div>
 
 <script>
 const scenes = {
-scene1: {
-title: "DÉFI 1 : Le Code",
-text: "Un carnet affiche le code 8-3-1-9-4-2 et disparaît. Que fais-tu ?",
-options: [
-{ text: "Je répète 831-942 en boucle", feedback: "C'est la boucle phonologique. Efficace 30 secondes, mais fragile !" },
-{ text: "Je ferme les yeux pour 'voir' le carnet", feedback: "L'image mentale aide, mais s'efface vite sans effort actif." },
-{ text: "J'essaie de retrouver les chiffres par pur effort", feedback: "BRAVO ! C'est l'effort de récupération, la base de la mémoire forte." }
-],
-next: 'scene2'
-},
-scene2: {
-title: "DÉFI 2 : Le Couloir",
-text: "Des notifications vibrent partout. Ton attention se fragmente...",
-options: [
-{ text: "Je gère les deux (multitâche)", feedback: "ERREUR ! Ton cerveau switch et perd 40% d'efficacité." },
-{ text: "Je range mon téléphone dans une autre pièce", feedback: "PARFAIT. Le contrôle de l'environnement bat la volonté." }
-],
-next: 'final'
-}
+  scene1: {
+    title: "DÉFI 1 : Le Code",
+    icon: "🧠",
+    text: "Un carnet affiche le code 8-3-1-9-4-2 et disparaît. Que fais-tu ?",
+    options: [
+      { text: "Je répète 831-942 en boucle", feedback: "C'est la boucle phonologique. Efficace 30 secondes, mais fragile !", points: 5 },
+      { text: "Je ferme les yeux pour « voir » le carnet", feedback: "L'image mentale aide, mais s'efface vite sans effort actif.", points: 8 },
+      { text: "J'essaie de retrouver les chiffres par pur effort", feedback: "BRAVO ! C'est l'effort de récupération, la base de la mémoire forte.", points: 15, type: "strategist" }
+    ],
+    next: "scene2"
+  },
+  scene2: {
+    title: "DÉFI 2 : Le Couloir",
+    icon: "🎯",
+    text: "Des notifications vibrent partout. Ton attention se fragmente...",
+    options: [
+      { text: "Je gère les deux en même temps (multitâche)", feedback: "ERREUR ! Ton cerveau ne fait pas deux choses à la fois : il switch et perd jusqu'à 40% d'efficacité.", points: 2 },
+      { text: "Je range mon téléphone dans une autre pièce", feedback: "PARFAIT. Le contrôle de l'environnement bat la volonté à chaque fois.", points: 15, type: "optimizer" }
+    ],
+    next: "scene3"
+  },
+  scene3: {
+    title: "DÉFI 3 : Le Gardien",
+    icon: "🛡️",
+    text: "Demain c'est l'interro. Le Gardien du Savoir te bloque le passage : comment révises-tu ce soir ?",
+    options: [
+      { text: "Je relis mon cours plusieurs fois", feedback: "PIÈGE ! La relecture donne une fausse impression de maîtrise, sans vraiment renforcer la mémoire.", points: 3 },
+      { text: "Je me teste sans regarder mes notes", feedback: "EXCELLENT ! Se tester soi-même (l'active recall) est la méthode de révision la plus puissante.", points: 15, type: "strategist" },
+      { text: "Je surligne tout en couleurs", feedback: "Ça occupe les mains... mais surligner n'apprend rien par soi-même.", points: 2 }
+    ],
+    next: "scene4"
+  },
+  scene4: {
+    title: "DÉFI 4 : La Nuit Blanche",
+    icon: "🌙",
+    text: "Il est 23h, tu n'as pas fini de réviser et l'examen est à 8h. Que choisis-tu ?",
+    options: [
+      { text: "Je révise toute la nuit, café à volonté", feedback: "DANGER ! Sans sommeil, ton cerveau ne fixe pas ce que tu viens d'apprendre. Tu perds plus que tu ne gagnes.", points: 2 },
+      { text: "Je dors 8h, quitte à réviser un peu moins", feedback: "SAGE CHOIX. C'est pendant le sommeil que ton cerveau consolide et range ce que tu as appris.", points: 15, type: "optimizer" }
+    ],
+    next: "final"
+  }
 };
 
-function nextScene(id) {
-const container = document.getElementById('game-container');
-if(id === 'final') {
-container.innerHTML = `<h2>Mission Accomplie !</h2><p>Tu as désormais les bases du Neuro-Hack. Apprends avec la science, pas avec les mythes.</p><button class="btn" id="restart-btn">Recommencer</button>`;
-document.getElementById('restart-btn').addEventListener('click', () => location.reload());
-return;
-}
-const s = scenes[id];
-let html = `<h2>${s.title}</h2><p>${s.text}</p>`;
-s.options.forEach((opt, i) => {
-html += `<button class="btn" data-index="${i}">${opt.text}</button>`;
-});
-container.innerHTML = html;
-container.querySelectorAll('.btn').forEach((btn, i) => {
-btn.addEventListener('click', () => showFeedback(s.options[i].feedback, s.next));
-});
+const TOTAL_DEFIS = 4;
+let score = 0;
+let typeCounts = { strategist: 0, optimizer: 0 };
+
+document.getElementById('start-btn').addEventListener('click', () => nextScene('scene1'));
+
+function sceneIndex(id) {
+  return { scene1: 1, scene2: 2, scene3: 3, scene4: 4 }[id] || 0;
 }
 
-function showFeedback(msg, next) {
-alert(msg);
-nextScene(next);
+function nextScene(id) {
+  const container = document.getElementById('game-container');
+
+  if (id === 'final') {
+    const profile = typeCounts.strategist === typeCounts.optimizer
+      ? { title: "🧠 HACKER COMPLET", text: "Tu combines l'effort actif ET l'hygiène de vie. C'est exactement le combo gagnant pour apprendre efficacement !" }
+      : typeCounts.strategist > typeCounts.optimizer
+        ? { title: "🎯 STRATEGIST", text: "Tu apprends par l'effort actif : tester, récupérer, s'entraîner. Continue à te tester plutôt qu'à relire !" }
+        : { title: "⚡ OPTIMIZER", text: "Tu sais que le corps et l'environnement comptent autant que la volonté. Protège ton sommeil et ton espace de travail !" };
+
+    container.innerHTML = `
+      <div class="defi-icon">🏆</div>
+      <h2>Mission Accomplie !</h2>
+      <p class="scene-text">Tu as désormais les bases du Neuro-Hack. Apprends avec la science, pas avec les mythes.</p>
+      <div class="profile-card">
+        <div class="profile-title">${profile.title}</div>
+        <p class="scene-text">${profile.text}</p>
+      </div>
+      <p class="scene-text" style="margin-top:14px;">Score final : <b style="color:#10b981">${score} pts</b></p>
+      <button class="btn" id="restart-btn">🔄 Recommencer</button>`;
+    document.getElementById('restart-btn').addEventListener('click', () => location.reload());
+    return;
+  }
+
+  const s = scenes[id];
+  container.innerHTML = `
+    <div id="hud">
+      <span>Défi ${sceneIndex(id)}/${TOTAL_DEFIS}</span>
+      <div id="progress-track"><div id="progress-bar"></div></div>
+      <span id="score-badge">⚡ ${score} pts</span>
+    </div>
+    <div class="defi-icon">${s.icon}</div>
+    <h2>${s.title}</h2>
+    <p class="scene-text">${s.text}</p>
+    <div id="options"></div>
+    <div id="feedback-box"></div>`;
+
+  document.getElementById('progress-bar').style.width = ((sceneIndex(id) - 1) / TOTAL_DEFIS * 100) + '%';
+
+  const optionsEl = document.getElementById('options');
+  s.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'btn';
+    btn.textContent = opt.text;
+    btn.addEventListener('click', () => chooseOption(s, i));
+    optionsEl.appendChild(btn);
+  });
+}
+
+function chooseOption(scene, index) {
+  const opt = scene.options[index];
+  score += opt.points;
+  if (opt.type) typeCounts[opt.type]++;
+
+  document.getElementById('options').querySelectorAll('.btn').forEach((b) => (b.disabled = true));
+  document.getElementById('score-badge').textContent = `⚡ ${score} pts`;
+
+  const box = document.getElementById('feedback-box');
+  box.innerHTML = `<p style="margin:0 0 12px;">${opt.feedback}</p><button class="btn" id="continue-btn">Continuer →</button>`;
+  box.classList.add('show');
+  document.getElementById('continue-btn').addEventListener('click', () => nextScene(scene.next));
 }
 </script>
 </body>
