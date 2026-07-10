@@ -407,6 +407,9 @@ const METHODO_ATELIERS = [
     { id:'m9', icon:'🌍', name:"Parler une autre langue ? Challenge accepted !", sub:"Apprendre une langue en mode fun", bonus:true,
       quoi:"Des stratégies pour apprendre une langue de façon engageante et efficace.",
       public:"Tous niveaux", objectifs:"Méthodes immersives, outils numériques, motivation", dynamique:"Jeux de rôle, apps, échanges", lieu:"En classe ou en ligne" },
+    { id:'m10', icon:'🧠', name:"Jeu de méthodo", sub:"Neuro-Hack : hacke ton cerveau pour mieux apprendre", bonus:true,
+      quoi:"Un jeu interactif où tu incarnes une recrue du Neuro-Hacking : à chaque défi (mémoire, concentration...) tu choisis une stratégie et découvres immédiatement ce qu'en dit la science.",
+      public:"Tous niveaux", objectifs:"Comprendre par l'expérience les bonnes stratégies de mémorisation et de concentration", dynamique:"Jeu solo à choix multiples avec feedback immédiat", lieu:"En ligne, à faire seul" },
 ];
 
 const DEVSOI_ATELIERS = [
@@ -465,6 +468,9 @@ function openDesc(id) {
         </a>` : atelier.id === 'm7' ? `
         <a href="scolaire-planner-pro.html" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.35);border-radius:12px;color:#2ecc71;font-size:14px;font-weight:700;text-decoration:none;margin-top:2px;transition:all 0.15s;" onmouseenter="this.style.background='rgba(46,204,113,0.2)'" onmouseleave="this.style.background='rgba(46,204,113,0.12)'">
             ⏱️ Lancer mon planner
+        </a>` : atelier.id === 'm10' ? `
+        <a href="neuro-hack.html" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.35);border-radius:12px;color:#2ecc71;font-size:14px;font-weight:700;text-decoration:none;margin-top:2px;transition:all 0.15s;" onmouseenter="this.style.background='rgba(46,204,113,0.2)'" onmouseleave="this.style.background='rgba(46,204,113,0.12)'">
+            🧠 Lancer le jeu
         </a>` : '';
     document.getElementById('desc-content').innerHTML = `
         <div style="display:flex;flex-direction:column;gap:10px;">

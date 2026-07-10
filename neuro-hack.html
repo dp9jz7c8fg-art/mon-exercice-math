@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURO-HACK : Le Jeu</title>
+<style>
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+#game-container { background: #1e293b; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-width: 600px; width: 90%; text-align: center; border: 1px solid #10b981; }
+h2 { color: #10b981; }
+.btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: #334155; border: none; border-radius: 10px; color: white; cursor: pointer; transition: 0.3s; font-size: 16px; }
+.btn:hover { background: #10b981; color: #020617; }
+#feedback { margin-top: 20px; font-style: italic; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div id="game-container">
+<div id="scene">
+<h2>Bienvenue Recrue...</h2>
+<p>Es-tu prêt à hacker ton cerveau pour réussir tes études ?</p>
+<button class="btn" onclick="nextScene('scene1')">Lancer la mission</button>
+</div>
+</div>
+
+<script>
+const scenes = {
+scene1: {
+title: "DÉFI 1 : Le Code",
+text: "Un carnet affiche le code 8-3-1-9-4-2 et disparaît. Que fais-tu ?",
+options: [
+{ text: "Je répète 831-942 en boucle", feedback: "C'est la boucle phonologique. Efficace 30 secondes, mais fragile !" },
+{ text: "Je ferme les yeux pour 'voir' le carnet", feedback: "L'image mentale aide, mais s'efface vite sans effort actif." },
+{ text: "J'essaie de retrouver les chiffres par pur effort", feedback: "BRAVO ! C'est l'effort de récupération, la base de la mémoire forte." }
+],
+next: 'scene2'
+},
+scene2: {
+title: "DÉFI 2 : Le Couloir",
+text: "Des notifications vibrent partout. Ton attention se fragmente...",
+options: [
+{ text: "Je gère les deux (multitâche)", feedback: "ERREUR ! Ton cerveau switch et perd 40% d'efficacité." },
+{ text: "Je range mon téléphone dans une autre pièce", feedback: "PARFAIT. Le contrôle de l'environnement bat la volonté." }
+],
+next: 'final'
+}
+};
+
+function nextScene(id) {
+const container = document.getElementById('game-container');
+if(id === 'final') {
+container.innerHTML = `<h2>Mission Accomplie !</h2><p>Tu as désormais les bases du Neuro-Hack. Apprends avec la science, pas avec les mythes.</p><button class="btn" onclick="location.reload()">Recommencer</button>`;
+return;
+}
+const s = scenes[id];
+let html = `<h2>${s.title}</h2><p>${s.text}</p>`;
+s.options.forEach(opt => {
+html += `<button class="btn" onclick="showFeedback('${opt.feedback}', '${s.next}')">${opt.text}</button>`;
+});
+container.innerHTML = html;
+}
+
+function showFeedback(msg, next) {
+alert(msg);
+nextScene(next);
+}
+</script>
+</body>
+</html>
