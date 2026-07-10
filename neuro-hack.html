@@ -48,15 +48,19 @@ next: 'final'
 function nextScene(id) {
 const container = document.getElementById('game-container');
 if(id === 'final') {
-container.innerHTML = `<h2>Mission Accomplie !</h2><p>Tu as désormais les bases du Neuro-Hack. Apprends avec la science, pas avec les mythes.</p><button class="btn" onclick="location.reload()">Recommencer</button>`;
+container.innerHTML = `<h2>Mission Accomplie !</h2><p>Tu as désormais les bases du Neuro-Hack. Apprends avec la science, pas avec les mythes.</p><button class="btn" id="restart-btn">Recommencer</button>`;
+document.getElementById('restart-btn').addEventListener('click', () => location.reload());
 return;
 }
 const s = scenes[id];
 let html = `<h2>${s.title}</h2><p>${s.text}</p>`;
-s.options.forEach(opt => {
-html += `<button class="btn" onclick="showFeedback('${opt.feedback}', '${s.next}')">${opt.text}</button>`;
+s.options.forEach((opt, i) => {
+html += `<button class="btn" data-index="${i}">${opt.text}</button>`;
 });
 container.innerHTML = html;
+container.querySelectorAll('.btn').forEach((btn, i) => {
+btn.addEventListener('click', () => showFeedback(s.options[i].feedback, s.next));
+});
 }
 
 function showFeedback(msg, next) {
