@@ -26,14 +26,17 @@ p.scene-text { color: #cbd5e1; line-height: 1.5; }
 #continue-btn:hover { background: #0d9668; color: white; }
 .profile-card { background: rgba(16,185,129,0.08); border: 1px solid #10b981; border-radius: 14px; padding: 20px; margin-top: 16px; }
 .profile-title { font-size: 22px; font-weight: 800; color: #10b981; margin-bottom: 8px; }
+.btn-row { display: flex; gap: 10px; }
+.btn-row .btn { text-align: center; }
+#commitment-input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; font-family: inherit; font-size: 14px; min-height: 70px; resize: vertical; margin-top: 10px; }
 </style>
 </head>
 <body>
 <div id="game-container">
 <div id="scene">
 <h2>Bienvenue Recrue...</h2>
-<p class="scene-text">Es-tu prêt à hacker ton cerveau pour réussir tes études ? 4 défis t'attendent.</p>
-<button class="btn" id="start-btn">🚀 Lancer la mission</button>
+<p class="scene-text">Es-tu prêt à hacker ton cerveau pour réussir tes études ? On commence par un petit quiz sur les idées reçues, puis 4 défis t'attendent.</p>
+<button class="btn" id="start-btn">🧪 Commencer par le quiz</button>
 </div>
 </div>
 
@@ -83,13 +86,67 @@ const scenes = {
   }
 };
 
+const QUIZ = [
+  { statement: "On n'utilise que 10 % de notre cerveau.", answer: false, explain: "C'est un mythe très répandu : l'imagerie cérébrale montre que la quasi-totalité du cerveau est active, même au repos." },
+  { statement: "On apprend mieux si les cours sont adaptés à notre « style d'apprentissage » (visuel, auditif, kinesthésique).", answer: false, explain: "L'idée est populaire, mais les études sérieuses n'ont jamais montré qu'adapter l'enseignement au style préféré améliore vraiment l'apprentissage." },
+  { statement: "Le cerveau peut faire plusieurs choses à la fois sans perdre en efficacité.", answer: false, explain: "Le cerveau alterne en réalité entre les tâches au lieu de les faire en parallèle, ce qui coûte du temps et de l'attention." },
+  { statement: "Relire plusieurs fois ses notes est l'une des meilleures façons de les mémoriser.", answer: false, explain: "Se tester soi-même est nettement plus efficace que la simple relecture, même si celle-ci donne une impression rassurante de familiarité." },
+  { statement: "Le cerveau continue à créer de nouvelles connexions tout au long de la vie.", answer: true, explain: "C'est vrai, on appelle ça la plasticité cérébrale — une bonne nouvelle : on peut progresser à tout âge !" }
+];
+
 const TOTAL_DEFIS = 4;
 let typeCounts = { strategist: 0, optimizer: 0 };
 
-document.getElementById('start-btn').addEventListener('click', () => nextScene('scene1'));
+document.getElementById('start-btn').addEventListener('click', () => renderQuiz(0));
 
 function sceneIndex(id) {
   return { scene1: 1, scene2: 2, scene3: 3, scene4: 4 }[id] || 0;
+}
+
+function renderQuiz(index) {
+  const container = document.getElementById('game-container');
+
+  if (index >= QUIZ.length) {
+    nextScene('scene1');
+    return;
+  }
+
+  const q = QUIZ[index];
+  container.innerHTML = `
+    <div id="hud">
+      <span>Quiz ${index + 1}/${QUIZ.length}</span>
+      <div id="progress-track"><div id="progress-bar"></div></div>
+    </div>
+    <div class="defi-icon">🔎</div>
+    <h2>Vrai ou Mythe ?</h2>
+    <p class="scene-text">${q.statement}</p>
+    <div class="btn-row">
+      <button class="btn" id="quiz-true">✅ Vrai</button>
+      <button class="btn" id="quiz-false">❌ Mythe</button>
+    </div>
+    <div id="feedback-box"></div>`;
+
+  document.getElementById('progress-bar').style.width = (index / QUIZ.length * 100) + '%';
+  document.getElementById('quiz-true').addEventListener('click', () => chooseQuizAnswer(index, true));
+  document.getElementById('quiz-false').addEventListener('click', () => chooseQuizAnswer(index, false));
+}
+
+function chooseQuizAnswer(index, guess) {
+  const q = QUIZ[index];
+  const correct = guess === q.answer;
+
+  document.getElementById('quiz-true').disabled = true;
+  document.getElementById('quiz-false').disabled = true;
+
+  const box = document.getElementById('feedback-box');
+  box.innerHTML = `
+    <div id="stef-avatar"><img src="Stef.png" alt="Stef" onerror="this.parentNode.textContent='🧑‍🏫'"></div>
+    <div id="feedback-text">
+      <p style="margin:0 0 12px;"><b>${correct ? '✅ Exact !' : '💡 Pas tout à fait.'}</b> ${q.explain}</p>
+      <button class="btn" id="continue-btn">Continuer →</button>
+    </div>`;
+  box.classList.add('show');
+  document.getElementById('continue-btn').addEventListener('click', () => renderQuiz(index + 1));
 }
 
 function nextScene(id) {
@@ -110,8 +167,24 @@ function nextScene(id) {
         <div class="profile-title">${profile.title}</div>
         <p class="scene-text">${profile.text}</p>
       </div>
+      <div class="profile-card" id="commitment-card">
+        <div class="profile-title" style="font-size:16px;">🎯 Ton défi de la semaine</div>
+        <p class="scene-text">Qu'est-ce que tu vas mettre en place suite à ce que tu viens de découvrir ?</p>
+        <textarea id="commitment-input" placeholder="Ex : Je vais me tester sur mon cours au lieu de le relire..."></textarea>
+        <button class="btn" id="commit-btn">Je m'engage 💪</button>
+      </div>
       <button class="btn" id="restart-btn">🔄 Recommencer</button>`;
     document.getElementById('restart-btn').addEventListener('click', () => location.reload());
+    document.getElementById('commit-btn').addEventListener('click', () => {
+      const text = document.getElementById('commitment-input').value.trim();
+      if (!text) return;
+      const card = document.getElementById('commitment-card');
+      card.innerHTML = `
+        <div class="profile-title" style="font-size:16px;">🎯 Ton défi de la semaine</div>
+        <p class="scene-text" id="commitment-echo"></p>
+        <p class="scene-text" style="color:#10b981;margin-top:8px;">C'est noté ! Reviens sur cette page quand tu veux pour te rappeler ton engagement.</p>`;
+      document.getElementById('commitment-echo').textContent = `« ${text} »`;
+    });
     return;
   }
 
